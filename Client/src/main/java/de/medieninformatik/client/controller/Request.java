@@ -3,6 +3,7 @@ package de.medieninformatik.client.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -42,6 +43,13 @@ public class Request {
             //                DBMeta myClass = mapper.readValue(response.readEntity(InputStream.class), DBMeta.class);
 //                System.out.println(myClass);
         }
+    }
+
+    public void put(String uri) {
+        WebTarget target = client.target(baseURI + uri);
+        String json = "";
+        Response response = target.request().put(Entity.entity(json, MediaType.APPLICATION_JSON));
+        status(response);
     }
 
     private WebTarget getTarget(String crud, String uri) {

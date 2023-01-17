@@ -59,7 +59,7 @@ public class DBConnection {
     private void initDatabase() {
         try {
             //SQL Anweisungen laden
-            FileReader reader = new FileReader("./src/main/resources/informatik_init.sql");
+            FileReader reader = new FileReader(".\\src\\main\\resources\\informatik_init.sql");
             StringBuilder sb = new StringBuilder();
             int c;
             while ((c = reader.read()) != -1) {

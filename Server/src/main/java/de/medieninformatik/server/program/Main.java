@@ -33,7 +33,6 @@ public class Main {
 
         //Server starten
         if (!server.isStarted()) server.start();
-        System.out.println("http://" + serverAddress + ":"+port+"/"+path+"/");
         System.out.println("ENTER stoppt den Server.");
         System.in.read();
         server.shutdownNow();

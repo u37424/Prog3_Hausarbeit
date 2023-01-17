@@ -3,7 +3,6 @@ package de.medieninformatik.server.model;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 //Ressourcenpfad
 @Path("data")
 public class DBRestData {
@@ -31,6 +30,12 @@ public class DBRestData {
 
     @GET
     public Response getBookList() {
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setThings(String json) {
         return Response.ok().build();
     }
 }
