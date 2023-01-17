@@ -1,0 +1,5 @@
+rootProject.name = 'm29987_Prog3_Hausarbeit_2023'
+include 'Common'
+include 'Server'
+include 'Client'
+
