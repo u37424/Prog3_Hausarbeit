@@ -8,16 +8,20 @@ import java.util.ResourceBundle;
 
 //Singleton
 public class DBConnection {
+    //Connection als Singleton
     private static final DBConnection instance = new DBConnection();
 
     private static Connection connection;
 
     private DBConnection() {
+        //Connection aufbauen
         connection = getConnection();
+        //Datenbankinitialisierung bei Bedarf
         setupDatabase();
     }
 
     private static Connection getConnection() {
+        //Verbindungsattribute
         ResourceBundle bundle = ResourceBundle.getBundle("Connection");
         String driver = bundle.getString("Driver");
         String baseUrl = bundle.getString("URL");
@@ -33,13 +37,16 @@ public class DBConnection {
     }
 
     private void setupDatabase() {
+        //Initialisierungsvariablen
         ResourceBundle bundle = ResourceBundle.getBundle("Connection");
-        String query = bundle.getString("InitRequiredSQL");
+        String query = bundle.getString("InitSQL");
+        //Herausfinden, ob DB leer oder nicht
         try {
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
             if (set.next()) {
                 int tables = set.getInt(1);
+                //Wenn leer, dann befuellen
                 if (tables == 0) initDatabase();
                 else System.err.println("Data found.");
             }
@@ -51,6 +58,7 @@ public class DBConnection {
 
     private void initDatabase() {
         try {
+            //SQL Anweisungen laden
             FileReader reader = new FileReader("./src/main/resources/informatik_init.sql");
             StringBuilder sb = new StringBuilder();
             int c;
@@ -58,6 +66,8 @@ public class DBConnection {
                 sb.append((char) c);
             }
             String init = sb.toString();
+
+            //Queries hintereinander ausführen
             Statement statement = connection.createStatement();
             String[] queries = init.split(";");
             for (String query : queries) {
@@ -73,12 +83,14 @@ public class DBConnection {
     }
 
     public static ResultSet query(String query) throws SQLException {
+        //Beliebigen Query and DB senden und result set erhalten
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery(query);
         return set;
     }
 
     public static int update(String update) throws SQLException {
+        //Beliebiges Update and DB senden und status erhalten
         Statement statement = connection.createStatement();
         int status = statement.executeUpdate(update);
         return status;
