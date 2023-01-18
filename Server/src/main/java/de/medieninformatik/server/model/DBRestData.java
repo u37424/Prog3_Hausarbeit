@@ -1,8 +1,11 @@
 package de.medieninformatik.server.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.medieninformatik.common.Category;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.*;
+
 //Ressourcenpfad
 @Path("data")
 public class DBRestData {
@@ -28,9 +31,26 @@ public class DBRestData {
 
     //Anmelden und Abmelden beim Server als Hauptnutzer, jeder kann Hauptnutzer werden, nur ein Hauptnutzer wird verteilt und muss seine Sperre erst zurueckgeben - PUT
 
+    //Realisierung durch verschiedene Paths
     @GET
     public Response getBookList() {
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("test")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTest() {
+        Category c = new Category(1);
+        c.setName("myCategory");
+        ObjectMapper mapper = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapper.writeValueAsString(c);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return Response.ok(json).build();
     }
 
     @PUT

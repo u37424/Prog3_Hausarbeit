@@ -29,7 +29,7 @@ public class Main {
                 GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
 
         //Datenbankverbindung herstellen
-        DBConnection.getInstance();
+        DBConnection connection = DBConnection.getInstance();
 
         //Server starten
         if (!server.isStarted()) server.start();

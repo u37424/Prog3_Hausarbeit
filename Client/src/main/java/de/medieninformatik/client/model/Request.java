@@ -1,6 +1,7 @@
-package de.medieninformatik.client.controller;
+package de.medieninformatik.client.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.medieninformatik.common.Category;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -8,6 +9,8 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ResourceBundle;
 
 public class Request {
@@ -34,14 +37,39 @@ public class Request {
         this.client = ClientBuilder.newClient();
     }
 
+    //Versionen: getBook, getTitleList, getCategories...
     public void get(String uri) {
         WebTarget target = getTarget("GET", uri);
-        Response response =
-                target.request().accept(MediaType.APPLICATION_JSON).get();
-        ObjectMapper mapper = new ObjectMapper();
-        if (status(response) == 200 && response.getLength() != 0) {
-            //                DBMeta myClass = mapper.readValue(response.readEntity(InputStream.class), DBMeta.class);
-//                System.out.println(myClass);
+        try {
+            Response response =
+                    target.request().accept(MediaType.APPLICATION_JSON).get();
+            ObjectMapper mapper = new ObjectMapper();
+            if (status(response) == 200 && response.getLength() != 0) {
+                String myClass = mapper.readValue(response.readEntity(InputStream.class), String.class);
+                System.out.println(myClass);
+            }
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        } catch (IOException e) {
+            System.err.println("Error in reading Server Response");
+        }
+    }
+
+    public void getTest(){
+        WebTarget target = getTarget("GET", "/data/test");
+        try {
+            Response response =
+                    target.request().accept(MediaType.APPLICATION_JSON).get();
+            ObjectMapper mapper = new ObjectMapper();
+            if (status(response) == 200 && response.getLength() != 0) {
+                Category cat = mapper.readValue(response.readEntity(InputStream.class), Category.class);
+                System.out.println(cat);
+            }
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        } catch (IOException e) {
+            System.err.println("Error in reading Server Response");
+            e.printStackTrace();
         }
     }
 

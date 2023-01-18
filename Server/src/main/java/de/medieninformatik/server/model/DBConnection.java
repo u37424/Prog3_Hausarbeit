@@ -16,6 +16,7 @@ public class DBConnection {
     private DBConnection() {
         //Connection aufbauen
         connection = getConnection();
+        if(connection == null) return;
         //Datenbankinitialisierung bei Bedarf
         setupDatabase();
     }
@@ -28,10 +29,12 @@ public class DBConnection {
         String user = bundle.getString("User");
         String password = bundle.getString("Password");
         try {
-            Connection connection = DriverManager.getConnection(baseUrl, user, password);
-            return connection;
+            Class.forName(driver);
+            return DriverManager.getConnection(baseUrl, user, password);
         } catch (SQLException e) {
             System.err.println("Could not find Database :(");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Could not find Driver :(");
         }
         return null;
     }
@@ -39,7 +42,7 @@ public class DBConnection {
     private void setupDatabase() {
         //Initialisierungsvariablen
         ResourceBundle bundle = ResourceBundle.getBundle("Connection");
-        String query = bundle.getString("InitSQL");
+        String query = bundle.getString("HasDataSQL");
         //Herausfinden, ob DB leer oder nicht
         try {
             Statement statement = connection.createStatement();
@@ -73,6 +76,7 @@ public class DBConnection {
             for (String query : queries) {
                 statement.executeUpdate(query);
             }
+            statement.close();
             System.err.println("Successfully executed Database initialisation!");
         } catch (FileNotFoundException | SQLException e) {
             System.err.println("Could not initialize Data.");

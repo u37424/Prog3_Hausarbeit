@@ -1,6 +1,5 @@
 package de.medieninformatik.client.view;
 
-import de.medieninformatik.client.controller.Request;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
