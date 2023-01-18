@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class Author {
     private Author[] authors;
+    //private Book[] books;
 
     private int authorId;
     private String firstName;

@@ -2,27 +2,29 @@ package de.medieninformatik.client.controller;
 
 import de.medieninformatik.client.model.Model;
 import de.medieninformatik.client.view.MainWindow;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-public class Controller extends WindowAdapter {
+public class Controller {
 
     private final Model model;
-    private final MainWindow window;
+    private final MainWindow view;
 
-    public Controller(MainWindow window, Model model){
+    public Controller(MainWindow window, Model model) {
         //Kennt Model und View
         this.model = model;
-        this.window = window;
+        this.view = window;
     }
 
-    private void exitProgram() {
+    public void exitProgram() {
+        if(model.isMainUser()) model.logout();
         System.exit(0);
     }
 
-    @Override
-    public void windowClosing(WindowEvent e) {
-        exitProgram();
+    public void login(Button btn, ActionEvent e) {
+        if (model.login()) {
+            view.mainUserTitle();
+            view.switchToMainScene();
+        } else btn.setStyle("-fx-background-color: #ff0000");
     }
 }

@@ -15,18 +15,19 @@ public class Model {
 
     //Hier Anfragen von Controller mithilfe von Request erhalten und bearbeiten
     private boolean isMainUser = false;
+    Request request = Request.getInstance();
 
     public boolean login(){
         if(isMainUser) return false;
         else {
-            return isMainUser = Request.getInstance().login();
+            return isMainUser = request.login();
         }
     }
 
     public boolean logout(){
         if(!isMainUser) return false;
         else {
-            return isMainUser = Request.getInstance().logout();
+            return isMainUser = request.logout();
         }
     }
 

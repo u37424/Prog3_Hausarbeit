@@ -15,6 +15,8 @@ public class Book {
     private int pages;
     private double rating;
     private String description;
+    private Category[] categories;
+    private Author[] authors;
 
     @JsonCreator
     public Book(@JsonProperty("isbn") String isbn) {
@@ -99,5 +101,25 @@ public class Book {
     @JsonSetter("description")
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @JsonGetter("categories")
+    public Category[] getCategories() {
+        return categories;
+    }
+
+    @JsonSetter("categories")
+    public void setCategories(Category[] categories) {
+        this.categories = categories;
+    }
+
+    @JsonGetter("authors")
+    public Author[] getAuthors() {
+        return authors;
+    }
+
+    @JsonSetter("authors")
+    public void setAuthors(Author[] authors) {
+        this.authors = authors;
     }
 }
