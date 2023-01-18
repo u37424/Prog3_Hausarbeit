@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.medieninformatik.common.Category;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 //Ressourcenpfad
 @Path("data")
@@ -32,10 +33,7 @@ public class DBRestData {
     //Anmelden und Abmelden beim Server als Hauptnutzer, jeder kann Hauptnutzer werden, nur ein Hauptnutzer wird verteilt und muss seine Sperre erst zurueckgeben - PUT
 
     //Realisierung durch verschiedene Paths
-    @GET
-    public Response getBookList() {
-        return Response.ok().build();
-    }
+    private boolean hasMainUser;
 
     @GET
     @Path("test")
@@ -54,8 +52,40 @@ public class DBRestData {
     }
 
     @PUT
+    @Path("test")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response setThings(String json) {
+    public Response putTest(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Category c = mapper.readValue(json, Category.class);
+            System.out.println(c);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("login")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login() {
+        if (hasMainUser) return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        else {
+            hasMainUser = true;
+            System.err.println("Main user logged in.");
+            return Response.ok().build();
+        }
+    }
+
+    @GET
+    @Path("logout")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response logout() {
+        if (!hasMainUser) return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        else {
+            hasMainUser = false;
+            System.err.println("Main user logged out.");
+            return Response.ok().build();
+        }
     }
 }

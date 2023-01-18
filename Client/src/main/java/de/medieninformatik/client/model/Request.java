@@ -1,5 +1,6 @@
 package de.medieninformatik.client.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.medieninformatik.common.Category;
 import jakarta.ws.rs.client.Client;
@@ -38,24 +39,7 @@ public class Request {
     }
 
     //Versionen: getBook, getTitleList, getCategories...
-    public void get(String uri) {
-        WebTarget target = getTarget("GET", uri);
-        try {
-            Response response =
-                    target.request().accept(MediaType.APPLICATION_JSON).get();
-            ObjectMapper mapper = new ObjectMapper();
-            if (status(response) == 200 && response.getLength() != 0) {
-                String myClass = mapper.readValue(response.readEntity(InputStream.class), String.class);
-                System.out.println(myClass);
-            }
-        } catch (RuntimeException e) {
-            System.err.println("Error in communication to server.");
-        } catch (IOException e) {
-            System.err.println("Error in reading Server Response");
-        }
-    }
-
-    public void getTest(){
+    public void getTest() {
         WebTarget target = getTarget("GET", "/data/test");
         try {
             Response response =
@@ -73,11 +57,45 @@ public class Request {
         }
     }
 
-    public void put(String uri) {
-        WebTarget target = client.target(baseURI + uri);
-        String json = "";
-        Response response = target.request().put(Entity.entity(json, MediaType.APPLICATION_JSON));
-        status(response);
+    public void putTest() {
+        WebTarget target = getTarget("PUT", "/data/test");
+        Category c = new Category(2);
+        c.setName("PutCategory");
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(c);
+            Response response = target.request().put(Entity.entity(json, MediaType.APPLICATION_JSON));
+            status(response);
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        } catch (JsonProcessingException e) {
+            System.err.println("Error with writing JSON Object.");
+        }
+    }
+
+    public boolean login() {
+        WebTarget target = getTarget("GET", "/data/login");
+        return isOk(target);
+    }
+
+    public boolean logout() {
+        WebTarget target = getTarget("GET", "/data/logout");
+        return isOk(target);
+    }
+
+    private boolean isOk(WebTarget target) {
+        try {
+            Response response =
+                    target.request().accept(MediaType.APPLICATION_JSON).get();
+            if (status(response) == 200) {
+                return true;
+            }
+            return false;
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+            return false;
+        }
     }
 
     private WebTarget getTarget(String crud, String uri) {

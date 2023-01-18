@@ -14,4 +14,23 @@ public class Model {
     //Wie koennen Modifizierungen oder erstellte Buecher / Autoren / Kategorien / Publisher an den Server uebermittelt werden?
 
     //Hier Anfragen von Controller mithilfe von Request erhalten und bearbeiten
+    private boolean isMainUser = false;
+
+    public boolean login(){
+        if(isMainUser) return false;
+        else {
+            return isMainUser = Request.getInstance().login();
+        }
+    }
+
+    public boolean logout(){
+        if(!isMainUser) return false;
+        else {
+            return isMainUser = Request.getInstance().logout();
+        }
+    }
+
+    public boolean isMainUser() {
+        return isMainUser;
+    }
 }
