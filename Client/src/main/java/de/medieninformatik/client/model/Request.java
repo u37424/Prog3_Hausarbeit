@@ -51,6 +51,7 @@ public class Request {
             }
         } catch (RuntimeException e) {
             System.err.println("Error in communication to server.");
+            e.printStackTrace();
         } catch (IOException e) {
             System.err.println("Error in reading Server Response");
             e.printStackTrace();

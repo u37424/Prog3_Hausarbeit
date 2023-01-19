@@ -211,6 +211,9 @@ VALUES ('978-0-262-53305-9', 'The Ethics of Artificial Intelligence', 2, 2020, 2
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
 VALUES ('978-0-262-58307-6', 'Superintelligence: Paths, Dangers, Strategies', 2, 2014, 512, 4.0, 'A discussion on the potential risks and benefits of artificial superintelligence and strategies to manage it.');
 
+INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
+VALUES ('978-1-566-19-853-5', 'The 7 Habits of Highly Effective People', 7, 1989, 432, 4.8, 'A self-help book that teaches the seven habits to be effective in personal and professional life.');
+
 CREATE TABLE Authors (
   Author_ID INTEGER PRIMARY KEY AUTO_INCREMENT,
   First_Name VARCHAR(255) NOT NULL,
@@ -317,8 +320,10 @@ INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
 VALUES (31, 'Max', 'Tegmark', 'M. Tegmark', '1967-05-26', 55);
 
 CREATE TABLE Book_Authors (
-  ISBN CHAR(255) REFERENCES Books(ISBN),
-  Author_ID INTEGER REFERENCES Authors(Author_ID),
+  ISBN CHAR(255),
+  Author_ID INTEGER,
+  FOREIGN KEY (ISBN) REFERENCES Books(ISBN),
+  FOREIGN KEY (Author_ID) REFERENCES Authors(Author_ID),
   PRIMARY KEY (ISBN, Author_ID)
 );
 
@@ -404,7 +409,7 @@ INSERT INTO Book_Authors (ISBN, Author_ID)
 VALUES ('978-0-596-15806-1', 27);
 
 INSERT INTO Book_Authors (ISBN, Author_ID)
-VALUES ('978-0-596-00671-3', 28);
+VALUES ('978-1-566-19-853-5', 28);
 
 INSERT INTO Book_Authors (ISBN, Author_ID)
 VALUES ('978-1-491-90766-7', 29);
@@ -416,8 +421,10 @@ INSERT INTO Book_Authors (ISBN, Author_ID)
 VALUES ('978-0-262-58307-6', 31);
 
 CREATE TABLE Book_Categories (
-  ISBN CHAR(255) REFERENCES Books(ISBN),
-  Category_ID INTEGER REFERENCES Categories(Category_ID),
+  ISBN CHAR(255),
+  Category_ID INTEGER,
+  FOREIGN KEY (ISBN) REFERENCES Books(ISBN),
+  FOREIGN KEY (Category_ID) REFERENCES Categories(Category_ID),
   PRIMARY KEY (ISBN, Category_ID)
 );
 
@@ -503,7 +510,7 @@ INSERT INTO Book_Categories (ISBN, Category_ID)
 VALUES ('978-0-596-15806-1', 8);
 
 INSERT INTO Book_Categories (ISBN, Category_ID)
-VALUES ('978-0-596-00671-3', 8);
+VALUES ('978-1-566-19-853-5', 8);
 
 INSERT INTO Book_Categories (ISBN, Category_ID)
 VALUES ('978-1-491-90766-7', 7);

@@ -13,6 +13,8 @@ public class DBConnection {
 
     private static Connection connection;
 
+    PreparedStatement bookByISBN;
+
     private DBConnection() {
         //Connection aufbauen
         connection = getConnection();
@@ -86,14 +88,14 @@ public class DBConnection {
         }
     }
 
-    public static ResultSet query(String query) throws SQLException {
+    public synchronized ResultSet query(String query) throws SQLException {
         //Beliebigen Query and DB senden und result set erhalten
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery(query);
         return set;
     }
 
-    public static int update(String update) throws SQLException {
+    public synchronized int update(String update) throws SQLException {
         //Beliebiges Update and DB senden und status erhalten
         Statement statement = connection.createStatement();
         int status = statement.executeUpdate(update);

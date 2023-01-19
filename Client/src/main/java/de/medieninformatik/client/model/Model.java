@@ -17,6 +17,14 @@ public class Model {
     private boolean isMainUser = false;
     Request request = Request.getInstance();
 
+    public Model(){
+        startup();
+    }
+
+    private void startup() {
+
+    }
+
     public boolean login(){
         if(isMainUser) return false;
         else {

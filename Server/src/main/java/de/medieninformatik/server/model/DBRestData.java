@@ -2,10 +2,13 @@ package de.medieninformatik.server.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.sql.SQLException;
 
 //Ressourcenpfad
 @Path("data")
@@ -34,21 +37,31 @@ public class DBRestData {
 
     //Realisierung durch verschiedene Paths
     private boolean hasMainUser;
+    //Query handler um Anfragen der Methoden entgegenzunehmen, Daten zu holen und in Objekte zu wandeln
+    private MyQuery query = MyQuery.getInstance();
 
     @GET
-    @Path("test")
+    @Path("book/{isbn}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTest() {
-        Category c = new Category(1);
-        c.setName("myCategory");
-        ObjectMapper mapper = new ObjectMapper();
-        String json = null;
+    public Response getBook(@PathParam("isbn") String isbn) {
         try {
-            json = mapper.writeValueAsString(c);
+            Book book = query.getBookByIsbn(isbn);
+            return sendAsJSON(book);
+        } catch (SQLException e) {
+            System.err.println("Could not retrieve Information from Database.");
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    private Response sendAsJSON(Object obj) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String json = mapper.writeValueAsString(obj);
+            return Response.ok(json).build();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.ok(json).build();
     }
 
     @PUT
@@ -58,11 +71,12 @@ public class DBRestData {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Category c = mapper.readValue(json, Category.class);
-            System.out.println(c);
+            //Put if exists (MyQuery->putIfExists(c))
+            return Response.ok().build();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.ok().build();
     }
 
     @GET
