@@ -38,15 +38,36 @@ public class DBRestData {
     //Realisierung durch verschiedene Paths
     private boolean hasMainUser;
     //Query handler um Anfragen der Methoden entgegenzunehmen, Daten zu holen und in Objekte zu wandeln
-    private MyQuery query = MyQuery.getInstance();
+    private QueryToObject query = QueryToObject.getInstance();
+
+    @GET
+    @Path("book/{from}/{amount}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBookList(@PathParam("from") int from, @PathParam("amount") int amount, @QueryParam("order") String order, @QueryParam("match") String match, @QueryParam("category") String category) {
+        System.err.println("GET BookList from "+from+" to "+amount+" order:"+order+" match:"+match+" category:"+category);
+        try {
+            Book book = query.getBookList(from, amount, order, match, category);
+            return sendAsJSON(book);
+        } catch (RuntimeException e) {
+            System.err.println("Error in Program Logic.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            System.err.println("Could not retrieve Information from Database.");
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+    }
 
     @GET
     @Path("book/{isbn}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBook(@PathParam("isbn") String isbn) {
+        System.err.println("GET " + isbn);
         try {
             Book book = query.getBookByIsbn(isbn);
             return sendAsJSON(book);
+        } catch (RuntimeException e) {
+            System.err.println("Error in Program Logic.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (SQLException e) {
             System.err.println("Could not retrieve Information from Database.");
             return Response.noContent().status(Response.Status.NOT_FOUND).build();

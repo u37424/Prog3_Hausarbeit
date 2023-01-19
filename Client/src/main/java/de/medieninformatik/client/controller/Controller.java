@@ -40,6 +40,7 @@ public class Controller {
         if (model.login()) {
             view.mainUser();
             view.switchToMainScene();
+            model.startup();
         } else btn.setStyle("-fx-background-color: #aa3333");
     }
 }

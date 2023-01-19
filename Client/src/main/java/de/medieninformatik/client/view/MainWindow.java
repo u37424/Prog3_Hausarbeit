@@ -3,12 +3,13 @@ package de.medieninformatik.client.view;
 import de.medieninformatik.client.controller.Controller;
 import de.medieninformatik.client.model.Model;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -25,8 +26,9 @@ public class MainWindow extends Application {
     private Button resetFilterButton;
     private Button logoutButton;
     private Button createButton;
-    private TextArea info;
     private ListView<HBox> list;
+    private Button ascending;
+    private Button descending;
 
     /**
      * The main entry point for all JavaFX applications.
@@ -146,14 +148,12 @@ public class MainWindow extends Application {
         create.setPrefHeight(35);
         this.createButton = create;
 
-        TextArea info = new TextArea();
-        info.setEditable(false);
-        info.setPrefSize(500, 15);
-        info.setStyle("-fx-background-color: #AAAAFF");
-        this.info = info;
+        this.ascending = setOrderButtonStyle("up_arrow.png");
+        this.descending = setOrderButtonStyle("down_arrow.png");
 
         lower.getChildren().add(create);
-        lower.getChildren().add(info);
+        lower.getChildren().add(ascending);
+        lower.getChildren().add(descending);
         box.getChildren().add(2, lower);
 
         Button testBook = new Button("Book View");
@@ -165,6 +165,17 @@ public class MainWindow extends Application {
 
         Scene scene = new Scene(box);
         return scene;
+    }
+
+    private Button setOrderButtonStyle(String image) {
+        ImageView view = new ImageView(image);
+        view.setFitHeight(35);
+        view.setPreserveRatio(true);
+        Button btn = new Button();
+        btn.setPadding(new Insets(0));
+        btn.setPrefHeight(35);
+        btn.setGraphic(view);
+        return btn;
     }
 
     public void switchToMainScene() {

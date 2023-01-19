@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.util.Arrays;
+
 public class Publisher {
     private Publisher[] publishers;
     private int publisherId;
@@ -65,5 +67,16 @@ public class Publisher {
     @JsonSetter("country")
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return "Publisher{" +
+                "publishers=" + Arrays.toString(publishers) +
+                ", publisherId=" + publisherId +
+                ", name='" + name + '\'' +
+                ", foundation=" + foundation +
+                ", country='" + country + '\'' +
+                '}';
     }
 }

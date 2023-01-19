@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.util.Arrays;
+
 public class Author {
     private Author[] authors;
     //private Book[] books;
@@ -89,5 +91,18 @@ public class Author {
     @JsonSetter("age")
     public void setAge(int age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "authors=" + Arrays.toString(authors) +
+                ", authorId=" + authorId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", alias='" + alias + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

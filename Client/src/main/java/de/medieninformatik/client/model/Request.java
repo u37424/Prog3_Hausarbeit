@@ -2,6 +2,8 @@ package de.medieninformatik.client.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -12,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import java.util.ResourceBundle;
 
 public class Request {
@@ -51,11 +54,39 @@ public class Request {
             }
         } catch (RuntimeException e) {
             System.err.println("Error in communication to server.");
-            e.printStackTrace();
         } catch (IOException e) {
             System.err.println("Error in reading Server Response");
-            e.printStackTrace();
         }
+    }
+
+    public Book getBookTest(String isbn) {
+        WebTarget target = getTarget("GET", "/data/book/"+isbn);
+        return (Book) getAsObject(target, new Book(""));
+    }
+
+    public Book getBookListTest(int from, int amount, String order, String match, String category) {
+        WebTarget target = getTarget("GET", "/data/book/"+from+"/"+amount+"?order="+order+"&match="+match+"&category="+category+"");
+        return (Book) getAsObject(target, new Book(""));
+    }
+
+    private Object getAsObject(WebTarget target, Object object) {
+        try {
+            Response response =
+                    target.request().accept(MediaType.APPLICATION_JSON).get();
+            ObjectMapper mapper = new ObjectMapper();
+            if (status(response) == 200 && response.getLength() != 0) {
+                object =  mapper.readValue(response.readEntity(InputStream.class), object.getClass());
+                ObjectWriter w = mapper.writerWithDefaultPrettyPrinter();
+                String s = w.writeValueAsString(object);
+                System.out.println(s);
+                return object;
+            }
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        } catch (IOException e) {
+            System.err.println("Error in reading Server Response");
+        }
+        return null;
     }
 
     public void putTest() {
