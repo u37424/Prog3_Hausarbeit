@@ -2,6 +2,7 @@ package de.medieninformatik.server.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.Publisher;
@@ -98,6 +99,22 @@ public class DBRestData {
         try {
             Publisher publisher = query.getPublisherList();
             return sendAsJSON(publisher);
+        } catch (RuntimeException e) {
+            System.err.println("Error in Program Logic.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            System.err.println("Could not retrieve Information from Database.");
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("author")
+    public Response getAuthors() {
+        System.err.println("GET Authors");
+        try {
+            Author author =  query.getAuthorList();
+            return sendAsJSON(author);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();

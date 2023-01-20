@@ -1,9 +1,13 @@
 package de.medieninformatik.client.model;
 
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.Publisher;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +32,7 @@ public class Model {
     private Book[] books;
     private Category[] categories;
     private Publisher[] publishers;
+    private Author[] authors;
 
     public void startup() {
         displayBook = new Book("");
@@ -39,17 +44,21 @@ public class Model {
     }
 
     public void loadBookList(int start, int amount, String order, String match, String category) {
-        this.books = request.getBookList(start, amount, order, match, category);
+        String queryMatch = URLEncoder.encode(match, StandardCharsets.UTF_8);
+        String queryCategory = URLEncoder.encode(category, StandardCharsets.UTF_8);
+        this.books = request.getBookList(start, amount, order, queryMatch, queryCategory);
     }
 
     public void loadAllCategories() {
-        Category[] categories = request.getCategoryList();
-        this.categories = categories;
+        this.categories = request.getCategoryList();
     }
 
     public void loadAllPublishers() {
-        Publisher[] publishers = request.getPublisherList();
-        this.publishers = publishers;
+        this.publishers = request.getPublisherList();
+    }
+
+    public void loadAllAuthors() {
+        this.authors = request.getAuthorList();
     }
 
     public boolean login() {
@@ -79,13 +88,19 @@ public class Model {
         return new LinkedList<>(List.of(books));
     }
 
-    public LinkedList<String> getCategoryNames() {
-        LinkedList<String> c = new LinkedList<>();
-        c.add("All");
+    public LinkedList<Category> getCategories() {
+        LinkedList<Category> c = new LinkedList<>();
+        c.add(Category.ALL);
         if (categories == null) return c;
-        for (int i = 0; i < categories.length; i++) {
-            c.add(categories[i].getName());
-        }
+        c.addAll(Arrays.asList(categories));
+        return c;
+    }
+
+
+    public LinkedList<Category> getSelectCategories() {
+        LinkedList<Category> c = new LinkedList<>();
+        if (categories == null) return c;
+        c.addAll(Arrays.asList(categories));
         return c;
     }
 
@@ -94,5 +109,16 @@ public class Model {
         if (publishers == null) return p;
         Collections.addAll(p, publishers);
         return p;
+    }
+
+    public void setTemplate() {
+        this.displayBook = Book.NONE;
+    }
+
+    public LinkedList<Author> getAuthorNames() {
+        LinkedList<Author> a = new LinkedList<>();
+        if (authors == null) return a;
+        Collections.addAll(a, authors);
+        return a;
     }
 }

@@ -2,6 +2,7 @@ package de.medieninformatik.client.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.Publisher;
@@ -64,6 +65,13 @@ public class Request {
         Publisher p = (Publisher) getAsObject(target, new Publisher(0));
         if (p == null) return null;
         return p.getPublishers();
+    }
+
+    public Author[] getAuthorList() {
+        WebTarget target = getTarget("GET", "/data/author");
+        Author a = (Author) getAsObject(target, new Author(0));
+        if (a == null) return null;
+        return a.getAuthors();
     }
 
     public void putTest() {

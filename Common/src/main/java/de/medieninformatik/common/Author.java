@@ -8,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.Arrays;
 
 public class Author {
+
+    private final static Author NONE;
     private Author[] authors;
-    //private Book[] books;
 
     private int authorId;
     private String firstName;
@@ -17,6 +18,16 @@ public class Author {
     private String alias;
     private String birthday;
     private int age;
+
+    static {
+        NONE = new Author(0);
+        NONE.setFirstName("First Name");
+        NONE.setLastName("Last Name");
+        NONE.setAlias("Alias");
+        NONE.setBirthday("Birthday");
+        NONE.setAge(0);
+        NONE.setAuthors(new Author[0]);
+    }
 
     @JsonCreator
     public Author(@JsonProperty("authorId") int authorId) {
@@ -95,14 +106,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" +
-                "authors=" + Arrays.toString(authors) +
-                ", authorId=" + authorId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", alias='" + alias + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", age=" + age +
-                '}';
+        return firstName+ " "+lastName;
     }
 }

@@ -5,12 +5,17 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.Arrays;
-
 public class Category {
+    public static final Category ALL;
     private Category[] categories;
     private int categoryId;
     private String name;
+
+    static {
+        ALL = new Category(0);
+        ALL.setName("ALL");
+        ALL.setCategories(new Category[0]);
+    }
 
     @JsonCreator
     public Category(@JsonProperty("categoryId") int categoryId) {
@@ -49,8 +54,6 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{categoryId=" + categoryId +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

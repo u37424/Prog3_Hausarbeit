@@ -2,10 +2,14 @@ package de.medieninformatik.client.controller;
 
 import de.medieninformatik.client.model.Model;
 import de.medieninformatik.client.view.MainWindow;
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
+import de.medieninformatik.common.Category;
 import de.medieninformatik.common.Publisher;
 
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class Controller {
     private final Model model;
@@ -54,7 +58,10 @@ public class Controller {
         scene = 1;
         model.startup();
         loadBookList();
-        view.setCategoryNames(model.getCategoryNames());
+        LinkedList<Category> categories = model.getCategories();
+        LinkedList<String> categoryNames = new LinkedList<>();
+        categories.forEach(c -> categoryNames.add(c.getName()));
+        view.setCategoryNames(categoryNames);
     }
 
     public void toLoginView() {
@@ -95,16 +102,14 @@ public class Controller {
     public void updateFilters(String filterString, String category) {
         if (filterString == null) filterString = "";
         if (category == null) category = "";
-        filterString = filterString.replace(" ", "+");
-        category = category.replace(" ", "+");
-        if (this.filterString == filterString && this.category == category) return;
+        if (this.filterString.equals(filterString) && this.category.equals(category)) return;
         this.filterString = filterString;
         this.category = category;
         loadBookList();
     }
 
     public void updateOrder(String order) {
-        if (this.order == order) return;
+        if (this.order.equals(order)) return;
         this.order = order;
         loadBookList();
     }
@@ -145,7 +150,10 @@ public class Controller {
     }
 
     public void createEntry() {
-
+        model.setTemplate();
+        view.switchToBookScene(model.getDisplayBook());
+        view.setEditMode();
+        edit = true;
     }
 
     public boolean isMainUser() {
@@ -154,19 +162,12 @@ public class Controller {
 
     public void editBookValue(String label) {
         switch (label) {
-            case "title":
-                editTitle();
-                break;
-            case "year":
-                editYear();
-                break;
-            case "pages":
-                editPages();
-                break;
-            case "isbn":
-                editIsbn();
-                break;
+            case "title" -> editTitle();
+            case "year" -> editYear();
+            case "pages" -> editPages();
+            case "isbn" -> editIsbn();
         }
+        view.updateBook(model.getDisplayBook());
     }
 
     private void editIsbn() {
@@ -176,12 +177,20 @@ public class Controller {
 
     private void editPages() {
         String newPages = view.editTextMessage("Edit Pages", String.valueOf(model.getDisplayBook().getPages()));
-        model.getDisplayBook().setPages(Integer.parseInt(newPages));
+        try {
+            model.getDisplayBook().setPages(Integer.parseInt(newPages));
+        } catch (NumberFormatException e) {
+            view.errorMessage("Not a Number!");
+        }
     }
 
     private void editYear() {
         String newYear = view.editTextMessage("Edit Year", String.valueOf(model.getDisplayBook().getReleaseYear()));
-        model.getDisplayBook().setReleaseYear(Integer.parseInt(newYear));
+        try {
+            model.getDisplayBook().setReleaseYear(Integer.parseInt(newYear));
+        } catch (NumberFormatException e) {
+            view.errorMessage("Not a Number!");
+        }
     }
 
     private void editTitle() {
@@ -194,5 +203,85 @@ public class Controller {
         LinkedList<Publisher> publishers = model.getPublishers();
         Publisher newPublisher = view.editChoiceMessage("Select Publisher", model.getDisplayBook().getPublisher(), publishers);
         model.getDisplayBook().setPublisher(newPublisher);
+        view.updateBook(model.getDisplayBook());
+    }
+
+    public void editBookDescription(String description) {
+        model.getDisplayBook().setDescription(description);
+    }
+
+    public void addCategory() {
+        model.loadAllCategories();
+        Category c = view.editChoiceMessage("Add Category", null, model.getSelectCategories());
+        if (c == null) return;
+        if (hasCategory(c)) view.infoMessage("Category already exists for this Element!");
+        else {
+            int index = model.getDisplayBook().getCategories().length;
+            Category[] current = model.getDisplayBook().getCategories();
+            model.getDisplayBook().setCategories(Arrays.copyOf(current, index + 1));
+            model.getDisplayBook().getCategories()[index] = c;
+            view.updateBook(model.getDisplayBook());
+        }
+    }
+
+    private boolean hasCategory(Category category) {
+        if (model.getDisplayBook().getCategories().length == 0) return false;
+        for (Category c : model.getDisplayBook().getCategories()) {
+            if (c.getCategoryId() == category.getCategoryId()) return true;
+        }
+        return false;
+    }
+
+    public void removeCategory(int index) {
+        if (model.getDisplayBook().getCategories().length == 1) {
+            view.errorMessage("You need at least one Category!");
+            return;
+        }
+        model.getDisplayBook().getCategories()[index] = null;
+        Category[] noNull = Arrays.stream(model.getDisplayBook().getCategories())
+                .filter(Objects::nonNull)
+                .toArray(Category[]::new);
+        model.getDisplayBook().setCategories(noNull);
+        view.updateBook(model.getDisplayBook());
+    }
+
+    public void addAuthor() {
+        model.loadAllAuthors();
+        Author a = view.editChoiceMessage("Add Author", null, model.getAuthorNames());
+        if (a == null) return;
+        if (hasAuthor(a))
+            view.infoMessage("Author already exists for this Element!");
+        else {
+            int index = model.getDisplayBook().getAuthors().length;
+            Author[] current = model.getDisplayBook().getAuthors();
+            model.getDisplayBook().setAuthors(Arrays.copyOf(current, index + 1));
+            model.getDisplayBook().getAuthors()[index] = a;
+            view.updateBook(model.getDisplayBook());
+        }
+    }
+
+    private boolean hasAuthor(Author author) {
+        if (model.getDisplayBook().getAuthors().length == 0) return false;
+        for (Author a : model.getDisplayBook().getAuthors()) {
+            if (a.getAuthorId() == author.getAuthorId()) return true;
+        }
+        return false;
+    }
+
+    public void removeAuthor(int index) {
+        if (model.getDisplayBook().getAuthors().length == 1) {
+            view.errorMessage("You need at least one Author!");
+            return;
+        }
+        model.getDisplayBook().getAuthors()[index] = null;
+        Author[] noNull = Arrays.stream(model.getDisplayBook().getAuthors())
+                .filter(Objects::nonNull)
+                .toArray(Author[]::new);
+        model.getDisplayBook().setAuthors(noNull);
+        view.updateBook(model.getDisplayBook());
+    }
+
+    public void updateEntry() {
+
     }
 }

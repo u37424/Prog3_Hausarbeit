@@ -17,7 +17,6 @@ public class QueryToObject {
         connection = DBConnection.getInstance();
     }
 
-
     public static QueryToObject getInstance() {
         return instance;
     }
@@ -71,6 +70,15 @@ public class QueryToObject {
         return publishers;
     }
 
+    public Author getAuthorList() throws SQLException {
+        Author authors = new Author(0);
+        LinkedList<Author> authorList = new LinkedList<>();
+        ResultSet authorSet = connection.query("SELECT Author_ID, First_Name, Last_Name, Alias, Birthday, Age FROM authors;");
+        convertAuthorsForList(authorList, authorSet);
+        authors.setAuthors(authorList.toArray(new Author[0]));
+        return authors;
+    }
+
     private void convertBooksForList(LinkedList<Book> list, ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             Book book;
@@ -96,13 +104,13 @@ public class QueryToObject {
             ResultSet authorSet = connection.query("SELECT a.Author_ID, a.First_Name, a.Last_Name, a.Alias, a.Birthday, a.Age" +
                     " FROM authors a, book_authors ba" +
                     " WHERE ba.ISBN = \"" + isbn + "\" AND ba.Author_ID = a.Author_ID;");
-            convertAuthorForList(authors, authorSet);
+            convertAuthorsForList(authors, authorSet);
 
             LinkedList<Category> categories = new LinkedList<>();
 
             ResultSet categorySet = connection.query("SELECT c.Category_ID, c.Name" +
                     " FROM categories c, books b, book_categories bc" +
-                    " WHERE bc.ISBN = b.ISBN AND bc.Category_Id = c.Category_Id AND b.ISBN = '"+isbn+"';");
+                    " WHERE bc.ISBN = b.ISBN AND bc.Category_Id = c.Category_Id AND b.ISBN = '" + isbn + "';");
             convertCategoriesForList(categories, categorySet);
 
             book = new Book(isbn);
@@ -132,7 +140,7 @@ public class QueryToObject {
         }
     }
 
-    private void convertAuthorForList(LinkedList<Author> list, ResultSet resultSet) throws SQLException {
+    private void convertAuthorsForList(LinkedList<Author> list, ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             int authorId = resultSet.getInt(1);
             String firstName = resultSet.getString(2);

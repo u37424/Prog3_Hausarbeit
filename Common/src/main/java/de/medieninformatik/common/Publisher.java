@@ -5,14 +5,21 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.Arrays;
-
 public class Publisher {
+    public static final Publisher NONE;
     private Publisher[] publishers;
     private int publisherId;
     private String name;
     private int foundation;
     private String country;
+
+    static {
+        NONE = new Publisher(0);
+        NONE.setName("Publisher Name");
+        NONE.setCountry("Publisher Country");
+        NONE.setFoundation(0);
+        NONE.setPublishers(new Publisher[0]);
+    }
 
     @JsonCreator
     public Publisher(@JsonProperty("publisherId") int publisherId) {
@@ -71,12 +78,6 @@ public class Publisher {
 
     @Override
     public String toString() {
-        return "Publisher{" +
-                "publishers=" + Arrays.toString(publishers) +
-                ", publisherId=" + publisherId +
-                ", name='" + name + '\'' +
-                ", foundation=" + foundation +
-                ", country='" + country + '\'' +
-                '}';
+        return name + " (" + country + ")";
     }
 }
