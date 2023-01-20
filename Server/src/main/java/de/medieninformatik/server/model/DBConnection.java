@@ -18,7 +18,7 @@ public class DBConnection {
     private DBConnection() {
         //Connection aufbauen
         connection = getConnection();
-        if(connection == null) return;
+        if (connection == null) return;
         //Datenbankinitialisierung bei Bedarf
         setupDatabase();
     }
@@ -52,7 +52,7 @@ public class DBConnection {
             if (set.next()) {
                 int tables = set.getInt(1);
                 //Wenn leer, dann befuellen
-                if (tables == 0) initDatabase();
+                if (tables != 6) initDatabase();
                 else System.err.println("Data found.");
             }
             statement.close();

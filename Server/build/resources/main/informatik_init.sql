@@ -44,7 +44,8 @@ CREATE TABLE Publishers (
   Publisher_ID INTEGER PRIMARY KEY AUTO_INCREMENT,
   Name VARCHAR(255) NOT NULL,
   Year_of_Foundation INTEGER,
-  Main_Country VARCHAR(255) NOT NULL
+  Main_Country VARCHAR(255) NOT NULL,
+  UNIQUE (Name, Year_of_Foundation, Main_Country)
 );
 
 INSERT INTO Publishers (Publisher_ID, Name, Year_of_Foundation, Main_Country)
@@ -134,7 +135,7 @@ INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Descr
 VALUES ('978-0-9847828-6-7', 'Cracking the Coding Interview', 4, 2015, 664, 4.0, 'A guide to preparing for technical interviews in the software industry.');
 
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
-VALUES ('978-0-201-63361-0', 'Design Patterns: Elements of Reusable Object-Oriented Software', 1, 1994, 395, 4.5, '	A collection of design patterns for creating object-oriented software.');
+VALUES ('978-0-201-63361-0', 'Design Patterns: Elements of Reusable Object-Oriented Software', 1, 1994, 395, 4.5, 'A guidebook that describes 23 classic software design patterns, which are reusable solutions to common software development problems.');
 
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
 VALUES ('978-0132350884', 'Clean Code: A Handbook of Agile Software Craftsmanship', 5, 2008, 464, 4.5, 'Best practices for writing clean and maintainable code.');
@@ -161,7 +162,7 @@ INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Descr
 VALUES ('978-0-596-51517-6', 'CSS: The Missing Manual', 5, 2009, 504, 4.0, 'A guide to using Cascading Style Sheets (CSS) to style and layout web pages.');
 
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
-VALUES ('978-1-491-91712-7', 'JavaScript and JQuery: Interactive Front-End Web Development', 5, 2014, 504, 4.5, 'Interactive Front-End Web Development using JavaScript and JQuery.');
+VALUES ('978-1-491-91712-7', 'The Complete Guide to Angular', 3, 2019, 728, 4.7, 'Learn Angular from the ground up and build real-world applications.');
 
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
 VALUES ('978-0-13-235088-4', 'Computer Science: An Overview', 3, 2012, 1088, 4.5, 'An overview of computer science concepts.');
@@ -212,15 +213,15 @@ INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Descr
 VALUES ('978-0-262-58307-6', 'Superintelligence: Paths, Dangers, Strategies', 2, 2014, 512, 4.0, 'A discussion on the potential risks and benefits of artificial superintelligence and strategies to manage it.');
 
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
-VALUES ('978-1-566-19-853-5', 'The 7 Habits of Highly Effective People', 7, 1989, 432, 4.8, 'A self-help book that teaches the seven habits to be effective in personal and professional life.');
-
+VALUES ('978-1-566-19-853-5', 'Operating System Concepts', 7, 1992, 944, 4.5, 'A comprehensive textbook that covers the fundamental concepts of operating systems, including process management, memory management, file systems and security.');
 CREATE TABLE Authors (
   Author_ID INTEGER PRIMARY KEY AUTO_INCREMENT,
   First_Name VARCHAR(255) NOT NULL,
   Last_Name VARCHAR(255) NOT NULL,
   Alias VARCHAR(255),
   Birthday DATE NOT NULL,
-  Age INTEGER
+  Age INTEGER,
+  UNIQUE (First_Name, Last_Name, Alias, Birthday, Age)
 );
 
 ALTER TABLE Authors
@@ -302,13 +303,13 @@ INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
 VALUES (25, 'Jon', 'Duckett', 'J. Duckett', '1983-01-01', 39);
 
 INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
-VALUES (26, 'Mark', 'Lutz', 'M. Lutz', '1968-03-02', 54);
+VALUES (26, 'Donald', 'Knuth', 'D. Knuth', '1938-01-10', 85);
 
 INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
 VALUES (27, 'Ian', 'F. Darwin', 'I. F. Darwin', '1955-08-01', 67);
 
 INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
-VALUES (28, 'David', 'Flanagan', 'D. Flanagan', '1962-05-13', 60);
+VALUES (28, 'Edsger', 'Dijkstra', 'E. Dijkstra', '1930-05-11', 93);
 
 INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
 VALUES (29, 'Douglas', 'Crockford', 'D. Crockford', '1955-07-01', 67);
@@ -510,7 +511,7 @@ INSERT INTO Book_Categories (ISBN, Category_ID)
 VALUES ('978-0-596-15806-1', 8);
 
 INSERT INTO Book_Categories (ISBN, Category_ID)
-VALUES ('978-1-566-19-853-5', 8);
+VALUES ('978-1-566-19-853-5', 9);
 
 INSERT INTO Book_Categories (ISBN, Category_ID)
 VALUES ('978-1-491-90766-7', 7);

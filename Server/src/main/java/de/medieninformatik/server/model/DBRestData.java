@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
+import de.medieninformatik.common.Publisher;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -44,7 +45,7 @@ public class DBRestData {
     @Path("book/{from}/{amount}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBookList(@PathParam("from") int from, @PathParam("amount") int amount, @QueryParam("order") String order, @QueryParam("match") String match, @QueryParam("category") String category) {
-        System.err.println("GET BookList from "+from+" to "+amount+" order:"+order+" match:"+match+" category:"+category);
+        System.err.println("GET BookList from " + from + " to " + amount + " order:" + order + " match:" + match + " category:" + category);
         try {
             Book book = query.getBookList(from, amount, order, match, category);
             return sendAsJSON(book);
@@ -63,7 +64,7 @@ public class DBRestData {
     public Response getBook(@PathParam("isbn") String isbn) {
         System.err.println("GET " + isbn);
         try {
-            Book book = query.getBookByIsbn(isbn);
+            Book book = query.getAllBookData(isbn);
             return sendAsJSON(book);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
@@ -74,7 +75,39 @@ public class DBRestData {
         }
     }
 
-    private Response sendAsJSON(Object obj) {
+    @GET
+    @Path("category")
+    public Response getCategories() {
+        System.err.println("GET Categories");
+        try {
+            Category category = query.getCategoryList();
+            return sendAsJSON(category);
+        } catch (RuntimeException e) {
+            System.err.println("Error in Program Logic.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            System.err.println("Could not retrieve Information from Database.");
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
+    @Path("publisher")
+    public Response getPublishers() {
+        System.err.println("GET Publishers");
+        try {
+            Publisher publisher = query.getPublisherList();
+            return sendAsJSON(publisher);
+        } catch (RuntimeException e) {
+            System.err.println("Error in Program Logic.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            System.err.println("Could not retrieve Information from Database.");
+            return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    private<T> Response sendAsJSON(T obj) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String json = mapper.writeValueAsString(obj);

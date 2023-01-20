@@ -1,6 +1,5 @@
 package de.medieninformatik.server.program;
 
-import de.medieninformatik.server.model.DBConnection;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;

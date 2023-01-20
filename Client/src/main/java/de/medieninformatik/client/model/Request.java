@@ -2,9 +2,9 @@ package de.medieninformatik.client.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
+import de.medieninformatik.common.Publisher;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -14,7 +14,6 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.util.ResourceBundle;
 
 public class Request {
@@ -41,52 +40,30 @@ public class Request {
         this.client = ClientBuilder.newClient();
     }
 
-    //Versionen: getBook, getTitleList, getCategories...
-    public void getTest() {
-        WebTarget target = getTarget("GET", "/data/test");
-        try {
-            Response response =
-                    target.request().accept(MediaType.APPLICATION_JSON).get();
-            ObjectMapper mapper = new ObjectMapper();
-            if (status(response) == 200 && response.getLength() != 0) {
-                Category cat = mapper.readValue(response.readEntity(InputStream.class), Category.class);
-                System.out.println(cat);
-            }
-        } catch (RuntimeException e) {
-            System.err.println("Error in communication to server.");
-        } catch (IOException e) {
-            System.err.println("Error in reading Server Response");
-        }
-    }
-
-    public Book getBookTest(String isbn) {
-        WebTarget target = getTarget("GET", "/data/book/"+isbn);
+    public Book getBook(String isbn) {
+        WebTarget target = getTarget("GET", "/data/book/" + isbn);
         return (Book) getAsObject(target, new Book(""));
     }
 
-    public Book getBookListTest(int from, int amount, String order, String match, String category) {
-        WebTarget target = getTarget("GET", "/data/book/"+from+"/"+amount+"?order="+order+"&match="+match+"&category="+category+"");
-        return (Book) getAsObject(target, new Book(""));
+    public Book[] getBookList(int from, int amount, String order, String match, String category) {
+        WebTarget target = getTarget("GET", "/data/book/" + from + "/" + amount + "?order=" + order + "&match=" + match + "&category=" + category + "");
+        Book b = (Book) getAsObject(target, new Book(""));
+        if (b == null) return null;
+        return b.getBooks();
     }
 
-    private Object getAsObject(WebTarget target, Object object) {
-        try {
-            Response response =
-                    target.request().accept(MediaType.APPLICATION_JSON).get();
-            ObjectMapper mapper = new ObjectMapper();
-            if (status(response) == 200 && response.getLength() != 0) {
-                object =  mapper.readValue(response.readEntity(InputStream.class), object.getClass());
-                ObjectWriter w = mapper.writerWithDefaultPrettyPrinter();
-                String s = w.writeValueAsString(object);
-                System.out.println(s);
-                return object;
-            }
-        } catch (RuntimeException e) {
-            System.err.println("Error in communication to server.");
-        } catch (IOException e) {
-            System.err.println("Error in reading Server Response");
-        }
-        return null;
+    public Category[] getCategoryList() {
+        WebTarget target = getTarget("GET", "/data/category");
+        Category c = (Category) getAsObject(target, new Category(0));
+        if (c == null) return null;
+        return c.getCategories();
+    }
+
+    public Publisher[] getPublisherList() {
+        WebTarget target = getTarget("GET", "/data/publisher");
+        Publisher p = (Publisher) getAsObject(target, new Publisher(0));
+        if (p == null) return null;
+        return p.getPublishers();
     }
 
     public void putTest() {
@@ -116,18 +93,30 @@ public class Request {
         return isOk(target);
     }
 
-    private boolean isOk(WebTarget target) {
+    private Object getAsObject(WebTarget target, Object object) {
         try {
-            Response response =
-                    target.request().accept(MediaType.APPLICATION_JSON).get();
-            if (status(response) == 200) {
-                return true;
+            Response response = target.request().accept(MediaType.APPLICATION_JSON).get();
+            ObjectMapper mapper = new ObjectMapper();
+            if (status(response) == 200 && response.getLength() != 0) {
+                object = mapper.readValue(response.readEntity(InputStream.class), object.getClass());
+                return object;
             }
-            return false;
         } catch (RuntimeException e) {
             System.err.println("Error in communication to server.");
-            return false;
+        } catch (IOException e) {
+            System.err.println("Error in reading Server Response");
         }
+        return null;
+    }
+
+    private boolean isOk(WebTarget target) {
+        try {
+            Response response = target.request().accept(MediaType.APPLICATION_JSON).get();
+            if (status(response) == 200) return true;
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        }
+        return false;
     }
 
     private WebTarget getTarget(String crud, String uri) {
