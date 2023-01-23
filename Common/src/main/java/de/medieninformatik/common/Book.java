@@ -22,8 +22,8 @@ public class Book {
     private Author[] authors;
 
     static {
-        NONE = new Book("ISBN");
-        NONE.setTitle("Title");
+        NONE = new Book("   ");
+        NONE.setTitle("   ");
         NONE.setReleaseYear(0);
         NONE.setPages(0);
         NONE.setPublisher(Publisher.NONE);

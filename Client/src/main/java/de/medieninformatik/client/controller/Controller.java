@@ -107,6 +107,7 @@ public class Controller {
         if (this.filterString.equals(filterString) && this.category.equals(category)) return;
         this.filterString = filterString;
         this.category = category;
+        this.listStart = 0;
         showBookList();
     }
 
@@ -131,7 +132,7 @@ public class Controller {
     }
 
     public void deleteBook(String isbn) {
-        if(!model.deleteBook(isbn)) view.errorMessage("Couldn't delete Book from Database!");
+        if (!model.deleteBook(isbn)) view.errorMessage("Couldn't delete Book from Database!");
         else showBookList();
     }
 
@@ -286,7 +287,14 @@ public class Controller {
 
     public void updateEntry() {
         Book book = model.getDisplayBook();
-        if (book.getTitle().isBlank()) view.infoMessage("Yor Entry needs to have a Title!");
+        if (book.getTitle().isBlank()) {
+            view.infoMessage("Yor Entry needs to have a Title!");
+            return;
+        }
+        if (book.getIsbn().isBlank()) {
+            view.infoMessage("Yor Entry needs to have a ISBN!");
+            return;
+        }
         if (book.getPublisher() == Publisher.NONE) {
             view.infoMessage("You need to have a Publisher!");
             return;
@@ -299,8 +307,8 @@ public class Controller {
             view.infoMessage("You need to have at least one Author!");
             return;
         }
-        if(create) createSubmit();
-        else if(edit) editSubmit();
+        if (create) createSubmit();
+        else if (edit) editSubmit();
     }
 
     private void editSubmit() {
