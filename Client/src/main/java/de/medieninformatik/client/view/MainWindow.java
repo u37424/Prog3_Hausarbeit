@@ -7,6 +7,7 @@ import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -14,16 +15,20 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.SpinnerSkin;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 public class MainWindow extends Application {
@@ -57,6 +62,9 @@ public class MainWindow extends Application {
     private HBox bookAuthors;
     private LinkedList<HBox> bookValues = new LinkedList<>();
     private Button submitEdit;
+    private Button backSide;
+    private Button forwardSide;
+    private ComboBox<Integer> listSize;
 
     /**
      * The main entry point for all JavaFX applications.
@@ -201,13 +209,33 @@ public class MainWindow extends Application {
             ascending.setStyle("-fx-border-style: none;");
         }));
 
-        Button create = setButtonImage("create.png", 35);
-        create.setPrefHeight(35);
+        Button backSide = setButtonImage("left_arrow.png", 20);
+        backSide.setPrefHeight(20);
+        backSide.setOnAction((event -> controller.backSide()));
+        this.backSide = backSide;
+
+        Button forwardSide = setButtonImage("right_arrow.png", 20);
+        forwardSide.setPrefHeight(20);
+        forwardSide.setOnAction((event -> controller.forwardSide()));
+        this.forwardSide = forwardSide;
+
+        final ComboBox<Integer> listSize = new ComboBox<>();
+        listSize.setPrefSize(35,20);
+        listSize.setPadding(new Insets(-5));
+        ObservableList<Integer> items = FXCollections.observableList(List.of(5,10,15,20,25,50,75,100));
+        listSize.setItems(items);
+        listSize.setOnAction(e -> controller.updateListSize(listSize.getValue()));
+        this.listSize = listSize;
+
+        Button create = setButtonImage("create.png", 30);
+        create.setPrefHeight(20);
+        create.setPrefHeight(30);
         create.setOnAction((event -> controller.createEntry()));
         create.setVisible(false);
+        create.setShape(new Circle(15));
         this.createButton = create;
 
-        lower.getChildren().addAll(ascending, descending, create);
+        lower.getChildren().addAll(ascending, descending, backSide, listSize, forwardSide, create);
 
         box.getChildren().add(2, lower);
 
@@ -251,6 +279,7 @@ public class MainWindow extends Application {
         Button leave = setButtonImage("back.png", 25);
         leave.setOnAction((event -> controller.toMainView()));
         leave.setFocusTraversable(false);
+        leave.setShape(new Circle(12.5));
         this.bookLeaveButton = leave;
 
         HBox title = getDataField("", "title", 1000 - 25);
@@ -338,16 +367,17 @@ public class MainWindow extends Application {
         bottom.setPrefWidth(30);
         bottom.setPadding(new Insets(4));
 
-        Button submitEdit = setButtonImage("check.png",30);
-        submitEdit.setStyle(submitEdit.getStyle()+"-fx-background-color:#63b08a; -fx-text-fill: black;-fx-font-size: 14px;-fx-padding: 3;");
-        submitEdit.setPrefSize(30,30);
+        Button submitEdit = setButtonImage("check.png", 30);
+        submitEdit.setStyle(submitEdit.getStyle() + "-fx-background-color:#63b08a; -fx-text-fill: black;-fx-font-size: 14px;-fx-padding: 3;");
+        submitEdit.setPrefSize(30, 30);
         submitEdit.setOnAction(event -> controller.updateEntry());
         submitEdit.setVisible(false);
+        submitEdit.setShape(new Circle(15));
         this.submitEdit = submitEdit;
 
         bottom.getChildren().add(submitEdit);
 
-        box.getChildren().addAll(titelZeile, s, data, s2, categories, s3, authors, s4, description,bottom);
+        box.getChildren().addAll(titelZeile, s, data, s2, categories, s3, authors, s4, description, bottom);
 
         box.setPrefSize(1000, 800);
         Scene scene = new Scene(box);
@@ -413,6 +443,7 @@ public class MainWindow extends Application {
         if (categories == null) return;
         for (int i = 0; i < categories.length; i++) {
             HBox container = new HBox();
+            container.setAlignment(Pos.CENTER);
             container.setSpacing(5);
             Label category = new Label(categories[i].getName());
             container.getChildren().add(category);
@@ -426,6 +457,7 @@ public class MainWindow extends Application {
         if (authors == null) return;
         for (int i = 0; i < authors.length; i++) {
             HBox container = new HBox();
+            container.setAlignment(Pos.CENTER);
             container.setSpacing(5);
             Label author = new Label(authors[i].getFirstName() + " " + authors[i].getLastName());
             container.getChildren().add(author);
@@ -546,13 +578,13 @@ public class MainWindow extends Application {
             concreteRating.setPrefWidth(20);
 
             Button edit = setButtonImage("edit.png", 15);
-            edit.setStyle(edit.getStyle()+"-fx-background-color: #63b08a;");
+            edit.setStyle(edit.getStyle() + "-fx-background-color: #63b08a;");
             edit.setOnAction((e) -> controller.editBook(book.getIsbn()));
             edit.setPrefWidth(15);
             edit.setVisible(controller.isMainUser());
 
             Button delete = setButtonImage("delete.png", 15);
-            delete.setStyle(delete.getStyle()+"-fx-background-color: #a85252;");
+            delete.setStyle(delete.getStyle() + "-fx-background-color: #a85252;");
             delete.setOnAction((e) -> {
                 if (confirmAction("Delete Entry", "Do you want to delete \"" + book.getTitle() + "\" from the Database?"))
                     controller.deleteBook(book.getIsbn());
@@ -655,5 +687,9 @@ public class MainWindow extends Application {
         choiceDialog.setContentText(message);
         Optional<T> result = choiceDialog.showAndWait();
         return result.isEmpty() ? def : result.get();
+    }
+
+    public void setDefaultListLength(int size) {
+        this.listSize.setValue(size);
     }
 }

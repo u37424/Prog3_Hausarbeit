@@ -40,7 +40,8 @@ public class DBRestData {
     //Realisierung durch verschiedene Paths
     private boolean hasMainUser;
     //Query handler um Anfragen der Methoden entgegenzunehmen, Daten zu holen und in Objekte zu wandeln
-    private QueryToObject query = QueryToObject.getInstance();
+    private QueryToObject queryToObject = QueryToObject.getInstance();
+    private ObjectToQuery objectToQuery = ObjectToQuery.getInstance();
 
     @GET
     @Path("book/{from}/{amount}")
@@ -48,7 +49,7 @@ public class DBRestData {
     public Response getBookList(@PathParam("from") int from, @PathParam("amount") int amount, @QueryParam("order") String order, @QueryParam("match") String match, @QueryParam("category") String category) {
         System.err.println("GET BookList from " + from + " to " + amount + " order:" + order + " match:" + match + " category:" + category);
         try {
-            Book book = query.getBookList(from, amount, order, match, category);
+            Book book = queryToObject.getBookList(from, amount, order, match, category);
             return sendAsJSON(book);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
@@ -65,7 +66,7 @@ public class DBRestData {
     public Response getBook(@PathParam("isbn") String isbn) {
         System.err.println("GET " + isbn);
         try {
-            Book book = query.getAllBookData(isbn);
+            Book book = queryToObject.getAllBookData(isbn);
             return sendAsJSON(book);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
@@ -81,7 +82,7 @@ public class DBRestData {
     public Response getCategories() {
         System.err.println("GET Categories");
         try {
-            Category category = query.getCategoryList();
+            Category category = queryToObject.getCategoryList();
             return sendAsJSON(category);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
@@ -97,7 +98,7 @@ public class DBRestData {
     public Response getPublishers() {
         System.err.println("GET Publishers");
         try {
-            Publisher publisher = query.getPublisherList();
+            Publisher publisher = queryToObject.getPublisherList();
             return sendAsJSON(publisher);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
@@ -113,7 +114,7 @@ public class DBRestData {
     public Response getAuthors() {
         System.err.println("GET Authors");
         try {
-            Author author =  query.getAuthorList();
+            Author author = queryToObject.getAuthorList();
             return sendAsJSON(author);
         } catch (RuntimeException e) {
             System.err.println("Error in Program Logic.");
@@ -124,7 +125,7 @@ public class DBRestData {
         }
     }
 
-    private<T> Response sendAsJSON(T obj) {
+    private <T> Response sendAsJSON(T obj) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String json = mapper.writeValueAsString(obj);
@@ -148,6 +149,54 @@ public class DBRestData {
             e.printStackTrace();
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PUT
+    @Path("book")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateBook(String json) {
+        System.err.println("PUT Book");
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Book book = mapper.readValue(json, Book.class);
+            if (objectToQuery.putBook(book)) return Response.ok().build();
+        } catch (JsonProcessingException e) {
+            System.err.println("Couldn't read Update Object.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            System.err.println("Couldn't update Object!");
+        }
+        return Response.noContent().status(Response.Status.NOT_FOUND).build();
+    }
+
+    @POST
+    @Path("book")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createBook(String json) {
+        System.err.println("POST Book");
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Book book = mapper.readValue(json, Book.class);
+            if (objectToQuery.postBook(book)) return Response.ok().build();
+        } catch (JsonProcessingException e) {
+            System.err.println("Couldn't read Post Object.");
+            return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            System.err.println("Couldn't create new Object.");
+        }
+        return Response.noContent().status(Response.Status.NOT_FOUND).build();
+    }
+
+    @DELETE
+    @Path("book/{isbn}")
+    public Response deleteBook(@PathParam("isbn") String isbn) {
+        System.err.println("DELETE Book");
+        try {
+            if (objectToQuery.deleteBook(isbn)) return Response.ok().build();
+        } catch (SQLException e) {
+            System.err.println("Couldn't delete specified Object.");
+        }
+        return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
     @GET

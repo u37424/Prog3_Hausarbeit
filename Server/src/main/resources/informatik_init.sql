@@ -118,7 +118,7 @@ CREATE TABLE Books (
   Release_Year INTEGER,
   Pages INTEGER NOT NULL,
   Rating FLOAT(2,1),
-  Description VARCHAR(255),
+  Description TEXT,
   FOREIGN KEY (Publisher_ID) REFERENCES Publishers(Publisher_ID)
 );
 

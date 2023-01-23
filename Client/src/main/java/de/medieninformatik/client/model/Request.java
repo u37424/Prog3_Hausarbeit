@@ -91,6 +91,45 @@ public class Request {
         }
     }
 
+    public boolean putEntry(Book displayBook) {
+        WebTarget target = getTarget("PUT", "/data/book");
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(displayBook);
+            Response response = target.request().put(Entity.entity(json, MediaType.APPLICATION_JSON));
+            if (status(response) == 200) return true;
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        } catch (JsonProcessingException e) {
+            System.err.println("Error with writing JSON Object.");
+        }
+        return false;
+    }
+
+    public boolean postEntry(Book displayBook) {
+        WebTarget target = getTarget("POST", "/data/book");
+        ObjectMapper mapper = new ObjectMapper();
+        String json;
+        try {
+            json = mapper.writeValueAsString(displayBook);
+            Response response = target.request().post(Entity.entity(json, MediaType.APPLICATION_JSON));
+            if (status(response) == 200) return true;
+        } catch (RuntimeException e) {
+            System.err.println("Error in communication to server.");
+        } catch (JsonProcessingException e) {
+            System.err.println("Error with writing JSON Object.");
+        }
+        return false;
+    }
+
+    public boolean deleteEntry(String isbn) {
+        WebTarget target = getTarget("DELETE", "/data/book/" + isbn);
+        Response response = target.request().delete();
+        if(status(response) == 200) return true;
+        return false;
+    }
+
     public boolean login() {
         WebTarget target = getTarget("GET", "/data/login");
         return isOk(target);

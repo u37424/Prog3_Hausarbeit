@@ -54,10 +54,11 @@ public class Controller {
     }
 
     public void startup() {
+        view.setDefaultListLength(10);
         view.switchToMainScene();
         scene = 1;
         model.startup();
-        loadBookList();
+        showBookList();
         LinkedList<Category> categories = model.getCategories();
         LinkedList<String> categoryNames = new LinkedList<>();
         categories.forEach(c -> categoryNames.add(c.getName()));
@@ -77,26 +78,27 @@ public class Controller {
             boolean leave_edit = view.confirmAction("Leave Edit", "All unsaved changes get lost!");
             if (!leave_edit) return;
             this.edit = false;
+            this.create = false;
             view.setNonEditMode();
         }
         view.switchToMainScene();
         scene = 1;
     }
 
-    public void incrementListStart(int listStart) {
+    public void forwardSide() {
         this.listStart += this.listLength;
-        loadBookList();
+        showBookList();
     }
 
-    public void decrementListStart(int listStart) {
+    public void backSide() {
         this.listStart -= this.listLength;
         if (this.listStart < 0) this.listStart = 0;
-        loadBookList();
+        showBookList();
     }
 
-    public void updateListLimit(int amount) {
+    public void updateListSize(int amount) {
         this.listLength = amount;
-        loadBookList();
+        showBookList();
     }
 
     public void updateFilters(String filterString, String category) {
@@ -105,21 +107,20 @@ public class Controller {
         if (this.filterString.equals(filterString) && this.category.equals(category)) return;
         this.filterString = filterString;
         this.category = category;
-        loadBookList();
+        showBookList();
     }
 
     public void updateOrder(String order) {
         if (this.order.equals(order)) return;
         this.order = order;
-        loadBookList();
+        showBookList();
     }
 
-    private void loadBookList() {
+    private void showBookList() {
         model.loadBookList(listStart, listLength, order, filterString, (category.equalsIgnoreCase("all")) ? "" : category);
         LinkedList<Book> books = model.getBooks();
         if (books == null || books.size() == 0) {
             view.errorMessage("Keine Bücher gefunden!");
-            return;
         }
         view.setList(view.createList(books));
     }
@@ -130,7 +131,8 @@ public class Controller {
     }
 
     public void deleteBook(String isbn) {
-
+        if(!model.deleteBook(isbn)) view.errorMessage("Couldn't delete Book from Database!");
+        else showBookList();
     }
 
     public void editBook(String isbn) {
@@ -154,6 +156,7 @@ public class Controller {
         view.switchToBookScene(model.getDisplayBook());
         view.setEditMode();
         edit = true;
+        create = true;
     }
 
     public boolean isMainUser() {
@@ -282,6 +285,43 @@ public class Controller {
     }
 
     public void updateEntry() {
+        Book book = model.getDisplayBook();
+        if (book.getTitle().isBlank()) view.infoMessage("Yor Entry needs to have a Title!");
+        if (book.getPublisher() == Publisher.NONE) {
+            view.infoMessage("You need to have a Publisher!");
+            return;
+        }
+        if (book.getCategories().length == 0) {
+            view.infoMessage("You need to have at least one Category!");
+            return;
+        }
+        if (book.getAuthors().length == 0) {
+            view.infoMessage("You need to have at least one Author!");
+            return;
+        }
+        if(create) createSubmit();
+        else if(edit) editSubmit();
+    }
 
+    private void editSubmit() {
+        if (model.updateEntry()) {
+            view.infoMessage("Entry successfully updated!");
+            this.edit = false;
+            this.create = false;
+            view.setNonEditMode();
+            showBookList();
+            toMainView();
+        } else view.errorMessage("Couldn't update Entry!");
+    }
+
+    private void createSubmit() {
+        if (model.createEntry()) {
+            view.infoMessage("Entry successfully created!");
+            this.edit = false;
+            this.create = false;
+            view.setNonEditMode();
+            showBookList();
+            toMainView();
+        } else view.errorMessage("Couldn't create Entry!");
     }
 }

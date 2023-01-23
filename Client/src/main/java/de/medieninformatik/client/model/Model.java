@@ -84,7 +84,7 @@ public class Model {
     }
 
     public LinkedList<Book> getBooks() {
-        if(books == null) return new LinkedList<>();
+        if (books == null) return new LinkedList<>();
         return new LinkedList<>(List.of(books));
     }
 
@@ -120,5 +120,17 @@ public class Model {
         if (authors == null) return a;
         Collections.addAll(a, authors);
         return a;
+    }
+
+    public boolean updateEntry() {
+        return request.putEntry(this.displayBook);
+    }
+
+    public boolean createEntry() {
+        return request.postEntry(this.displayBook);
+    }
+
+    public boolean deleteBook(String isbn) {
+        return request.deleteEntry(isbn);
     }
 }
