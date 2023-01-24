@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.Arrays;
-
 public class Book {
     public static final Book NONE;
     private Book[] books;

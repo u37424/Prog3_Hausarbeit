@@ -1,6 +1,5 @@
 package de.medieninformatik.client.program;
 
-import de.medieninformatik.client.model.Request;
 import de.medieninformatik.client.view.MainWindow;
 import javafx.application.Application;
 

@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DBApplication extends Application {
-    private Set<Object> singletons = new HashSet<>();
-    private Set<Class<?>> classes = new HashSet<>();
+    private final Set<Object> singletons = new HashSet<>();
+    private final Set<Class<?>> classes = new HashSet<>();
 
     public DBApplication() {
         singletons.add(new DBRestData());

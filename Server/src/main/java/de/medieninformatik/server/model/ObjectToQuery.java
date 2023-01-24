@@ -53,7 +53,6 @@ public class ObjectToQuery {
         }
         if (amount != 0) return false;
         if (!createBook(book)) return false;
-        System.out.println("here");
         putBookCategories(isbn, book.getCategories());
         putBookAuthors(isbn, book.getAuthors());
         return true;
