@@ -42,12 +42,12 @@ public class DBMeta {
         this.authors = authors;
     }
 
-    @JsonGetter("publisher")
+    @JsonGetter("publishers")
     public LinkedList<Publisher> getPublishers() {
         return publishers;
     }
 
-    @JsonSetter("publisher")
+    @JsonSetter("publishers")
     public void setPublishers(LinkedList<Publisher> publishers) {
         this.publishers = publishers;
     }

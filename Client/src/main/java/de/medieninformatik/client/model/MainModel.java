@@ -36,6 +36,14 @@ public class MainModel {
         this.bookListMax = new DBMeta().getResultMax();
     }
 
+    public void loadBook(String isbn) {
+        this.selection = new Book("999-999-99-99999");
+    }
+
+    public void resetDatabase() {
+
+    }
+
     public void setMainUser(boolean isMainUser) {
         this.mainUser = isMainUser; //Set Admin Status
     }
@@ -45,7 +53,16 @@ public class MainModel {
     }
 
     public void setCrateMode(boolean crateMode) {
+        this.editMode = crateMode;
         this.crateMode = crateMode; //Set Create Status
+    }
+
+    public void setSelection(Book selection) {
+        this.selection = selection;
+    }
+
+    public Book getSelection() {
+        return selection;
     }
 
     public LinkedList<Book> getBooks() {
@@ -79,5 +96,4 @@ public class MainModel {
     public int getResultMax() {
         return bookListMax;
     }
-
 }

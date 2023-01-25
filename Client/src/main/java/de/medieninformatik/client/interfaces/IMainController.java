@@ -16,4 +16,5 @@ public interface IMainController extends IController{
     void inspectBook(String isbn);
     void editBook(String isbn);
     void deleteBook(String isbn);
+    void resetDatabase();
 }

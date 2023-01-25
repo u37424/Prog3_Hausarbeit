@@ -22,7 +22,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button fx:id="normalLogin" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginNormalUser" prefHeight="44.0" prefWidth="171.0" style="-fx-background-color: #18d0bb; -fx-background-radius: 10;" text="Normaler Benutzer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Button fx:id="normalLogin" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginNormalUser" prefHeight="44.0" prefWidth="171.0" style="-fx-background-color: #18d0bb; -fx-background-radius: 10;" text="Normal User" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <font>
             <Font name="Consolas" size="15.0" />
          </font>
@@ -30,7 +30,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="mainLogin" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginMainUser" prefHeight="44.0" prefWidth="171.0" style="-fx-background-color: #cc4b4b; -fx-background-radius: 10;" text="Hauptbenutzer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+      <Button fx:id="mainLogin" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginMainUser" prefHeight="44.0" prefWidth="171.0" style="-fx-background-color: #cc4b4b; -fx-background-radius: 10;" text="Main User" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <font>
             <Font name="Consolas" size="15.0" />
          </font>
