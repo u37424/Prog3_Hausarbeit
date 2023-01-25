@@ -48,7 +48,6 @@ public class QueryToObject {
                 " ORDER BY b.Title " + orderBy +
                 " LIMIT " + from + "," + amount + ";");
         convertBooksForList(bookList, bookSet);
-        books.setBooks(bookList.toArray(new Book[0]));
         return books;
     }
 
@@ -57,7 +56,6 @@ public class QueryToObject {
         LinkedList<Category> categoryList = new LinkedList<>();
         ResultSet categorySet = connection.query("SELECT Category_ID, Name FROM categories;");
         convertCategoriesForList(categoryList, categorySet);
-        categories.setCategories(categoryList.toArray(new Category[0]));
         return categories;
     }
 
@@ -66,7 +64,6 @@ public class QueryToObject {
         LinkedList<Publisher> publisherList = new LinkedList<>();
         ResultSet publisherSet = connection.query("SELECT Publisher_ID, Name, Year_of_Foundation, Main_Country FROM publishers;");
         convertPublishersForList(publisherList, publisherSet);
-        publishers.setPublishers(publisherList.toArray(new Publisher[0]));
         return publishers;
     }
 
@@ -75,7 +72,6 @@ public class QueryToObject {
         LinkedList<Author> authorList = new LinkedList<>();
         ResultSet authorSet = connection.query("SELECT Author_ID, First_Name, Last_Name, Alias, Birthday, Age FROM authors;");
         convertAuthorsForList(authorList, authorSet);
-        authors.setAuthors(authorList.toArray(new Author[0]));
         return authors;
     }
 

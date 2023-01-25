@@ -6,30 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class Category {
-    public static final Category ALL;
-    private Category[] categories;
     private int categoryId;
     private String name;
-
-    static {
-        ALL = new Category(0);
-        ALL.setName("ALL");
-        ALL.setCategories(new Category[0]);
-    }
 
     @JsonCreator
     public Category(@JsonProperty("categoryId") int categoryId) {
         this.categoryId = categoryId;
-    }
-
-    @JsonGetter("categories")
-    public Category[] getCategories() {
-        return categories;
-    }
-
-    @JsonSetter("categories")
-    public void setCategories(Category[] categories) {
-        this.categories = categories;
     }
 
     @JsonGetter("categoryId")

@@ -46,34 +46,6 @@ public class Request {
         return (Book) getAsObject(target, new Book(""));
     }
 
-    public Book[] getBookList(int from, int amount, String order, String match, String category) {
-        WebTarget target = getTarget("GET", "/data/book/" + from + "/" + amount + "?order=" + order + "&match=" + match + "&category=" + category + "");
-        Book b = (Book) getAsObject(target, new Book(""));
-        if (b == null) return null;
-        return b.getBooks();
-    }
-
-    public Category[] getCategoryList() {
-        WebTarget target = getTarget("GET", "/data/category");
-        Category c = (Category) getAsObject(target, new Category(0));
-        if (c == null) return null;
-        return c.getCategories();
-    }
-
-    public Publisher[] getPublisherList() {
-        WebTarget target = getTarget("GET", "/data/publisher");
-        Publisher p = (Publisher) getAsObject(target, new Publisher(0));
-        if (p == null) return null;
-        return p.getPublishers();
-    }
-
-    public Author[] getAuthorList() {
-        WebTarget target = getTarget("GET", "/data/author");
-        Author a = (Author) getAsObject(target, new Author(0));
-        if (a == null) return null;
-        return a.getAuthors();
-    }
-
     public void putTest() {
         WebTarget target = getTarget("PUT", "/data/test");
         Category c = new Category(2);

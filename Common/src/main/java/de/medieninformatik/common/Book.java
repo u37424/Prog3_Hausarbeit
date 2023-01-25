@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class Book {
-    public static final Book NONE;
-    private Book[] books;
-
     private String isbn;
     private String title;
     private Publisher publisher;
@@ -19,29 +16,9 @@ public class Book {
     private Category[] categories;
     private Author[] authors;
 
-    static {
-        NONE = new Book("   ");
-        NONE.setTitle("   ");
-        NONE.setReleaseYear(0);
-        NONE.setPages(0);
-        NONE.setPublisher(Publisher.NONE);
-        NONE.setAuthors(new Author[0]);
-        NONE.setCategories(new Category[0]);
-    }
-
     @JsonCreator
     public Book(@JsonProperty("isbn") String isbn) {
         this.isbn = isbn;
-    }
-
-    @JsonGetter("books")
-    public Book[] getBooks() {
-        return books;
-    }
-
-    @JsonSetter("books")
-    public void setBooks(Book[] books) {
-        this.books = books;
     }
 
     @JsonGetter("isbn")

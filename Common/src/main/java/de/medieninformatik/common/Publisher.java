@@ -6,34 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class Publisher {
-    public static final Publisher NONE;
-    private Publisher[] publishers;
     private int publisherId;
     private String name;
     private int foundation;
     private String country;
 
-    static {
-        NONE = new Publisher(0);
-        NONE.setName("Publisher Name");
-        NONE.setCountry("Publisher Country");
-        NONE.setFoundation(0);
-        NONE.setPublishers(new Publisher[0]);
-    }
-
     @JsonCreator
     public Publisher(@JsonProperty("publisherId") int publisherId) {
         this.publisherId = publisherId;
-    }
-
-    @JsonGetter("publishers")
-    public Publisher[] getPublishers() {
-        return publishers;
-    }
-
-    @JsonSetter("publishers")
-    public void setPublishers(Publisher[] publishers) {
-        this.publishers = publishers;
     }
 
     @JsonGetter("publisherId")
