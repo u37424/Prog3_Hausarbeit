@@ -8,6 +8,7 @@ import de.medieninformatik.common.Publisher;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 public class QueryToObject {
     private static final QueryToObject instance = new QueryToObject();
@@ -116,8 +117,8 @@ public class QueryToObject {
             book.setRating(rating);
             book.setPublisher(publisher);
             book.setDescription(description);
-            book.setAuthors(authors.toArray(new Author[0]));
-            book.setCategories(categories.toArray(new Category[0]));
+            book.setAuthors(authors);
+            book.setCategories(categories);
             list.add(book);
         }
     }

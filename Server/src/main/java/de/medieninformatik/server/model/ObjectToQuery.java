@@ -6,6 +6,7 @@ import de.medieninformatik.common.Category;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 public class ObjectToQuery {
     private static final ObjectToQuery instance = new ObjectToQuery();
@@ -66,14 +67,14 @@ public class ObjectToQuery {
         return res == 1;
     }
 
-    private void putBookCategories(String isbn, Category[] categories) throws SQLException {
+    private void putBookCategories(String isbn, LinkedList<Category> categories) throws SQLException {
         connection.update("DELETE FROM book_categories WHERE isbn = '" + isbn + "';");
         for (Category category : categories) {
             connection.update("INSERT INTO book_categories VALUES('" + isbn + "'," + category.getCategoryId() + ");");
         }
     }
 
-    private void putBookAuthors(String isbn, Author[] authors) throws SQLException {
+    private void putBookAuthors(String isbn, LinkedList<Author> authors) throws SQLException {
         connection.update("DELETE FROM book_authors WHERE isbn = '" + isbn + "';");
         for (Author author : authors) {
             connection.update("INSERT INTO book_authors VALUES('" + isbn + "'," + author.getAuthorId() + ");");

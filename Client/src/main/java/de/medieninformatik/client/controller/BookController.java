@@ -16,9 +16,6 @@ import javafx.stage.Stage;
 
 public class BookController implements IBookController {
     @FXML
-    private Button backButton;
-
-    @FXML
     private Label title, isbn, pages, year, rating;
 
     @FXML
@@ -28,7 +25,7 @@ public class BookController implements IBookController {
     private TextArea description;
 
     @FXML
-    private Button submitButton, deleteButton;
+    private Button submitButton, deleteButton, backButton;
 
     private Stage stage;
     private MainModel model;
@@ -40,11 +37,13 @@ public class BookController implements IBookController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        //Stage received
         this.stage.setTitle("Book Inspector");
     }
 
     public void setModel(MainModel model) {
         this.model = model;
+        //Model received
         setOptions();
         Book book = model.getSelection();
         if (book == null) return;
@@ -58,15 +57,20 @@ public class BookController implements IBookController {
         boolean isCreate = model.isCrateMode();
         this.submitButton.setVisible(isEdit);
         this.deleteButton.setVisible(isEdit && !isCreate);
+        ((ImageView) this.backButton.getGraphic()).setImage(new Image((isEdit)? "exit.png" : "return.png"));
+        if(isEdit) this.stage.setTitle("Book Editor");
 
         //Wenn im Create Modus
         this.description.setEditable(isCreate);
         this.description.setDisable(!isCreate);
-        if (isCreate) ratingBox.getChildren().forEach(n -> n.setOnMouseClicked(e -> editBookRating(n.getId())));
+        if (isCreate)
+            ratingBox.getChildren().forEach(n -> n.setOnMouseClicked(e -> editBookRating(n.getId())));    //Rating durch Klicks auf Sterne
+        if (isCreate) this.description.setText("");
     }
 
     @Override
     public void displayBook(Book book) {
+        //Fill with Book Data
         if (book.getTitle() != null && !book.getTitle().isBlank())
             this.title.setText(book.getTitle());
 
@@ -80,9 +84,11 @@ public class BookController implements IBookController {
         if (book.getDescription() != null && !book.getDescription().isBlank())
             this.description.setText(book.getDescription());
 
+        //Load Publisher into Label
         if (book.getPublisher() != null)
             ((Label) this.publisher.getChildren().get(0)).setText(book.getPublisher().toString());
 
+        //Build HBox representations of Authors and Categories
         if (book.getAuthors() != null) buildAuthorBox();
 
         if (book.getCategories() != null) buildCategoryBox();
@@ -108,40 +114,49 @@ public class BookController implements IBookController {
     }
 
     public void editBookRating(String id) {
-        String finalId = id;
         String image = "star_filled.png";
+
+        int val = 0;
         for (Node n : ratingBox.getChildren()) {
+            val++;
             ((ImageView) n).setImage(new Image(image));
-            if (finalId.equals(n.getId())) image = "star_empty.png";
+            if (id.equals(n.getId())) {
+                image = "star_empty.png";
+                model.getSelection().setRating(val);
+            }
         }
-        id = id.replace("star", "");
-        int val = Integer.parseInt(id);
-        model.getSelection().setRating(val);
         displayBook(model.getSelection());
     }
 
     @Override
     public void editBookInfo() {
-
+        displayBook(model.getSelection());
     }
 
     @Override
     public void editBookAuthors() {
-
+        displayBook(model.getSelection());
     }
 
     @Override
     public void editBookPublisher() {
-
+        displayBook(model.getSelection());
     }
 
     @Override
     public void editBookCategories() {
+        displayBook(model.getSelection());
+    }
 
+    @Override
+    public void submitChanges() {
+        if(model.isEditMode()) model.editBook();
+        if(model.isCrateMode()) model.createBook();
     }
 
     @Override
     public void deleteBook() {
-
+        if (View.confirmMessage("Delete Book", "Do you really want to delete " + model.getSelection().getIsbn() + " ?"))
+            model.deleteBook(model.getSelection().getIsbn());
     }
 }

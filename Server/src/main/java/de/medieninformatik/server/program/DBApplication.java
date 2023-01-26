@@ -1,6 +1,6 @@
 package de.medieninformatik.server.program;
 
-import de.medieninformatik.server.model.DBRestData;
+import de.medieninformatik.server.model.*;
 import jakarta.ws.rs.core.Application;
 
 import java.util.HashSet;
@@ -11,8 +11,16 @@ public class DBApplication extends Application {
     private final Set<Class<?>> classes = new HashSet<>();
 
     public DBApplication() {
-        singletons.add(new DBRestData());
-        classes.add(DBRestData.class);
+        singletons.add(new UserResource());
+        singletons.add(new BookResource());
+        singletons.add(new AuthorResource());
+        singletons.add(new CategoryResource());
+        singletons.add(new PublisherResource());
+        classes.add(UserResource.class);
+        classes.add(BookResource.class);
+        classes.add(AuthorResource.class);
+        classes.add(CategoryResource.class);
+        classes.add(PublisherResource.class);
     }
 
     @Override

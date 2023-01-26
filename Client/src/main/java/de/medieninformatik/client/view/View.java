@@ -7,7 +7,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,18 +40,23 @@ public class View extends Application {
         Scene loginScene = new Scene(loginRoot);
         Stage stage = new Stage();
         stage.setScene(loginScene);
-
         controller.setStage(stage);
-        controller.setModel(new MainModel());
+        MainModel model = new MainModel();
+        controller.setModel(model);
+
+        stage.setOnCloseRequest(e -> {
+            if (model.isMainUser()) model.logout();
+        });
+
         stage.show();
     }
 
     public static void errorMessage(String type, String message) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Message");
-            alert.setHeaderText(type);
-            alert.setContentText(message);
-            alert.showAndWait();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Message");
+        alert.setHeaderText(type);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static boolean confirmMessage(String type, String message) {
@@ -59,22 +65,25 @@ public class View extends Application {
         alert.setHeaderText(type);
         alert.setContentText(message);
         Optional<ButtonType> res = alert.showAndWait();
-        if(res.isPresent() && res.get().equals(ButtonType.OK)) return true;
-        else return false;
+        return res.isPresent() && res.get().equals(ButtonType.OK);
     }
 
-    public static void loadScene(String resource, Stage stage, MainModel model){
+    public static void loadScene(String resource, Stage stage, MainModel model) {
         try {
             FXMLLoader loader = new FXMLLoader(View.class.getResource(resource));
             Parent parent = loader.load();
 
             IController controller = loader.getController();
-            controller.setModel(model);
             controller.setStage(stage);
+            controller.setModel(model);
+
+            double width = stage.getWidth();
+            double height = stage.getHeight();
 
             Scene scene = new Scene(parent);
             stage.setScene(scene);
-            stage.centerOnScreen();
+            stage.setWidth(width);
+            stage.setHeight(height);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             View.errorMessage("Resource Error", "Fehler beim laden von Resource: " + resource);

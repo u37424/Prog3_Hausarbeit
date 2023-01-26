@@ -10,5 +10,6 @@ public interface IBookController extends IController {
     void editBookAuthors();
     void editBookPublisher();
     void editBookCategories();
+    void submitChanges();
     void deleteBook();
 }

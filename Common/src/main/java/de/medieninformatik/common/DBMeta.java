@@ -12,6 +12,13 @@ public class DBMeta {
     private LinkedList<Publisher> publishers;
     private int resultMax;
 
+    public DBMeta(){
+        books = new LinkedList<>();
+        categories = new LinkedList<>();
+        authors = new LinkedList<>();
+        publishers = new LinkedList<>();
+    }
+
     @JsonGetter("books")
     public LinkedList<Book> getBooks() {
         return books;

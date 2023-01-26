@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.util.LinkedList;
+
 public class Book {
     private String isbn;
     private String title;
@@ -13,12 +15,14 @@ public class Book {
     private int pages;
     private double rating;
     private String description;
-    private Category[] categories;
-    private Author[] authors;
+    private LinkedList<Category> categories;
+    private LinkedList<Author> authors;
 
     @JsonCreator
     public Book(@JsonProperty("isbn") String isbn) {
         this.isbn = isbn;
+        categories = new LinkedList<>();
+        authors = new LinkedList<>();
     }
 
     @JsonGetter("isbn")
@@ -92,22 +96,22 @@ public class Book {
     }
 
     @JsonGetter("categories")
-    public Category[] getCategories() {
+    public LinkedList<Category> getCategories() {
         return categories;
     }
 
     @JsonSetter("categories")
-    public void setCategories(Category[] categories) {
+    public void setCategories(LinkedList<Category> categories) {
         this.categories = categories;
     }
 
     @JsonGetter("authors")
-    public Author[] getAuthors() {
+    public LinkedList<Author> getAuthors() {
         return authors;
     }
 
     @JsonSetter("authors")
-    public void setAuthors(Author[] authors) {
+    public void setAuthors(LinkedList<Author> authors) {
         this.authors = authors;
     }
 

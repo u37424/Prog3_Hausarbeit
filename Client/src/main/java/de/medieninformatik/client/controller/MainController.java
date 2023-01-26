@@ -4,6 +4,7 @@ import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.client.view.View;
 import de.medieninformatik.common.Book;
+import de.medieninformatik.common.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,22 +35,13 @@ public class MainController implements IMainController {
     @FXML
     ListView<HBox> page;
 
-    private String userString;
-    private String userCategory;
-    private boolean ascending;
-    private int pageStart;
-    private int pageSize;
-
     private Stage stage;
     private MainModel model;
 
     @FXML
     public void initialize() {
-        this.userString = "";
-        this.userCategory = "";
-        this.ascending = true;
-        this.pageStart = 0;
-        this.pageSize = 5;
+        //Default Category Selection
+        categorySelector.getItems().add("");
         //Limits des Spinners setzen
         setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100, 5, 5));
         setPageSize.valueProperty().addListener((obs) -> updatePageSize(setPageSize.getValue()));
@@ -66,13 +58,25 @@ public class MainController implements IMainController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        //On Stage received
         this.stage.setTitle("List Viewer");
     }
 
     public void setModel(MainModel model) {
         this.model = model;
+        //On Model received
+        //Optionen des Users setzen
         setOptions();
-        //Initiales laden der Buchliste beim Betreten
+
+        //Sync Filter
+        this.stringInput.setText(model.getUserString());
+        this.categorySelector.setValue(model.getUserCategory());
+        this.setPageSize.getValueFactory().setValue(model.getPageSize());
+        if (model.isAscending()) ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
+        else ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
+
+        loadCategorySelection();
+        //Load BookList
         loadBookList();
     }
 
@@ -88,10 +92,16 @@ public class MainController implements IMainController {
         else this.returnButton.setText("Return");
     }
 
+    private void loadCategorySelection() {
+        model.loadCategoryList();
+        if(model.getCategories() == null) return;
+        for (Category category : model.getCategories()) this.categorySelector.getItems().add(category.getName());
+    }
+
     @Override
     public void loadBookList() {
         //Aktuelle Daten laden
-        model.loadBookList(userString, userCategory, pageStart, pageSize, ascending);
+        model.loadBookList();
         //Liste aus den Daten erstellen
         ObservableList<HBox> list = FXCollections.observableArrayList(buildBookItems());
         //Elemente in die ListView einsetzen
@@ -108,6 +118,11 @@ public class MainController implements IMainController {
         list.add(new HBox());
         list.add(new HBox());
         list.add(new HBox());
+        list.add(new HBox());
+        list.add(new HBox());
+        list.add(new HBox());
+        list.add(new HBox());
+        list.add(new HBox());
         return list;
     }
 
@@ -115,7 +130,7 @@ public class MainController implements IMainController {
     @FXML
     public void createBook() {
         model.setCrateMode(true);
-        model.setSelection(new Book(""));
+        model.resetSelection();
         View.loadScene("/book.fxml", stage, model);
     }
 
@@ -140,22 +155,22 @@ public class MainController implements IMainController {
     @Override
     @FXML
     public void setOrder() {
-        if (ascending) ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
+        if (model.isAscending()) ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
         else ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
-        ascending = !ascending;
+        model.setAscending(!model.isAscending());
     }
 
     @Override
     public void updatePageSize(int size) {
         //Listengroesse aktualisieren
-        this.pageSize = size;
+        model.setPageSize(size);
+        loadBookList();
     }
 
     @Override
     @FXML
     public void pageBackward() {
-        this.pageStart -= this.pageSize;
-        if (pageStart < 0) this.pageStart = 0;   //Nicht < 0
+        model.pageBackward();
         //Reload Book List
         loadBookList();
     }
@@ -163,9 +178,7 @@ public class MainController implements IMainController {
     @Override
     @FXML
     public void pageForward() {
-        this.pageStart -= this.pageSize;
-        int max = model.getResultMax();
-        if (pageStart > max) pageStart = max;    //Aufhoeren wenn > Listengroesse
+        model.pageForward();
         //Reload Book List
         loadBookList();
     }
@@ -173,30 +186,20 @@ public class MainController implements IMainController {
     @Override
     @FXML
     public void updateFilter() {
-        String string = stringInput.getText();
-        String category = categorySelector.getValue();
-
-        if (string == null) string = "";
-        if (category == null) category = "";
-
-        if (userString.equals(string) && userCategory.equals(category)) return;
-        this.userString = string;
-        this.userCategory = category;
-        //Reload Book List
-        loadBookList();
+        //Only reload on filter change
+        if (model.updateFilters(stringInput.getText(), categorySelector.getValue()))
+            loadBookList();
     }
 
     @Override
     @FXML
     public void resetFilter() {
         updateFilter();
-        if (userString.isBlank() && userCategory.equals("")) return;
-        this.userString = "";
-        this.userCategory = "";
-        this.stringInput.setText("");
-        this.categorySelector.setValue(null);
-        //Reload Book List
-        loadBookList();
+        if (model.resetFilters()) {
+            this.stringInput.setText("");
+            this.categorySelector.setValue("");
+            loadBookList();
+        }
     }
 
     @Override
@@ -223,12 +226,15 @@ public class MainController implements IMainController {
 
     @Override
     public void deleteBook(String isbn) {
-
+        if (View.confirmMessage("Delete Book", "Do you really want to delete " + isbn + " ?")) model.deleteBook(isbn);
     }
 
     @Override
     @FXML
     public void resetDatabase() {
-        if(View.confirmMessage("Reset Database", "Do you want to reset the Database?")) model.resetDatabase();
+        if (View.confirmMessage("Reset Database", "Do you want to reset the Database?")) {
+            model.resetDatabase();
+            resetFilter();
+        }
     }
 }

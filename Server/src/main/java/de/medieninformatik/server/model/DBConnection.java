@@ -13,8 +13,6 @@ public class DBConnection {
 
     private static Connection connection;
 
-    PreparedStatement bookByISBN;
-
     private DBConnection() {
         //Connection aufbauen
         connection = getConnection();
@@ -25,7 +23,7 @@ public class DBConnection {
 
     private static Connection getConnection() {
         //Verbindungsattribute
-        ResourceBundle bundle = ResourceBundle.getBundle("Connection");
+        ResourceBundle bundle = ResourceBundle.getBundle("Database");
         String driver = bundle.getString("Driver");
         String baseUrl = bundle.getString("URL");
         String user = bundle.getString("User");
@@ -43,7 +41,7 @@ public class DBConnection {
 
     private void setupDatabase() {
         //Initialisierungsvariablen
-        ResourceBundle bundle = ResourceBundle.getBundle("Connection");
+        ResourceBundle bundle = ResourceBundle.getBundle("Database");
         String query = bundle.getString("HasDataSQL");
         //Herausfinden, ob DB leer oder nicht
         try {
@@ -64,7 +62,7 @@ public class DBConnection {
     private void initDatabase() {
         try {
             //SQL Anweisungen laden
-            FileReader reader = new FileReader(".\\src\\main\\resources\\informatik_init.sql");
+            FileReader reader = new FileReader(".\\src\\main\\resources\\database_startup.sql");
             StringBuilder sb = new StringBuilder();
             int c;
             while ((c = reader.read()) != -1) {

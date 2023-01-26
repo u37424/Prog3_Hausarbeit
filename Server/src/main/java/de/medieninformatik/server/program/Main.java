@@ -16,10 +16,10 @@ public class Main {
         Logger.getLogger("org.glassfish").setLevel(Level.SEVERE);
 
         //Allgemeine Variablen fuer Server
-        ResourceBundle bundle = ResourceBundle.getBundle("Server");
-        String serverAddress = bundle.getString("ServerAddress");
-        String port = bundle.getString("Port");
-        String path = bundle.getString("Path");
+        ResourceBundle bundle = ResourceBundle.getBundle("ServerResources");
+        String serverAddress = bundle.getString("Host.Address");
+        String port = bundle.getString("Host.Port");
+        String path = bundle.getString("Base.Path");
 
         //Server erstellen
         URI baseUri = new URI("http://" + serverAddress + ":" + port + "/" + path);
