@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -27,6 +29,7 @@ public class RequestManager {
     private final String userPath;
     private final String loginPath;
     private final String logoutPath;
+    private final String resetPath;
 
     private final String baseURI;
     private final Client client;
@@ -48,11 +51,12 @@ public class RequestManager {
         this.userPath = bundle.getString("User.Path");
         this.loginPath = bundle.getString("User.Login.Path");
         this.logoutPath = bundle.getString("User.Logout.Path");
+        this.resetPath = bundle.getString("User.Reset.Path");
 
         this.client = ClientBuilder.newClient();
     }
 
-    //--------------Data Request Methods
+    //--------------Data Request Methods (Request -> JSON -> POJO -> Data)
 
     public boolean login() {
         Response response = serverRequest(HttpMethod.GET, "/" + userPath + "/" + loginPath);
@@ -64,13 +68,22 @@ public class RequestManager {
         return status(response) == 200;
     }
 
+    public Book getBook(String isbn) {
+
+        Response response = serverRequest(HttpMethod.GET, "/" + bookPath + "/" + isbn);
+        return createBook(response);
+    }
+
     public int getBookListMax() {
         Response response = serverRequest(HttpMethod.GET, "/" + bookPath + "/" + maxPath);
         return createDBMeta(response).getResultMax();
     }
 
-    public LinkedList<Book> loadBooks() {
-        Response response = serverRequest(HttpMethod.GET, "/" + bookPath);
+    public LinkedList<Book> loadBooks(int start, int limit, boolean orderAsc, String string, String category) {
+        string = URLEncoder.encode(string, StandardCharsets.UTF_8);
+        category = URLEncoder.encode(category, StandardCharsets.UTF_8);
+        String query = "/" + bookPath + "/" + start + "/" + limit + "/" + orderAsc + "?string=" + string + "?category=" + category;
+        Response response = serverRequest(HttpMethod.GET, query);
         return createDBMeta(response).getBooks();
     }
 
@@ -89,13 +102,40 @@ public class RequestManager {
         return createDBMeta(response).getPublishers();
     }
 
-    //----------Converter Methods
+    public boolean editBook(Book selection) {
+        Response response = serverRequest(HttpMethod.PUT, "/" + bookPath + "/" + selection.getIsbn(), selection);
+        return status(response) == 200;
+    }
+
+    public boolean createBook(Book selection) {
+        Response response = serverRequest(HttpMethod.POST, "/" + bookPath + "/" + selection.getIsbn(), selection);
+        return status(response) == 200;
+    }
+
+    public boolean deleteBook(String isbn) {
+        Response response = serverRequest(HttpMethod.DELETE, "/" + bookPath + "/" + isbn);
+        return status(response) == 200;
+    }
+
+    public boolean resetDatabase() {
+        Response response = serverRequest(HttpMethod.POST, "/" + userPath + "/" + resetPath);
+        return status(response) == 200;
+    }
+
+    //----------Converter Methods (JSON -> POJO)
 
     private DBMeta createDBMeta(Response response) {
         DBMeta meta = null;
         if (status(response) == 200) meta = readJSON(response, DBMeta.class);
         if (meta == null) return new DBMeta();
         return meta;
+    }
+
+    private Book createBook(Response response) {
+        Book book = null;
+        if (status(response) == 200) book = readJSON(response, Book.class);
+        if (book == null) return new Book("");
+        return book;
     }
 
     private <T> T readJSON(Response response, Class<T> objectClass) {
@@ -109,7 +149,7 @@ public class RequestManager {
         return res;
     }
 
-    //------------Server Request Methods
+    //------------Server Request Methods (Response)
 
     private Response serverRequest(String crud, String path) {
         return serverRequest(crud, path, Optional.empty());
@@ -118,6 +158,7 @@ public class RequestManager {
     private <T> Response serverRequest(String crud, String path, T object) {
         WebTarget target = getTarget(crud, path);
         ObjectMapper mapper = new ObjectMapper();
+
         try {
             String json = object == null ? "" : mapper.writeValueAsString(object);
 

@@ -1,8 +1,9 @@
-package de.medieninformatik.server.model;
+package de.medieninformatik.server.model.parsing;
 
 import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
+import de.medieninformatik.server.model.database.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,10 +11,10 @@ import java.util.LinkedList;
 
 public class ObjectToQuery {
     private static final ObjectToQuery instance = new ObjectToQuery();
-    private final DBConnection connection;
+    private final Database connection;
 
     private ObjectToQuery() {
-        connection = DBConnection.getInstance();
+        connection = Database.getInstance();
     }
 
     public static ObjectToQuery getInstance() {

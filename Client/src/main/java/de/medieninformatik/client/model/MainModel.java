@@ -1,6 +1,10 @@
 package de.medieninformatik.client.model;
 
-import de.medieninformatik.common.*;
+import de.medieninformatik.common.Author;
+import de.medieninformatik.common.Book;
+import de.medieninformatik.common.Category;
+import de.medieninformatik.common.Publisher;
+
 import java.util.LinkedList;
 
 public class MainModel {
@@ -42,38 +46,48 @@ public class MainModel {
         return !(mainUser = !requestManager.logout());
     }
 
+    public void loadBookList() {
+        this.books = requestManager.loadBooks(this.pageStart, this.pageSize, this.ascending, this.userString, this.userCategory);
+        this.bookListMax = requestManager.getBookListMax();
+    }
+
     public void loadCategoryList() {
         //Categories from Server
         this.categories = requestManager.loadCategories();
     }
 
-    public void loadBookList() {
-        //userString, userCategory, pageStart, pageSize, ascending
-        //DBMeta POJO erhalten
-        //Liste von Buechern (im DBMeta POJO) nach angegebenen Parametern laden
-        this.books = new DBMeta().getBooks();
-        this.bookListMax = new DBMeta().getResultMax();
+    public void loadPublisherList() {
+        //Categories from Server
+        this.publishers = requestManager.loadPublishers();
+    }
+
+    public void loadAuthorList() {
+        //Categories from Server
+        this.authors = requestManager.loadAuthors();
     }
 
     public void loadBook(String isbn) {
-        this.selection = new Book("999-999-99-99999");
+        this.selection = requestManager.getBook(isbn);
     }
 
-    public void editBook() {
+    public boolean editBook() {
+        return requestManager.editBook(this.selection);
     }
 
-    public void createBook() {
+    public boolean createBook() {
+        return requestManager.createBook(this.selection);
     }
 
-    public void deleteBook(String isbn) {
+    public boolean deleteBook(String isbn) {
+        return requestManager.deleteBook(isbn);
     }
 
     public void resetSelection() {
         this.selection = new Book("");
     }
 
-    public void resetDatabase() {
-
+    public boolean resetDatabase() {
+        return requestManager.resetDatabase();
     }
 
     public void pageBackward() {

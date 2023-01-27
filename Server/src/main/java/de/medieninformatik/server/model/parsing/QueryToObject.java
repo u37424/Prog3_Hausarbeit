@@ -1,21 +1,21 @@
-package de.medieninformatik.server.model;
+package de.medieninformatik.server.model.parsing;
 
 import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.Publisher;
+import de.medieninformatik.server.model.database.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-import java.util.List;
 
 public class QueryToObject {
     private static final QueryToObject instance = new QueryToObject();
-    private final DBConnection connection;
+    private final Database connection;
 
     private QueryToObject() {
-        connection = DBConnection.getInstance();
+        connection = Database.getInstance();
     }
 
     public static QueryToObject getInstance() {

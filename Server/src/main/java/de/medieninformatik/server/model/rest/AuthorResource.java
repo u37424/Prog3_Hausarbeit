@@ -1,11 +1,11 @@
-package de.medieninformatik.server.model;
+package de.medieninformatik.server.model.rest;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("category")
-public class CategoryResource {
+@Path("author")
+public class AuthorResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(){
@@ -13,29 +13,29 @@ public class CategoryResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCategory(@PathParam("id") int id){
+    public Response getAuthor(@PathParam("id") int id){
         return Response.ok().build();
     }
 
     @PUT
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response putCategory(@PathParam("id") int id){
+    public Response putAuthor(@PathParam("id") int id){
         return Response.ok().build();
     }
 
     @POST
-    @Path("{id}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postCategory(@PathParam("id") int id){
+    public Response postAuthor(@PathParam("id") int id){
         return Response.ok().build();
     }
 
     @DELETE
-    @Path("{id}")
-    public Response deleteCategory(@PathParam("id") int id){
+    @Path("/{id}")
+    public Response deleteAuthor(@PathParam("id") int id){
         return Response.ok().build();
     }
 }

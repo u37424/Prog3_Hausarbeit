@@ -27,6 +27,9 @@ public class BookController implements IBookController {
     @FXML
     private Button submitButton, deleteButton, backButton;
 
+    @FXML
+    private Button editIsbn, editYear, editPages, editTitle, editPublisher, editAuthors, editCategories;
+
     private Stage stage;
     private MainModel model;
 
@@ -55,10 +58,18 @@ public class BookController implements IBookController {
         //Wenn im Editing Modus
         boolean isEdit = model.isEditMode();
         boolean isCreate = model.isCrateMode();
+        this.editTitle.setVisible(isEdit);
+        this.editYear.setVisible(isEdit);
+        this.editPages.setVisible(isEdit);
+        this.editPublisher.setVisible(isEdit);
+        this.editAuthors.setVisible(isEdit);
+        this.editCategories.setVisible(isEdit);
+
+        this.editIsbn.setVisible(isEdit && isCreate);
         this.submitButton.setVisible(isEdit);
         this.deleteButton.setVisible(isEdit && !isCreate);
-        ((ImageView) this.backButton.getGraphic()).setImage(new Image((isEdit)? "exit.png" : "return.png"));
-        if(isEdit) this.stage.setTitle("Book Editor");
+        ((ImageView) this.backButton.getGraphic()).setImage(new Image((isEdit) ? "exit.png" : "return.png"));
+        if (isEdit) this.stage.setTitle("Book Editor");
 
         //Wenn im Create Modus
         this.description.setEditable(isCreate);
@@ -103,7 +114,6 @@ public class BookController implements IBookController {
     }
 
     @Override
-    @FXML
     public void returnToMain() {
         if (model.isCrateMode() || model.isEditMode()) {
             if (!View.confirmMessage("Leave Editing", "Unsaved Changes will be lost!")) return;
@@ -111,6 +121,26 @@ public class BookController implements IBookController {
         model.setCrateMode(false);
         model.setEditMode(false);
         View.loadScene("/main.fxml", stage, model);
+    }
+
+    @Override
+    public void editBookTitle() {
+
+    }
+
+    @Override
+    public void editBookISBN() {
+
+    }
+
+    @Override
+    public void editBookYear() {
+
+    }
+
+    @Override
+    public void editBookPages() {
+
     }
 
     public void editBookRating(String id) {
@@ -125,11 +155,6 @@ public class BookController implements IBookController {
                 model.getSelection().setRating(val);
             }
         }
-        displayBook(model.getSelection());
-    }
-
-    @Override
-    public void editBookInfo() {
         displayBook(model.getSelection());
     }
 
@@ -150,13 +175,20 @@ public class BookController implements IBookController {
 
     @Override
     public void submitChanges() {
-        if(model.isEditMode()) model.editBook();
-        if(model.isCrateMode()) model.createBook();
+        boolean res = model.isCrateMode() ? model.createBook() : model.editBook();
+        if (res) {
+            View.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
+            returnToMain();
+        } else View.errorMessage("Submit Error", "Failed to save Changes!");
+
     }
 
     @Override
     public void deleteBook() {
-        if (View.confirmMessage("Delete Book", "Do you really want to delete " + model.getSelection().getIsbn() + " ?"))
-            model.deleteBook(model.getSelection().getIsbn());
+        if (View.confirmMessage("Delete Book", "Do you really want to delete " + model.getSelection().getIsbn() + " ?")) {
+            boolean res = model.deleteBook(model.getSelection().getIsbn());
+            if (res) View.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            else View.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+        }
     }
 }

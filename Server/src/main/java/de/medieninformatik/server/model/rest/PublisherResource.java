@@ -1,48 +1,41 @@
-package de.medieninformatik.server.model;
+package de.medieninformatik.server.model.rest;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("book")
-public class BookResource {
+@Path("publisher")
+public class PublisherResource {
     @GET
-    @Path("max")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(){
         return Response.ok().build();
     }
 
     @GET
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllBySelection(){
-        return Response.ok().build();
-    }
-
-    @GET
-    @Path("{isbn}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getBook(@PathParam("isbn") String isbn){
+    public Response getPublisher(@PathParam("id") int id){
         return Response.ok().build();
     }
 
     @PUT
-    @Path("{isbn}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response putBook(@PathParam("isbn") String isbn){
+    public Response putPublisher(@PathParam("id") int id){
         return Response.ok().build();
     }
 
     @POST
-    @Path("{isbn}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postBook(@PathParam("isbn") String isbn){
+    public Response postPublisher(@PathParam("id") int id){
         return Response.ok().build();
     }
 
     @DELETE
-    @Path("{isbn}")
-    public Response deleteBook(@PathParam("isbn") String isbn){
+    @Path("/{id}")
+    public Response deletePublisher(@PathParam("id") int id){
         return Response.ok().build();
     }
 }

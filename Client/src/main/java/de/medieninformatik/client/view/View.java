@@ -51,6 +51,14 @@ public class View extends Application {
         stage.show();
     }
 
+    public static void infoMessage(String type, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Info Message");
+        alert.setHeaderText(type);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public static void errorMessage(String type, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error Message");

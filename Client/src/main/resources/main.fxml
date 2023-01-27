@@ -128,7 +128,7 @@
       </Button>
       <Button fx:id="orderButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setOrder" prefHeight="40.0" prefWidth="40.0" GridPane.rowIndex="9">
          <graphic>
-            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@asc.png" />
                </image>
@@ -200,7 +200,7 @@
             <Insets left="10.0" right="10.0" />
          </GridPane.margin>
       </ChoiceBox>
-      <Button fx:id="filterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updateFilter" text="Filter" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Button fx:id="filterButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updateFilter" style="-fx-background-color: #79b7e1;" text="Filter" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets left="10.0" right="10.0" />
          </GridPane.margin>
@@ -208,7 +208,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="revertButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetFilter" prefHeight="25.0" prefWidth="25.0" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Button fx:id="revertButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetFilter" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #cc4b4b;" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets left="10.0" right="10.0" />
          </GridPane.margin>

@@ -1,6 +1,6 @@
 package de.medieninformatik.server.program;
 
-import de.medieninformatik.server.model.*;
+import de.medieninformatik.server.model.rest.*;
 import jakarta.ws.rs.core.Application;
 
 import java.util.HashSet;

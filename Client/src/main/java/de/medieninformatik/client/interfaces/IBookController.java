@@ -5,7 +5,10 @@ import de.medieninformatik.common.Book;
 public interface IBookController extends IController {
     void displayBook(Book book);
     void returnToMain();
-    void editBookInfo();
+    void editBookTitle();
+    void editBookISBN();
+    void editBookYear();
+    void editBookPages();
     void editBookRating(String rating);
     void editBookAuthors();
     void editBookPublisher();

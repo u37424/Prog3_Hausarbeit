@@ -44,7 +44,6 @@ public class MainController implements IMainController {
         categorySelector.getItems().add("");
         //Limits des Spinners setzen
         setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100, 5, 5));
-        setPageSize.valueProperty().addListener((obs) -> updatePageSize(setPageSize.getValue()));
 
         //Onclick eines Listen Items (HBox.getID() == someISBN)
         page.setOnMouseClicked((e) -> {
@@ -75,6 +74,9 @@ public class MainController implements IMainController {
         if (model.isAscending()) ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
         else ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
 
+        //Set Change Listener for Spinner after loading
+        setPageSize.valueProperty().addListener((obs) -> updatePageSize(setPageSize.getValue()));
+
         loadCategorySelection();
         //Load BookList
         loadBookList();
@@ -94,7 +96,7 @@ public class MainController implements IMainController {
 
     private void loadCategorySelection() {
         model.loadCategoryList();
-        if(model.getCategories() == null) return;
+        if (model.getCategories() == null) return;
         for (Category category : model.getCategories()) this.categorySelector.getItems().add(category.getName());
     }
 
@@ -112,22 +114,19 @@ public class MainController implements IMainController {
         LinkedList<HBox> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
         //Liste aus den Daten erstellen
         LinkedList<Book> books = model.getBooks();
+        if (books.size() == 0) return list;
         //List HBox
-        //foreach book -> list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
-        list.add(new HBox());
+        for (Book book : books) {
+            HBox hbox = new HBox();
+            hbox.setId(book.getIsbn());
+            Label title = new Label(book.getTitle());
+            hbox.getChildren().add(title);
+            list.add(hbox);
+        }
         return list;
     }
 
     @Override
-    @FXML
     public void createBook() {
         model.setCrateMode(true);
         model.resetSelection();
@@ -135,29 +134,26 @@ public class MainController implements IMainController {
     }
 
     @Override
-    @FXML
     public void createCategory() {
 
     }
 
     @Override
-    @FXML
     public void createAuthor() {
 
     }
 
     @Override
-    @FXML
     public void createPublisher() {
 
     }
 
     @Override
-    @FXML
     public void setOrder() {
         if (model.isAscending()) ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
         else ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
         model.setAscending(!model.isAscending());
+        loadBookList();
     }
 
     @Override
@@ -168,7 +164,6 @@ public class MainController implements IMainController {
     }
 
     @Override
-    @FXML
     public void pageBackward() {
         model.pageBackward();
         //Reload Book List
@@ -176,7 +171,6 @@ public class MainController implements IMainController {
     }
 
     @Override
-    @FXML
     public void pageForward() {
         model.pageForward();
         //Reload Book List
@@ -184,7 +178,6 @@ public class MainController implements IMainController {
     }
 
     @Override
-    @FXML
     public void updateFilter() {
         //Only reload on filter change
         if (model.updateFilters(stringInput.getText(), categorySelector.getValue()))
@@ -192,7 +185,6 @@ public class MainController implements IMainController {
     }
 
     @Override
-    @FXML
     public void resetFilter() {
         updateFilter();
         if (model.resetFilters()) {
@@ -203,7 +195,6 @@ public class MainController implements IMainController {
     }
 
     @Override
-    @FXML
     public void returnToLogin() {
         if (model.isMainUser() && !model.logout()) View.errorMessage("Logout Denied", "Server refused logout.");
         else {
@@ -226,15 +217,19 @@ public class MainController implements IMainController {
 
     @Override
     public void deleteBook(String isbn) {
-        if (View.confirmMessage("Delete Book", "Do you really want to delete " + isbn + " ?")) model.deleteBook(isbn);
+        if (View.confirmMessage("Delete Book", "Do you really want to delete " + model.getSelection().getIsbn() + " ?")) {
+            if (model.deleteBook(isbn)) View.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            else View.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+        }
     }
 
     @Override
-    @FXML
     public void resetDatabase() {
         if (View.confirmMessage("Reset Database", "Do you want to reset the Database?")) {
-            model.resetDatabase();
-            resetFilter();
+            if (model.resetDatabase()) {
+                View.infoMessage("Database Reset", "Succeeded!");
+                resetFilter();
+            } else View.errorMessage("Database Reset", "Database Reset failed!");
         }
     }
 }

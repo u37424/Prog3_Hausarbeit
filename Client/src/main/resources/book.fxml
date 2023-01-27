@@ -18,16 +18,16 @@
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" prefWidth="50.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="60.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="35.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="65.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="150.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="70.0" />
-      <ColumnConstraints hgrow="SOMETIMES" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="60.0" />
+      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="50.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="85.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="85.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" prefWidth="60.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="50.0" />
@@ -50,7 +50,7 @@
       <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="title" prefHeight="69.0" prefWidth="1050.0" text="No Title found" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+      <Label fx:id="title" prefHeight="69.0" text="No Title found" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
          <font>
             <Font name="Arial" size="45.0" />
          </font>
@@ -78,12 +78,12 @@
          </GridPane.margin>
       </Label>
       <Separator style="-fx-background-color: black;" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-      <Label fx:id="rating" alignment="CENTER_RIGHT" text="0.0" GridPane.columnIndex="10" GridPane.rowIndex="1">
+      <Label fx:id="rating" alignment="CENTER_RIGHT" text="0.0" GridPane.columnIndex="11" GridPane.rowIndex="1">
          <font>
             <Font size="20.0" />
          </font>
          <GridPane.margin>
-            <Insets left="15.0" />
+            <Insets left="15.0" right="15.0" />
          </GridPane.margin>
       </Label>
       <Label text="Pages" textOverrun="CLIP" GridPane.columnIndex="8" GridPane.rowIndex="1">
@@ -102,7 +102,7 @@
             <Insets left="5.0" />
          </GridPane.margin>
       </Label>
-      <HBox fx:id="ratingBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="11" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <HBox fx:id="ratingBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="12" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <children>
             <ImageView fx:id="star1" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -133,8 +133,11 @@
          <padding>
             <Insets bottom="5.0" />
          </padding>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
       </HBox>
-      <Label fx:id="isbn" prefHeight="41.0" prefWidth="282.0" text="00-000-00-000-00-0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <Label fx:id="isbn" prefHeight="41.0" text="00-000-00-000-00-0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <font>
             <Font size="20.0" />
          </font>
@@ -168,7 +171,7 @@
       </HBox>
       <HBox fx:id="authors" alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="11" GridPane.rowIndex="3" />
       <HBox fx:id="categories" alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="11" GridPane.rowIndex="4" />
-      <Button fx:id="deleteButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" visible="false" GridPane.columnIndex="13" GridPane.halignment="RIGHT" GridPane.rowIndex="14" GridPane.valignment="CENTER">
+      <Button fx:id="deleteButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBook" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" visible="false" GridPane.columnIndex="13" GridPane.halignment="RIGHT" GridPane.rowIndex="14" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -183,7 +186,7 @@
             <Insets bottom="15.0" left="15.0" top="15.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="submitButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #5dc367;" visible="false" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="14" GridPane.valignment="CENTER">
+      <Button fx:id="submitButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#submitChanges" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #5dc367;" visible="false" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="14" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -206,6 +209,111 @@
             <Font size="16.0" />
          </font>
       </TextArea>
+      <Button fx:id="editIsbn" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookISBN" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="editYear" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookYear" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="6" GridPane.rowIndex="1">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="editPages" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookPages" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="9" GridPane.rowIndex="1">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="editPublisher" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookPublisher" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="13" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="editAuthors" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookAuthors" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="13" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="editCategories" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookCategories" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="13" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="editTitle" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editBookTitle" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" visible="false" GridPane.columnIndex="13" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <GridPane.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

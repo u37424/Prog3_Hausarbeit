@@ -214,6 +214,7 @@ VALUES ('978-0-262-58307-6', 'Superintelligence: Paths, Dangers, Strategies', 2,
 
 INSERT INTO Books (ISBN, Title, Publisher_ID, Release_Year, Pages, Rating, Description)
 VALUES ('978-1-566-19-853-5', 'Operating System Concepts', 7, 1992, 944, 4.5, 'A comprehensive textbook that covers the fundamental concepts of operating systems, including process management, memory management, file systems and security.');
+
 CREATE TABLE Authors (
   Author_ID INTEGER PRIMARY KEY AUTO_INCREMENT,
   First_Name VARCHAR(255) NOT NULL,
@@ -224,8 +225,7 @@ CREATE TABLE Authors (
   UNIQUE (First_Name, Last_Name, Alias, Birthday, Age)
 );
 
-ALTER TABLE Authors
-ADD CHECK (Birthday IS NOT NULL AND Birthday <= CURRENT_DATE);
+ALTER TABLE Authors ADD CHECK (Birthday IS NOT NULL AND Birthday <= CURRENT_DATE);
 
 INSERT INTO Authors (Author_ID, First_Name, Last_Name, Alias, Birthday, Age)
 VALUES (1, 'Bjarne', 'Stroustrup', 'B. Stroustrup', '1950-12-30', 71);

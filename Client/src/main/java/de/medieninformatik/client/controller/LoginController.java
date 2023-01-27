@@ -3,7 +3,6 @@ package de.medieninformatik.client.controller;
 import de.medieninformatik.client.interfaces.ILoginController;
 import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.client.view.View;
-import javafx.fxml.FXML;
 import javafx.stage.Stage;
 
 public class LoginController implements ILoginController {
@@ -21,14 +20,12 @@ public class LoginController implements ILoginController {
     }
 
     @Override
-    @FXML
     public void loginNormalUser() {
         //Normaler Benutzer kann einfach einloggen
         View.loadScene("/main.fxml", stage, model);
     }
 
     @Override
-    @FXML
     public void loginMainUser() {
         //Wenn erfolgreich eingeloggt, sonst Fehler
         if (!model.login()) View.errorMessage("Login Denied", "Login as Main User has failed!");
