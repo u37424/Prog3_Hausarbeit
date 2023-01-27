@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class BookController implements IBookController {
+public class BookViewController implements IBookController {
     @FXML
     private Label title, isbn, pages, year, rating;
 
@@ -120,7 +120,7 @@ public class BookController implements IBookController {
         }
         model.setCrateMode(false);
         model.setEditMode(false);
-        View.loadScene("/main.fxml", stage, model);
+        View.loadScene("/main.fxml", stage, model, new MainBookController());
     }
 
     @Override

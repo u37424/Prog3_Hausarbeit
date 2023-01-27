@@ -34,8 +34,9 @@ public class View extends Application {
     public void start(Stage primaryStage) throws Exception {
         //Lade Login Scene
         FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        IController controller = new LoginController();
+        loginLoader.setController(controller);
         Parent loginRoot = loginLoader.load();
-        LoginController controller = loginLoader.getController();
 
         Scene loginScene = new Scene(loginRoot);
         Stage stage = new Stage();
@@ -76,25 +77,28 @@ public class View extends Application {
         return res.isPresent() && res.get().equals(ButtonType.OK);
     }
 
-    public static void loadScene(String resource, Stage stage, MainModel model) {
+    public static void loadScene(String resource, Stage stage, MainModel model, IController controller) {
         try {
             FXMLLoader loader = new FXMLLoader(View.class.getResource(resource));
+            loader.setController(controller);
             Parent parent = loader.load();
-
-            IController controller = loader.getController();
-            controller.setStage(stage);
-            controller.setModel(model);
-
-            double width = stage.getWidth();
-            double height = stage.getHeight();
-
-            Scene scene = new Scene(parent);
-            stage.setScene(scene);
-            stage.setWidth(width);
-            stage.setHeight(height);
+            setSceneParameters(stage, model, controller, parent);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             View.errorMessage("Resource Error", "Fehler beim laden von Resource: " + resource);
         }
+    }
+
+    private static void setSceneParameters(Stage stage, MainModel model, IController controller, Parent parent) {
+        controller.setStage(stage);
+        controller.setModel(model);
+
+        double width = stage.getWidth();
+        double height = stage.getHeight();
+
+        Scene scene = new Scene(parent);
+        stage.setScene(scene);
+        stage.setWidth(width);
+        stage.setHeight(height);
     }
 }

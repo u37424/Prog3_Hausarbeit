@@ -22,13 +22,13 @@ public class LoginController implements ILoginController {
     @Override
     public void loginNormalUser() {
         //Normaler Benutzer kann einfach einloggen
-        View.loadScene("/main.fxml", stage, model);
+        View.loadScene("/main.fxml", stage, model, new MainBookController());
     }
 
     @Override
     public void loginMainUser() {
         //Wenn erfolgreich eingeloggt, sonst Fehler
         if (!model.login()) View.errorMessage("Login Denied", "Login as Main User has failed!");
-        else View.loadScene("/main.fxml", stage, model);
+        else View.loadScene("/main.fxml", stage, model, new MainBookController());
     }
 }

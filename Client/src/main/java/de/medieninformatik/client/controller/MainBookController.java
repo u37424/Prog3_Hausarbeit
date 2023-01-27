@@ -1,5 +1,6 @@
 package de.medieninformatik.client.controller;
 
+import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.client.view.View;
@@ -16,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.util.LinkedList;
 
-public class MainController implements IMainController {
+public class MainBookController implements IMainController {
     @FXML
     Button returnButton, pageBackward, pageForward, filterButton, revertButton, orderButton;
 
@@ -24,13 +25,13 @@ public class MainController implements IMainController {
     Spinner<Integer> setPageSize;
 
     @FXML
-    Button createBook, createCategory, createAuthor, createPublisher, databaseButton;
+    Button bookButton, categoryButton, authorButton, publisherButton, databaseButton;
 
     @FXML
     TextField stringInput;
 
     @FXML
-    ChoiceBox<String> categorySelector;
+    ChoiceBox<String> selector;
 
     @FXML
     ListView<HBox> page;
@@ -40,8 +41,9 @@ public class MainController implements IMainController {
 
     @FXML
     public void initialize() {
+        bookButton.setStyle(bookButton.getStyle()+"-fx-background-color: #5dc367;");
         //Default Category Selection
-        categorySelector.getItems().add("");
+        selector.getItems().add("");
         //Limits des Spinners setzen
         setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100, 5, 5));
 
@@ -69,7 +71,7 @@ public class MainController implements IMainController {
 
         //Sync Filter
         this.stringInput.setText(model.getUserString());
-        this.categorySelector.setValue(model.getUserCategory());
+        this.selector.setValue(model.getUserCategory());
         this.setPageSize.getValueFactory().setValue(model.getPageSize());
         if (model.isAscending()) ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
         else ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
@@ -86,18 +88,18 @@ public class MainController implements IMainController {
         boolean mainUser = model.isMainUser();
         //Setzen der Optionen des Hauptnutzers
         this.databaseButton.setVisible(mainUser);
-        this.createBook.setVisible(mainUser);
-        this.createCategory.setVisible(mainUser);
-        this.createAuthor.setVisible(mainUser);
-        this.createPublisher.setVisible(mainUser);
+        this.bookButton.setVisible(mainUser);
+        this.categoryButton.setVisible(mainUser);
+        this.authorButton.setVisible(mainUser);
+        this.publisherButton.setVisible(mainUser);
         if (mainUser) this.returnButton.setText("Log Out");
         else this.returnButton.setText("Return");
     }
 
     private void loadCategorySelection() {
         model.loadCategoryList();
-        if (model.getCategories() == null) return;
-        for (Category category : model.getCategories()) this.categorySelector.getItems().add(category.getName());
+        if (model.getCategories() == null || model.getCategories().size() == 0) return;
+        for (Category category : model.getCategories()) this.selector.getItems().add(category.getName());
     }
 
     @Override
@@ -114,7 +116,7 @@ public class MainController implements IMainController {
         LinkedList<HBox> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
         //Liste aus den Daten erstellen
         LinkedList<Book> books = model.getBooks();
-        if (books.size() == 0) return list;
+        if (books == null || books.size() == 0) return list;
         //List HBox
         for (Book book : books) {
             HBox hbox = new HBox();
@@ -130,22 +132,31 @@ public class MainController implements IMainController {
     public void createBook() {
         model.setCrateMode(true);
         model.resetSelection();
-        View.loadScene("/book.fxml", stage, model);
+        View.loadScene("/book.fxml", stage, model, new BookViewController());
     }
 
     @Override
-    public void createCategory() {
+    public void bookPressed() {
+        createBook();
+    }
+
+    @Override
+    public void categoryPressed() {
+        switchController(new MainCategoryController());
+    }
+
+    @Override
+    public void authorPressed() {
 
     }
 
     @Override
-    public void createAuthor() {
+    public void publisherPressed() {
 
     }
 
-    @Override
-    public void createPublisher() {
-
+    public void switchController(IController controller) {
+        View.loadScene("/main.fxml", stage, model, controller);
     }
 
     @Override
@@ -180,7 +191,7 @@ public class MainController implements IMainController {
     @Override
     public void updateFilter() {
         //Only reload on filter change
-        if (model.updateFilters(stringInput.getText(), categorySelector.getValue()))
+        if (model.updateFilters(stringInput.getText(), selector.getValue()))
             loadBookList();
     }
 
@@ -189,7 +200,7 @@ public class MainController implements IMainController {
         updateFilter();
         if (model.resetFilters()) {
             this.stringInput.setText("");
-            this.categorySelector.setValue("");
+            this.selector.setValue("");
             loadBookList();
         }
     }
@@ -199,14 +210,14 @@ public class MainController implements IMainController {
         if (model.isMainUser() && !model.logout()) View.errorMessage("Logout Denied", "Server refused logout.");
         else {
             setOptions();
-            View.loadScene("/login.fxml", stage, model);
+            View.loadScene("/login.fxml", stage, model, new LoginController());
         }
     }
 
     @Override
     public void inspectBook(String isbn) {
         model.loadBook(isbn);
-        View.loadScene("/book.fxml", stage, model);
+        View.loadScene("/book.fxml", stage, model, new BookViewController());
     }
 
     @Override

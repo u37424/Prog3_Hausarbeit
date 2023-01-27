@@ -1,5 +1,7 @@
 package de.medieninformatik.server.model.database;
 
+import de.medieninformatik.server.model.parsing.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,7 +11,9 @@ import java.util.ResourceBundle;
 
 public class Database {
 
-    public static final Database instance = new Database();
+    private static final Database instance = new Database();
+    private static final RequestManager manager = new RequestManager();
+
     private static Connection connection;
     private String driver;
     private String url;
@@ -32,8 +36,7 @@ public class Database {
         this.user = bundle.getString("User");
         this.password = bundle.getString("Password");
         this.dbName = bundle.getString("Database.Name");
-        ResourceBundle tables = ResourceBundle.getBundle("Database_Tables");
-        this.tableAmount = Integer.parseInt(tables.getString("Table.Amount"));
+        this.tableAmount = Integer.parseInt(bundle.getString("Database.Tables"));
 
         this.baseURL = url + "/" + dbName;
     }
@@ -108,7 +111,7 @@ public class Database {
         return statement.executeUpdate(update);
     }
 
-    private void printSQLErrors(SQLException e) {
+    public void printSQLErrors(SQLException e) {
         while (e != null) {
             System.err.printf("""
                             Message: %s
@@ -123,5 +126,9 @@ public class Database {
 
     public static Database getInstance() {
         return instance;
+    }
+
+    public static RequestManager getRequestManager() {
+        return manager;
     }
 }

@@ -3,9 +3,10 @@ package de.medieninformatik.client.interfaces;
 public interface IMainController extends IController{
     void loadBookList();
     void createBook();
-    void createCategory();
-    void createAuthor();
-    void createPublisher();
+    void bookPressed();
+    void categoryPressed();
+    void authorPressed();
+    void publisherPressed();
     void setOrder();
     void updatePageSize(int size);
     void pageBackward();

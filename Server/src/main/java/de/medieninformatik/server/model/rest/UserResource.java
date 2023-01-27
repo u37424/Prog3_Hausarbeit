@@ -12,7 +12,7 @@ public class UserResource {
 
     @GET
     @Path("/login")
-    public Response getAll() {
+    public Response login() {
         if (!loggedIn) {
             loggedIn = true;
             return Response.ok().build();
@@ -22,7 +22,7 @@ public class UserResource {
 
     @GET
     @Path("/logout")
-    public Response getAllBySelection() {
+    public Response logout() {
         if (loggedIn) {
             loggedIn = false;
             return Response.ok().build();
