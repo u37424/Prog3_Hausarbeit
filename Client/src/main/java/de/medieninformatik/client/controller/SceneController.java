@@ -64,14 +64,12 @@ public class SceneController {
             double width = stage.getWidth();
             double height = stage.getHeight();
 
-
             Scene scene = new Scene(parent, width, height);
 
             stage.setScene(scene);
             stage.setWidth(width);
             stage.setHeight(height);
             stage.sizeToScene();
-
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             errorMessage("Resource Error", "Fehler beim laden von Resource: " + resource);

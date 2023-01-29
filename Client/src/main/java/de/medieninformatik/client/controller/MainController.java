@@ -96,7 +96,8 @@ public abstract class MainController implements IMainController {
         this.categoryButton.setVisible(mainUser);
         this.authorButton.setVisible(mainUser);
         this.publisherButton.setVisible(mainUser);
-        this.returnButton.setVisible(true);
+        this.selector.setPrefWidth(0);
+        this.selector.setVisible(false);
         if (mainUser) this.returnButton.setText("Log Out");
         else this.returnButton.setText("Return");
     }
@@ -110,15 +111,19 @@ public abstract class MainController implements IMainController {
     }
 
     @Override
+    @FXML
     abstract public void bookPressed();
 
     @Override
+    @FXML
     abstract public void categoryPressed();
 
     @Override
+    @FXML
     abstract public void authorPressed();
 
     @Override
+    @FXML
     abstract public void publisherPressed();
 
     @Override

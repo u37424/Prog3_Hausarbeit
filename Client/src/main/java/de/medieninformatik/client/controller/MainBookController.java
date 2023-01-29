@@ -38,6 +38,13 @@ public class MainBookController extends MainController {
         loadCategorySelection();
     }
 
+    @Override
+    public void setOptions() {
+        super.setOptions();
+        this.selector.setPrefWidth(150);
+        this.selector.setVisible(true);
+    }
+
     private void loadCategorySelection() {
         model.getCategoryRequest().loadAll();
         if (model.getCategoryRequest().getCategories() == null ||
@@ -78,7 +85,7 @@ public class MainBookController extends MainController {
     public void createItem() {
         super.createItem();
         model.resetSelection();
-        sceneController.loadMainBookScene();
+        sceneController.loadBookViewScene();
     }
 
     @Override

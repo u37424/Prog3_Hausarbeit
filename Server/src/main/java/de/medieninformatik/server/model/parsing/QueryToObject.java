@@ -34,7 +34,7 @@ public class QueryToObject {
     }
 
     public Book getBookList(int from, int amount, String order, String filterString, String filterCategory) throws SQLException {
-        Book books = new Book("");
+        Book books = new Book();
 
         String orderBy = (order == null || order.equals("")) ? "ASC" : (order.equalsIgnoreCase("asc")) ? "ASC" : "DESC";
         String titleMatch = (filterString == null || filterString.equals("")) ? "" : ("AND b.Title LIKE('%" + filterString + "%')");
@@ -53,7 +53,7 @@ public class QueryToObject {
     }
 
     public Category getCategoryList() throws SQLException {
-        Category categories = new Category(0);
+        Category categories = new Category();
         LinkedList<Category> categoryList = new LinkedList<>();
         ResultSet categorySet = connection.query("SELECT Category_ID, Name FROM categories;");
         convertCategoriesForList(categoryList, categorySet);
@@ -61,7 +61,7 @@ public class QueryToObject {
     }
 
     public Publisher getPublisherList() throws SQLException {
-        Publisher publishers = new Publisher(0);
+        Publisher publishers = new Publisher();
         LinkedList<Publisher> publisherList = new LinkedList<>();
         ResultSet publisherSet = connection.query("SELECT Publisher_ID, Name, Year_of_Foundation, Main_Country FROM publishers;");
         convertPublishersForList(publisherList, publisherSet);
@@ -69,7 +69,7 @@ public class QueryToObject {
     }
 
     public Author getAuthorList() throws SQLException {
-        Author authors = new Author(0);
+        Author authors = new Author();
         LinkedList<Author> authorList = new LinkedList<>();
         ResultSet authorSet = connection.query("SELECT Author_ID, First_Name, Last_Name, Alias, Birthday, Age FROM authors;");
         convertAuthorsForList(authorList, authorSet);
@@ -110,7 +110,7 @@ public class QueryToObject {
                     " WHERE bc.ISBN = b.ISBN AND bc.Category_Id = c.Category_Id AND b.ISBN = '" + isbn + "';");
             convertCategoriesForList(categories, categorySet);
 
-            book = new Book(isbn);
+            book = new Book();
             book.setTitle(title);
             book.setPages(pages);
             book.setReleaseYear(year);
@@ -129,7 +129,7 @@ public class QueryToObject {
             String name = resultSet.getString(2);
             int foundation = resultSet.getInt(3);
             String country = resultSet.getString(4);
-            Publisher publisher = new Publisher(publisherId);
+            Publisher publisher = new Publisher();
             publisher.setName(name);
             publisher.setFoundation(foundation);
             publisher.setCountry(country);
@@ -145,7 +145,7 @@ public class QueryToObject {
             String alias = resultSet.getString(4);
             String birthday = resultSet.getString(5);
             int age = resultSet.getInt(6);
-            Author author = new Author(authorId);
+            Author author = new Author();
             author.setFirstName(firstName);
             author.setLastName(lastName);
             author.setAlias(alias);
@@ -159,7 +159,7 @@ public class QueryToObject {
         while (resultSet.next()) {
             int categoryId = resultSet.getInt(1);
             String name = resultSet.getString(2);
-            Category category = new Category(categoryId);
+            Category category = new Category();
             category.setName(name);
             list.add(category);
         }

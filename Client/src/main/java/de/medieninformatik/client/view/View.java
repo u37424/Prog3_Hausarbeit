@@ -43,7 +43,6 @@ public class View extends Application {
         stage.setOnCloseRequest(e -> {
             if (model.isMainUser()) model.logout();
         });
-
         stage.show();
     }
 }
