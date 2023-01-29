@@ -30,7 +30,7 @@
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" />
-    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -115,12 +115,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="returnButton" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#returnToLogin" prefHeight="31.0" prefWidth="80.0" style="-fx-background-color: #cc4b4b;" text="Return" textAlignment="CENTER" GridPane.columnIndex="14">
+      <Button fx:id="returnButton" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#returnToLogin" prefHeight="31.0" style="-fx-background-color: #cc4b4b;" text="Return" textAlignment="CENTER" GridPane.columnIndex="14">
          <font>
             <Font name="Consolas" size="15.0" />
          </font>
          <GridPane.margin>
-            <Insets right="40.0" />
+            <Insets left="-30.0" />
          </GridPane.margin>
          <cursor>
             <Cursor fx:constant="HAND" />

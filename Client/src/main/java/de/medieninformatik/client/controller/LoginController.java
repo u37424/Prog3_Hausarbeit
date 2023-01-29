@@ -9,6 +9,7 @@ public class LoginController implements ILoginController {
 
     private Stage stage;
     private MainModel model;
+    private SceneController sceneController;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -20,15 +21,20 @@ public class LoginController implements ILoginController {
     }
 
     @Override
+    public void setSceneController(SceneController sceneController) {
+        this.sceneController = sceneController;
+    }
+
+    @Override
     public void loginNormalUser() {
         //Normaler Benutzer kann einfach einloggen
-        View.loadScene("/main.fxml", stage, model, new MainBookController());
+        sceneController.loadMainBookScene();
     }
 
     @Override
     public void loginMainUser() {
         //Wenn erfolgreich eingeloggt, sonst Fehler
-        if (!model.login()) View.errorMessage("Login Denied", "Login as Main User has failed!");
-        else View.loadScene("/main.fxml", stage, model, new MainBookController());
+        if (!model.login()) sceneController.errorMessage("Login Denied", "Login as Main User has failed!");
+        else sceneController.loadMainBookScene();
     }
 }

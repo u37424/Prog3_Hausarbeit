@@ -13,14 +13,6 @@ public class BookResource {
     RequestManager manager = Database.getRequestManager();
 
     @GET
-    @Path("max")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMax() {
-        String max = manager.getBookMax();
-        return Response.ok(max).build();
-    }
-
-    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         String books = manager.getAllBooks();

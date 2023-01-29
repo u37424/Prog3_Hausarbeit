@@ -18,9 +18,10 @@ public class Book {
     private LinkedList<Category> categories;
     private LinkedList<Author> authors;
 
-    @JsonCreator
-    public Book(@JsonProperty("isbn") String isbn) {
-        this.isbn = isbn;
+    public Book(){
+        isbn = "";
+        title ="";
+        description = "";
         categories = new LinkedList<>();
         authors = new LinkedList<>();
     }

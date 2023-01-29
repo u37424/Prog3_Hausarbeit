@@ -13,9 +13,11 @@ public class Author {
     private String birthday;
     private int age;
 
-    @JsonCreator
-    public Author(@JsonProperty("authorId") int authorId) {
-        this.authorId = authorId;
+    public Author(){
+        firstName = "";
+        lastName = "";
+        alias = "";
+        birthday = "";
     }
 
     @JsonGetter("authorId")

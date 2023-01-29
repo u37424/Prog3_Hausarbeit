@@ -11,9 +11,9 @@ public class Publisher {
     private int foundation;
     private String country;
 
-    @JsonCreator
-    public Publisher(@JsonProperty("publisherId") int publisherId) {
-        this.publisherId = publisherId;
+    public Publisher() {
+        name = "";
+        country = "";
     }
 
     @JsonGetter("publisherId")

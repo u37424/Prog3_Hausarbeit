@@ -21,13 +21,6 @@ public class AuthorResource {
     }
 
     @GET
-    @Path("max")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getMax() {
-        String max = manager.getAuthorMax();
-        return Response.ok(max).build();
-    }
-    @GET
     @Path("/{start}/{size}/{orderAsc}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllBySelection(@PathParam("start") int start, @PathParam("size") int size, @PathParam("orderAsc") boolean orderAsc,

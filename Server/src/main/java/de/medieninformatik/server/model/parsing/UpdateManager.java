@@ -7,10 +7,12 @@ import de.medieninformatik.common.Publisher;
 import de.medieninformatik.server.model.database.Database;
 
 public class UpdateManager {
-    private final Database database =  Database.getInstance();
+    private final Database database = Database.getInstance();
+
     public boolean putBook(Book book) {
         return false;
     }
+
     public boolean putCategory(Category category) {
         return false;
     }
@@ -27,6 +29,7 @@ public class UpdateManager {
     public boolean postAuthor(Author author) {
         return false;
     }
+
     public boolean postBook(Book book) {
         return false;
     }

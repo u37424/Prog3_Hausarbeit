@@ -8,135 +8,57 @@ import de.medieninformatik.common.Publisher;
 import java.util.LinkedList;
 
 public class MainModel {
-
-    private final RequestManager requestManager;
+    private final Request request;
+    private final BookRequest bookRequest;
+    private final CategoryRequest categoryRequest;
+    private final AuthorRequest authorRequest;
+    private final PublisherRequest publisherRequest;
 
     private boolean mainUser;
     private boolean editMode;
-    private boolean crateMode;
-
-    private String userString;
-    private String userCategory;
-    private boolean ascending;
-    private int pageStart;
-    private int pageSize;
-
-    private Book selection;
-    private LinkedList<Book> books;
-    private LinkedList<Category> categories;
-    private LinkedList<Author> authors;
-    private LinkedList<Publisher> publishers;
-    private int bookListMax;
+    private boolean createMode;
 
     public MainModel() {
-        this.requestManager = new RequestManager();
-
-        this.userString = "";
-        this.userCategory = "";
-        this.ascending = true;
-        this.pageStart = 0;
-        this.pageSize = 5;
+        this.request = new Request();
+        this.bookRequest = new BookRequest(request);
+        this.categoryRequest = new CategoryRequest(request);
+        this.authorRequest = new AuthorRequest(request);
+        this.publisherRequest = new PublisherRequest(request);
     }
 
     public boolean login() {
-        return mainUser = requestManager.login();
+        return mainUser = request.login();
     }
 
     public boolean logout() {
-        return !(mainUser = !requestManager.logout());
+        return !(mainUser = !request.logout());
     }
 
-    public void loadBookList() {
-        this.books = requestManager.loadBooks(this.pageStart, this.pageSize, this.ascending, this.userString, this.userCategory);
-        this.bookListMax = requestManager.getBookListMax();
+    //---------RESET
+
+
+    public BookRequest getBookRequest() {
+        return bookRequest;
     }
 
-    public void loadCategoryList() {
-        //Categories from Server
-        this.categories = requestManager.loadCategories();
+    public CategoryRequest getCategoryRequest() {
+        return categoryRequest;
     }
 
-    public void loadPublisherList() {
-        //Categories from Server
-        this.publishers = requestManager.loadPublishers();
+    public AuthorRequest getAuthorRequest() {
+        return authorRequest;
     }
 
-    public void loadAuthorList() {
-        //Categories from Server
-        this.authors = requestManager.loadAuthors();
-    }
-
-    public void loadBook(String isbn) {
-        this.selection = requestManager.getBook(isbn);
-    }
-
-    public boolean editBook() {
-        return requestManager.editBook(this.selection);
-    }
-
-    public boolean createBook() {
-        return requestManager.createBook(this.selection);
-    }
-
-    public boolean deleteBook(String isbn) {
-        return requestManager.deleteBook(isbn);
+    public PublisherRequest getPublisherRequest() {
+        return publisherRequest;
     }
 
     public void resetSelection() {
-        this.selection = new Book("");
+        this.bookRequest.reset();
     }
 
     public boolean resetDatabase() {
-        return requestManager.resetDatabase();
-    }
-
-    public void pageBackward() {
-        if (pageStart - pageSize >= 0) this.pageStart -= pageSize;
-    }
-
-    public void pageForward() {
-        if (pageStart + pageSize <= bookListMax) this.pageStart += pageSize;
-    }
-
-    public boolean updateFilters(String string, String category) {
-        if (string == null) string = "";
-        if (category == null) category = "";
-
-        if (userString.equals(string) && userCategory.equals(category)) return false;
-        this.userString = string;
-        this.userCategory = category;
-        return true;
-    }
-
-    public boolean resetFilters() {
-        if (userString.isBlank() && userCategory.equals("")) return false;
-        this.userString = "";
-        this.userCategory = "";
-        return true;
-    }
-
-    //GETTER, SETTER
-
-    //--------------Results from Server / Daten des Model
-
-    public Book getSelection() {
-        return selection;
-    }
-
-    public LinkedList<Book> getBooks() {
-        return books;
-    }
-
-    public LinkedList<Category> getCategories() {
-        return categories;
-    }
-
-    public LinkedList<Author> getAuthors() {
-        return authors;
-    }
-
-    public LinkedList<Publisher> getPublishers() {
-        return publishers;
+        return request.resetDatabase();
     }
 
     //-------------User Settings im Model, um Anmeldung ueber mehrere Views / Controller zu behalten
@@ -149,42 +71,16 @@ public class MainModel {
         return editMode;
     }
 
+    public boolean isCreateMode() {
+        return createMode;
+    }
+
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;   //Set Edit Status
     }
 
-    public boolean isCrateMode() {
-        return crateMode;
-    }
-
-    public void setCrateMode(boolean crateMode) {
-        this.editMode = crateMode;
-        this.crateMode = crateMode; //Set Create Status
-    }
-
-    //------------Filter im Model, um konsistent ueber mehrere Views/ Controller zu bleiben
-
-    public boolean isAscending() {
-        return ascending;
-    }
-
-    public void setAscending(boolean ascending) {
-        this.ascending = ascending;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public String getUserString() {
-        return userString;
-    }
-
-    public String getUserCategory() {
-        return userCategory;
+    public void setCreateMode(boolean createMode) {
+        this.editMode = createMode;
+        this.createMode = createMode; //Set Create Status
     }
 }

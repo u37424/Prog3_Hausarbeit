@@ -12,24 +12,6 @@ public class RequestManager {
 
     //-------GET METHODS
 
-    //-------GET MAX
-
-    public String getBookMax() {
-        return asMax(query.getBookMax());
-    }
-
-    public String getCategoryMax() {
-        return asMax(query.getCategoryMax());
-    }
-
-    public String getAuthorMax() {
-        return asMax(query.getAuthorMax());
-    }
-
-    public String getPublisherMax() {
-        return asMax(query.getPublisherMax());
-    }
-
     // --------GET LISTS
 
     public String getAllBooks() {
@@ -38,8 +20,10 @@ public class RequestManager {
 
     public String getAllBooks(int start, int size, boolean orderAsc, String string, String category) {
         LinkedList<Book> books = query.getAllBooks(start, size, orderAsc, string, category);
+        int maxBooks = query.getBookMax();
         DBMeta meta = new DBMeta();
         meta.setBooks(books);
+        meta.setResultMax(maxBooks);
         return asJSON(meta);
     }
 
@@ -98,12 +82,6 @@ public class RequestManager {
 
 
     //------CONVERT GET METHODS
-
-    private String asMax(int max) {
-        DBMeta meta = new DBMeta();
-        meta.setResultMax(max);
-        return asJSON(meta);
-    }
 
     private <T> String asJSON(T object) {
         ObjectMapper mapper = new ObjectMapper();

@@ -9,11 +9,7 @@ import de.medieninformatik.server.model.database.Database;
 import java.util.LinkedList;
 
 public class QueryManager {
-    private final Database database =  Database.getInstance();
-
-    public QueryManager() {
-
-    }
+    private final Database database = Database.getInstance();
 
     //------Get Max Data
 

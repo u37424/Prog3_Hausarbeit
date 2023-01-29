@@ -1,8 +1,8 @@
 package de.medieninformatik.client.interfaces;
 
 public interface IMainController extends IController{
-    void loadBookList();
-    void createBook();
+    void loadItemList();
+    void createItem();
     void bookPressed();
     void categoryPressed();
     void authorPressed();
@@ -14,8 +14,8 @@ public interface IMainController extends IController{
     void updateFilter();
     void resetFilter();
     void returnToLogin();
-    void inspectBook(String isbn);
-    void editBook(String isbn);
-    void deleteBook(String isbn);
+    void inspectItem(String id);
+    void editItem(String id);
+    void deleteItem(String id);
     void resetDatabase();
 }

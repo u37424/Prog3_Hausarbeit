@@ -9,9 +9,8 @@ public class Category {
     private int categoryId;
     private String name;
 
-    @JsonCreator
-    public Category(@JsonProperty("categoryId") int categoryId) {
-        this.categoryId = categoryId;
+    public Category(){
+        name = "";
     }
 
     @JsonGetter("categoryId")

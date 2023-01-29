@@ -16,7 +16,6 @@ public class Database {
 
     private static Connection connection;
     private String driver;
-    private String url;
     private String user;
     private String password;
     private String dbName;
@@ -32,7 +31,7 @@ public class Database {
     private void loadResources() {
         ResourceBundle bundle = ResourceBundle.getBundle("Database_Connection");
         this.driver = bundle.getString("Driver");
-        this.url = bundle.getString("URL");
+        String url = bundle.getString("URL");
         this.user = bundle.getString("User");
         this.password = bundle.getString("Password");
         this.dbName = bundle.getString("Database.Name");
@@ -83,10 +82,8 @@ public class Database {
                 sql.append(line);
             }
 
-            // split the SQL file into individual statements
+            //execute as individual Queries
             String[] statements = sql.toString().split(";");
-
-            // execute each statement
             for (String statement : statements) {
                 if (statement.isBlank()) continue;
                 update(statement);

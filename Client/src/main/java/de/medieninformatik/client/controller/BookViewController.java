@@ -32,6 +32,7 @@ public class BookViewController implements IBookController {
 
     private Stage stage;
     private MainModel model;
+    private SceneController sceneController;
 
     @FXML
     public void initialize() {
@@ -48,16 +49,21 @@ public class BookViewController implements IBookController {
         this.model = model;
         //Model received
         setOptions();
-        Book book = model.getSelection();
+        Book book = model.getBookRequest().getSelection();
         if (book == null) return;
         displayBook(book);
+    }
+
+    @Override
+    public void setSceneController(SceneController sceneController) {
+        this.sceneController = sceneController;
     }
 
     private void setOptions() {
         if (!model.isMainUser()) return;
         //Wenn im Editing Modus
         boolean isEdit = model.isEditMode();
-        boolean isCreate = model.isCrateMode();
+        boolean isCreate = model.isCreateMode();
         this.editTitle.setVisible(isEdit);
         this.editYear.setVisible(isEdit);
         this.editPages.setVisible(isEdit);
@@ -115,12 +121,12 @@ public class BookViewController implements IBookController {
 
     @Override
     public void returnToMain() {
-        if (model.isCrateMode() || model.isEditMode()) {
-            if (!View.confirmMessage("Leave Editing", "Unsaved Changes will be lost!")) return;
+        if (model.isCreateMode() || model.isEditMode()) {
+            if (!sceneController.confirmMessage("Leave Editing", "Unsaved Changes will be lost!")) return;
         }
-        model.setCrateMode(false);
+        model.setCreateMode(false);
         model.setEditMode(false);
-        View.loadScene("/main.fxml", stage, model, new MainBookController());
+        sceneController.loadMainBookScene();
     }
 
     @Override
@@ -152,43 +158,43 @@ public class BookViewController implements IBookController {
             ((ImageView) n).setImage(new Image(image));
             if (id.equals(n.getId())) {
                 image = "star_empty.png";
-                model.getSelection().setRating(val);
+                model.getBookRequest().getSelection().setRating(val);
             }
         }
-        displayBook(model.getSelection());
+        displayBook(model.getBookRequest().getSelection());
     }
 
     @Override
     public void editBookAuthors() {
-        displayBook(model.getSelection());
+        displayBook(model.getBookRequest().getSelection());
     }
 
     @Override
     public void editBookPublisher() {
-        displayBook(model.getSelection());
+        displayBook(model.getBookRequest().getSelection());
     }
 
     @Override
     public void editBookCategories() {
-        displayBook(model.getSelection());
+        displayBook(model.getBookRequest().getSelection());
     }
 
     @Override
     public void submitChanges() {
-        boolean res = model.isCrateMode() ? model.createBook() : model.editBook();
+        boolean res = model.isCreateMode() ? model.getBookRequest().createBook() : model.getBookRequest().editBook();
         if (res) {
-            View.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
+            sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
             returnToMain();
-        } else View.errorMessage("Submit Error", "Failed to save Changes!");
+        } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
 
     }
 
     @Override
     public void deleteBook() {
-        if (View.confirmMessage("Delete Book", "Do you really want to delete " + model.getSelection().getIsbn() + " ?")) {
-            boolean res = model.deleteBook(model.getSelection().getIsbn());
-            if (res) View.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else View.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+        if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getIsbn() + " ?")) {
+            boolean res = model.getBookRequest().deleteBook(model.getBookRequest().getSelection().getIsbn());
+            if (res) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }
