@@ -58,6 +58,9 @@ public abstract class MainController implements IMainController {
                 inspectItem(id);
             }
         });
+
+        this.selector.setPrefWidth(0);
+        this.selector.setVisible(false);
     }
 
     public void setStage(Stage stage) {
@@ -96,8 +99,6 @@ public abstract class MainController implements IMainController {
         this.categoryButton.setVisible(mainUser);
         this.authorButton.setVisible(mainUser);
         this.publisherButton.setVisible(mainUser);
-        this.selector.setPrefWidth(0);
-        this.selector.setVisible(false);
         if (mainUser) this.returnButton.setText("Log Out");
         else this.returnButton.setText("Return");
     }

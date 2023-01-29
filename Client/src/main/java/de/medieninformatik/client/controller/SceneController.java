@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class SceneController {
     private MainModel model;
     private Stage stage;
+    private Scene scene;
     private IController login;
     private IController mainBook;
     private IController mainCategory;
@@ -27,6 +29,7 @@ public class SceneController {
     private IController publisherViewController;
 
     public SceneController(){
+        this.scene = new Scene(new AnchorPane());
         this.login = new LoginController();
         this.mainBook = new MainBookController();
         this.bookViewController = new BookViewController();
@@ -38,6 +41,7 @@ public class SceneController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        stage.setScene(scene);
     }
 
     public void loadLoginScene(){
@@ -61,15 +65,7 @@ public class SceneController {
 
             setParameters(controller);
 
-            double width = stage.getWidth();
-            double height = stage.getHeight();
-
-            Scene scene = new Scene(parent, width, height);
-
-            stage.setScene(scene);
-            stage.setWidth(width);
-            stage.setHeight(height);
-            stage.sizeToScene();
+            scene.setRoot(parent);
         } catch (IOException | RuntimeException e) {
             e.printStackTrace();
             errorMessage("Resource Error", "Fehler beim laden von Resource: " + resource);

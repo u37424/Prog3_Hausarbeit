@@ -1,6 +1,7 @@
 package de.medieninformatik.client.interfaces;
 
 public interface IMainController extends IController{
+    void setOptions();
     void loadItemList();
     void createItem();
     void bookPressed();

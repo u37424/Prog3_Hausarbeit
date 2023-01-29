@@ -21,8 +21,7 @@ public class Database {
 
     private Database() {
         loadResources();
-        connect();
-        init();
+        if (connect()) init();
     }
 
     private void loadResources() {
@@ -37,17 +36,17 @@ public class Database {
         this.baseURL = url + "/" + dbName;
     }
 
-    private void connect() {
+    private boolean connect() {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(baseURL, user, password);
+            return true;
         } catch (SQLException e) {
             printSQLErrors(e);
-            System.exit(-1);
         } catch (ClassNotFoundException e) {
             System.err.println("MySQL Driver not found.");
-            System.exit(-1);
         }
+        return false;
     }
 
     private void init() {

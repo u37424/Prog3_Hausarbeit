@@ -1,17 +1,12 @@
 package de.medieninformatik.client.controller;
 
-import de.medieninformatik.client.interfaces.IController;
-import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.client.view.View;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -19,11 +14,14 @@ import java.util.LinkedList;
 
 public class MainBookController extends MainController {
     @FXML
+    @Override
     public void initialize() {
         super.initialize();
         bookButton.setStyle(bookButton.getStyle() + "-fx-background-color: #5dc367;");
         //Default Category Selection
         selector.getItems().add("");
+        this.selector.setPrefWidth(150);
+        this.selector.setVisible(true);
     }
 
     @Override
@@ -36,13 +34,6 @@ public class MainBookController extends MainController {
         super.setModel(model);
         //Specific selection for books
         loadCategorySelection();
-    }
-
-    @Override
-    public void setOptions() {
-        super.setOptions();
-        this.selector.setPrefWidth(150);
-        this.selector.setVisible(true);
     }
 
     private void loadCategorySelection() {

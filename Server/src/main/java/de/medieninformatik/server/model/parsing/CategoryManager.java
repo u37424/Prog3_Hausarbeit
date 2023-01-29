@@ -3,10 +3,12 @@ package de.medieninformatik.server.model.parsing;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.DBMeta;
 
-public class CategoryManager {
+import java.util.LinkedList;
 
+public class CategoryManager {
     public DBMeta getAll() {
-        return null;
+        LinkedList<Category> categories = new LinkedList<>();
+        return asDBMeta(categories);
     }
 
     public DBMeta getSelection(int start, int size, boolean orderAsc, String string) {
@@ -27,5 +29,16 @@ public class CategoryManager {
 
     public boolean deleteItem(int id) {
         return false;
+    }
+
+    private DBMeta asDBMeta(LinkedList<Category> categories) {
+        DBMeta meta = new DBMeta();
+        meta.setResultMax(getMax());
+        meta.setCategories(categories);
+        return meta;
+    }
+
+    private int getMax() {
+        return 0;
     }
 }

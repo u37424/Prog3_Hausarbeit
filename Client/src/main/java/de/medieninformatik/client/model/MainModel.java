@@ -1,12 +1,5 @@
 package de.medieninformatik.client.model;
 
-import de.medieninformatik.common.Author;
-import de.medieninformatik.common.Book;
-import de.medieninformatik.common.Category;
-import de.medieninformatik.common.Publisher;
-
-import java.util.LinkedList;
-
 public class MainModel {
     private final Request request;
     private final BookRequest bookRequest;
@@ -32,6 +25,10 @@ public class MainModel {
 
     public boolean logout() {
         return !(mainUser = !request.logout());
+    }
+
+    public void changeHostName(String name){
+        request.changeHostName(name);
     }
 
     //---------RESET

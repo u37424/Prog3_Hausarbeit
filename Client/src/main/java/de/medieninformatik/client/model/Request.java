@@ -22,15 +22,17 @@ public class Request {
     private final String logoutPath;
     private final String resetPath;
 
-    private final String baseURI;
+    private final String hostPort;
+    private final String basePath;
+    private String baseURI;
     private final Client client;
 
     public Request() {
         ResourceBundle bundle = ResourceBundle.getBundle("ServerResources");
         //Set BASE URI
         String hostAddress = bundle.getString("Host.Address");
-        String hostPort = bundle.getString("Host.Port");
-        String basePath = bundle.getString("Base.Path");
+        this.hostPort = bundle.getString("Host.Port");
+        this.basePath = bundle.getString("Base.Path");
         this.baseURI = "http://" + hostAddress + ":" + hostPort + "/" + basePath;
 
         //Set Path Attributes
@@ -43,6 +45,10 @@ public class Request {
     }
 
     //---------USER REQUESTS
+
+    public void changeHostName(String hostName) {
+        this.baseURI = "http://" + hostName + ":" + hostPort + "/" + basePath;
+    }
 
     public boolean login() {
         Response response = serverRequest("GET", "/" + userPath + "/" + loginPath);
@@ -62,6 +68,7 @@ public class Request {
     //----------Converter Methods (JSON -> POJO)
 
     boolean isOk(Response response) {
+        if (response == null) return false;
         return status(response) == 200;
     }
 
@@ -109,7 +116,7 @@ public class Request {
                 case "PUT" -> target.request().put(Entity.entity(json, MediaType.APPLICATION_JSON));
                 case "POST" -> target.request().post(Entity.entity(json, MediaType.APPLICATION_JSON));
                 case "DELETE" -> target.request().delete();
-                default -> Response.noContent().build();
+                default -> null;
             };
 
         } catch (JsonProcessingException e) {
@@ -117,7 +124,7 @@ public class Request {
         } catch (RuntimeException e) {
             System.err.println("Connection refused.");
         }
-        return Response.noContent().build();
+        return null;
     }
 
     //--------Debug

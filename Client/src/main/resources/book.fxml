@@ -33,21 +33,21 @@
     <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="50.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
       <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Label fx:id="title" prefHeight="69.0" text="No Title found" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
@@ -56,7 +56,7 @@
          </font>
       </Label>
       <Separator style="-fx-background-color: black; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.valignment="BOTTOM" />
-      <Label prefHeight="41.0" prefWidth="282.0" text="ISBN:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label text="ISBN:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font size="20.0" />
          </font>
@@ -137,7 +137,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </GridPane.margin>
       </HBox>
-      <Label fx:id="isbn" prefHeight="41.0" text="00-000-00-000-00-0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <Label fx:id="isbn" text="00-000-00-000-00-0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <font>
             <Font size="20.0" />
          </font>

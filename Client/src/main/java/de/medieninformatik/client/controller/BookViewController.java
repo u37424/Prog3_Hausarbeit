@@ -1,8 +1,7 @@
 package de.medieninformatik.client.controller;
 
-import de.medieninformatik.client.interfaces.IBookController;
+import de.medieninformatik.client.interfaces.IViewController;
 import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.client.view.View;
 import de.medieninformatik.common.Book;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,7 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class BookViewController implements IBookController {
+public class BookViewController extends ViewController {
     @FXML
     private Label title, isbn, pages, year, rating;
 
@@ -25,23 +24,10 @@ public class BookViewController implements IBookController {
     private TextArea description;
 
     @FXML
-    private Button submitButton, deleteButton, backButton;
-
-    @FXML
     private Button editIsbn, editYear, editPages, editTitle, editPublisher, editAuthors, editCategories;
 
-    private Stage stage;
-    private MainModel model;
-    private SceneController sceneController;
-
-    @FXML
-    public void initialize() {
-
-    }
-
     public void setStage(Stage stage) {
-        this.stage = stage;
-        //Stage received
+        super.setStage(stage);
         this.stage.setTitle("Book Inspector");
     }
 
@@ -59,23 +45,21 @@ public class BookViewController implements IBookController {
         this.sceneController = sceneController;
     }
 
-    private void setOptions() {
+    @Override
+    public void setOptions() {
         if (!model.isMainUser()) return;
-        //Wenn im Editing Modus
+        super.setOptions();
+
         boolean isEdit = model.isEditMode();
         boolean isCreate = model.isCreateMode();
+
         this.editTitle.setVisible(isEdit);
         this.editYear.setVisible(isEdit);
         this.editPages.setVisible(isEdit);
         this.editPublisher.setVisible(isEdit);
         this.editAuthors.setVisible(isEdit);
         this.editCategories.setVisible(isEdit);
-
         this.editIsbn.setVisible(isEdit && isCreate);
-        this.submitButton.setVisible(isEdit);
-        this.deleteButton.setVisible(isEdit && !isCreate);
-        ((ImageView) this.backButton.getGraphic()).setImage(new Image((isEdit) ? "exit.png" : "return.png"));
-        if (isEdit) this.stage.setTitle("Book Editor");
 
         //Wenn im Create Modus
         this.description.setEditable(isCreate);

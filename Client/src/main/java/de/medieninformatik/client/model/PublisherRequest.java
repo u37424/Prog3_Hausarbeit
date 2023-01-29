@@ -24,7 +24,7 @@ public class PublisherRequest {
         this.publisherPath = "/"+bundle.getString("Publisher.Path");
     }
 
-    //----------POJOS FOR MODEL
+    //----------POJOs FOR MODEL
 
     public Publisher getSelection() {
         return selection;
