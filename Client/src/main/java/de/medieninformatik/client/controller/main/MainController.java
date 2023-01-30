@@ -42,11 +42,12 @@ public abstract class MainController implements IMainController {
     protected int pageSize;
     private int minPage;
     private int maxPage;
+    private int increment;
 
     @FXML
     public void initialize() {
         //Limits des Spinners setzen
-        setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minPage, maxPage, pageStart, pageSize));
+        setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minPage, maxPage, pageStart, increment));
         //Onclick eines Listen Items (HBox.getID() == someISBN)
         page.setOnMouseClicked((e) -> {
             if (e.getClickCount() > 1) {
@@ -68,6 +69,7 @@ public abstract class MainController implements IMainController {
         this.pageSize = 5;
         this.minPage = 5;
         this.maxPage = 100;
+        this.increment = 5;
     }
 
     public void setStage(Stage stage) {

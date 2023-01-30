@@ -6,11 +6,14 @@ import de.medieninformatik.common.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
+import java.util.Locale;
 
 public class MainBookController extends MainController {
     @FXML
@@ -65,10 +68,30 @@ public class MainBookController extends MainController {
         for (Book book : books) {
             HBox hbox = new HBox();
             hbox.setId(book.getIsbn());
-            Label title = new Label(book.getTitle());
-            hbox.getChildren().add(title);
+
+            TextFlow textFlow = new TextFlow();
+            String title = book.getTitle();
+            String checkTitle = title.toLowerCase(Locale.ROOT);
+            String checkString = this.userString.toLowerCase(Locale.ROOT);
+            int index = checkTitle.indexOf(checkString);
+            if (index >= 0) {
+                if (index > 0) {
+                    textFlow.getChildren().add(new Text(title.substring(0, index)));
+                }
+                Text fill = new Text(title.substring(index, index+checkString.length()));
+                fill.setFill(Color.RED);
+                textFlow.getChildren().add(fill);
+                textFlow.getChildren().add(new Text(title.substring(index + userString.length())));
+            } else {
+                textFlow.getChildren().add(new Text(title));
+            }
+            hbox.getChildren().add(textFlow);
+
             list.add(hbox);
         }
+
+
+
         return list;
     }
 
@@ -115,7 +138,8 @@ public class MainBookController extends MainController {
     @Override
     public void deleteItem(String id) {
         if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getTitle() + " ?")) {
-            if (model.getBookRequest().deleteBook(id)) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            if (model.getBookRequest().deleteBook(id))
+                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
             else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
