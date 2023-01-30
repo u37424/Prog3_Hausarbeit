@@ -91,18 +91,18 @@ public class MainBookController extends MainController {
 
     @Override
     public void authorPressed() {
-
+        sceneController.loadMainAuthorScene();
     }
 
     @Override
     public void publisherPressed() {
-
+        sceneController.loadMainPublisherScene();
     }
 
     @Override
     public void pageForward() {
         if (pageStart + pageSize < model.getBookRequest().getMax()) this.pageStart += pageSize;
-        //Reload Book List
+        //Reload List
         loadItemList();
     }
 

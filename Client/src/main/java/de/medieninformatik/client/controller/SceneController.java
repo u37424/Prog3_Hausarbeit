@@ -33,8 +33,12 @@ public class SceneController {
         this.login = new LoginController();
         this.mainBook = new MainBookController();
         this.mainCategory = new MainCategoryController();
+        this.mainAuthor = new MainAuthorController();
+        this.mainPublisher = new MainPublisherController();
         this.bookViewController = new BookViewController();
         this.categoryViewController = new CategoryViewController();
+        this.authorViewController = new AuthorViewController();
+        this.publisherViewController = new PublisherViewController();
     }
 
     public void setModel(MainModel model) {
@@ -58,12 +62,28 @@ public class SceneController {
         loadScene("/main.fxml", mainCategory);
     }
 
+    public void loadMainAuthorScene(){
+        loadScene("/main.fxml", mainAuthor);
+    }
+
+    public void loadMainPublisherScene(){
+        loadScene("/main.fxml", mainPublisher);
+    }
+
     public void loadBookViewScene(){
         loadScene("/book.fxml", bookViewController);
     }
 
     public void loadCategoryViewScene(){
         loadScene("/category.fxml", categoryViewController);
+    }
+
+    public void loadAuthorViewScene() {
+        loadScene("/author.fxml", authorViewController);
+    }
+
+    public void loadPublisherViewScene() {
+        loadScene("/publisher.fxml", publisherViewController);
     }
 
     private void loadScene(String resource, IController controller) {
