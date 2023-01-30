@@ -1,16 +1,10 @@
-package de.medieninformatik.client.controller;
+package de.medieninformatik.client.controller.inspector;
 
 import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class CategoryViewController extends ViewController<Category> {

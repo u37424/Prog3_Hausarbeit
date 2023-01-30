@@ -1,5 +1,6 @@
-package de.medieninformatik.client.controller;
+package de.medieninformatik.client.controller.main;
 
+import de.medieninformatik.client.controller.SceneController;
 import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;

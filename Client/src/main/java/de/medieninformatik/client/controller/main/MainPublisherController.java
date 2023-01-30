@@ -1,7 +1,6 @@
-package de.medieninformatik.client.controller;
+package de.medieninformatik.client.controller.main;
 
-import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.common.Author;
+import de.medieninformatik.common.Publisher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,40 +15,36 @@ public class MainPublisherController extends MainController {
     @Override
     public void initialize() {
         super.initialize();
-        authorButton.setStyle(authorButton.getStyle() + "-fx-background-color: #5dc367;");
+        publisherButton.setStyle(publisherButton.getStyle() + "-fx-background-color: #5dc367;");
     }
 
     @Override
     public void setStage(Stage stage) {
         super.setStage(stage);
-        stage.setTitle("Author List");
-    }
-
-    public void setModel(MainModel model) {
-        super.setModel(model);
+        stage.setTitle("Publisher List");
     }
 
     @Override
     public void loadItemList() {
         //Aktuelle Daten laden
-        model.getAuthorRequest().loadSelection(pageStart, pageSize, ascending, userString);
+        model.getPublisherRequest().loadSelection(pageStart, pageSize, ascending, userString);
         //Liste aus den Daten erstellen
-        ObservableList<HBox> list = FXCollections.observableArrayList(buildAuthorItems());
+        ObservableList<HBox> list = FXCollections.observableArrayList(buildPublisherItems());
         //Elemente in die ListView einsetzen
         page.setItems(list);
     }
 
-    private LinkedList<HBox> buildAuthorItems() {
+    private LinkedList<HBox> buildPublisherItems() {
         LinkedList<HBox> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
         //Liste aus den Daten erstellen
-        LinkedList<Author> authors = model.getAuthorRequest().getAuthors();
-        if (authors == null || authors.size() == 0) return list;
+        LinkedList<Publisher> publishers = model.getPublisherRequest().getPublishers();
+        if (publishers == null || publishers.size() == 0) return list;
         //List HBox
-        for (Author author : authors) {
+        for (Publisher publisher : publishers) {
             HBox hbox = new HBox();
-            hbox.setId(String.valueOf(author.getAuthorId()));
-            Label alias = new Label(author.getAlias());
-            hbox.getChildren().add(alias);
+            hbox.setId(String.valueOf(publisher.getPublisherId()));
+            Label name = new Label(publisher.getName());
+            hbox.getChildren().add(name);
             list.add(hbox);
         }
         return list;
@@ -58,8 +53,8 @@ public class MainPublisherController extends MainController {
     @Override
     public void createItem() {
         super.createItem();
-        model.getAuthorRequest().reset();
-        sceneController.loadAuthorViewScene();
+        model.getPublisherRequest().reset();
+        sceneController.loadPublisherViewScene();
     }
 
     @Override
@@ -74,31 +69,31 @@ public class MainPublisherController extends MainController {
 
     @Override
     public void authorPressed() {
-        createItem();
+      sceneController.loadMainAuthorScene();
     }
 
     @Override
     public void publisherPressed() {
-        sceneController.loadMainPublisherScene();
+        createItem();
     }
 
     @Override
     public void pageForward() {
-        if (pageStart + pageSize < model.getAuthorRequest().getMax()) this.pageStart += pageSize;
+        if (pageStart + pageSize < model.getPublisherRequest().getMax()) this.pageStart += pageSize;
         //Reload List
         loadItemList();
     }
 
     @Override
     public void inspectItem(String id) {
-        model.getAuthorRequest().getAuthor(Integer.parseInt(id));
-        sceneController.loadAuthorViewScene();
+        model.getPublisherRequest().getPublisher(Integer.parseInt(id));
+        sceneController.loadPublisherViewScene();
     }
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Author", "Do you really want to delete " + model.getAuthorRequest().getSelection().getAlias() + " ?")) {
-            if (model.getAuthorRequest().deleteAuthor(Integer.parseInt(id))) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+        if (sceneController.confirmMessage("Delete Publisher", "Do you really want to delete " + model.getPublisherRequest().getSelection().getName() + " ?")) {
+            if (model.getPublisherRequest().deletePublisher(Integer.parseInt(id))) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
             else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }

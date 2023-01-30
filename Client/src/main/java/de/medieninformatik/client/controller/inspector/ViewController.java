@@ -1,5 +1,6 @@
-package de.medieninformatik.client.controller;
+package de.medieninformatik.client.controller.inspector;
 
+import de.medieninformatik.client.controller.SceneController;
 import de.medieninformatik.client.interfaces.IViewController;
 import de.medieninformatik.client.model.MainModel;
 import javafx.fxml.FXML;

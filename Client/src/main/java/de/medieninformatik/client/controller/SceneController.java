@@ -1,8 +1,15 @@
 package de.medieninformatik.client.controller;
 
+import de.medieninformatik.client.controller.inspector.AuthorViewController;
+import de.medieninformatik.client.controller.inspector.BookViewController;
+import de.medieninformatik.client.controller.inspector.CategoryViewController;
+import de.medieninformatik.client.controller.inspector.PublisherViewController;
+import de.medieninformatik.client.controller.main.MainAuthorController;
+import de.medieninformatik.client.controller.main.MainBookController;
+import de.medieninformatik.client.controller.main.MainCategoryController;
+import de.medieninformatik.client.controller.main.MainPublisherController;
 import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.client.view.View;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

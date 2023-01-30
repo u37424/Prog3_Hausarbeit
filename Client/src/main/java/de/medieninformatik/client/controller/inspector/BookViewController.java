@@ -1,4 +1,4 @@
-package de.medieninformatik.client.controller;
+package de.medieninformatik.client.controller.inspector;
 
 import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.common.Book;
