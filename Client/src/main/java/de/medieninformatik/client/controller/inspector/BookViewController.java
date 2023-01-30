@@ -23,7 +23,7 @@ public class BookViewController extends ViewController<Book> {
     private TextArea description;
 
     @FXML
-    private Button editIsbn, editYear, editPages, editTitle, editPublisher, editAuthors, editCategories;
+    private Button editIsbn, editYear, editPages, editTitle, editPublisher, addAuthor, addCategory;
 
     public void setStage(Stage stage) {
         super.setStage(stage);
@@ -53,8 +53,8 @@ public class BookViewController extends ViewController<Book> {
         this.editYear.setVisible(isEdit);
         this.editPages.setVisible(isEdit);
         this.editPublisher.setVisible(isEdit);
-        this.editAuthors.setVisible(isEdit);
-        this.editCategories.setVisible(isEdit);
+        this.addAuthor.setVisible(isEdit);
+        this.addCategory.setVisible(isEdit);
 
 
         //Wenn im Create Modus
@@ -145,15 +145,15 @@ public class BookViewController extends ViewController<Book> {
         displayValues(model.getBookRequest().getSelection());
     }
 
-    public void editBookAuthors() {
-        displayValues(model.getBookRequest().getSelection());
-    }
-
     public void editBookPublisher() {
         displayValues(model.getBookRequest().getSelection());
     }
 
-    public void editBookCategories() {
+    public void addBookAuthor() {
+        displayValues(model.getBookRequest().getSelection());
+    }
+
+    public void addBookCategory() {
         displayValues(model.getBookRequest().getSelection());
     }
 

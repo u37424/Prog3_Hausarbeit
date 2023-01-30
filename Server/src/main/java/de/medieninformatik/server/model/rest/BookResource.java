@@ -3,10 +3,12 @@ package de.medieninformatik.server.model.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.DBMeta;
+import de.medieninformatik.server.model.database.Database;
 import de.medieninformatik.server.model.parsing.RequestManager;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 @Path("book")
@@ -22,6 +24,9 @@ public class BookResource {
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            Database.getInstance().printSQLErrors(e);
+            return Response.noContent().build();
         }
     }
 
@@ -36,6 +41,9 @@ public class BookResource {
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            Database.getInstance().printSQLErrors(e);
+            return Response.noContent().build();
         }
     }
 
@@ -48,6 +56,9 @@ public class BookResource {
             return Response.ok(manager.asJSON(book)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            Database.getInstance().printSQLErrors(e);
+            return Response.noContent().build();
         }
     }
 
@@ -59,6 +70,9 @@ public class BookResource {
             if (manager.getBookManager().putItem(book)) return Response.ok().build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            Database.getInstance().printSQLErrors(e);
+            return Response.noContent().build();
         }
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
@@ -73,6 +87,9 @@ public class BookResource {
             if (manager.getBookManager().postItem(book)) return Response.created(builder.build()).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (SQLException e) {
+            Database.getInstance().printSQLErrors(e);
+            return Response.noContent().build();
         }
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
@@ -80,7 +97,11 @@ public class BookResource {
     @DELETE
     @Path("/{isbn}")
     public Response deleteBook(@PathParam("isbn") String isbn) {
-        if (manager.getBookManager().deleteItem(isbn)) return Response.ok().build();
-        else return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        try {
+            if (manager.getBookManager().deleteItem(isbn)) return Response.ok().build();
+            else return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        } catch (SQLException e) {
+            return Response.noContent().build();
+        }
     }
 }

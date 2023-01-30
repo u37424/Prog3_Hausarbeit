@@ -53,7 +53,7 @@ public class BookRequest {
     public void loadSelection(int start, int limit, boolean orderAsc, String string, String category) {
         string = URLEncoder.encode(string, StandardCharsets.UTF_8);
         category = URLEncoder.encode(category, StandardCharsets.UTF_8);
-        String query = bookPath + "/" + start + "/" + limit + "/" + orderAsc + "?string=" + string + "?category=" + category;
+        String query = bookPath + "/" + start + "/" + limit + "/" + orderAsc + "?string=" + string + "&category=" + category;
         Response response = request.serverRequest("GET", query);
         DBMeta result = request.createObject(response, DBMeta.class);
         this.books = result.getBooks();

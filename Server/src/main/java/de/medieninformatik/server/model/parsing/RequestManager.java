@@ -17,8 +17,6 @@ public class RequestManager {
         this.authorManager = new AuthorManager();
         this.publisherManager = new PublisherManager();
     }
-    //-------GET METHODS
-
 
     public BookManager getBookManager() {
         return bookManager;
@@ -40,8 +38,8 @@ public class RequestManager {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(object);
-        } catch (JsonProcessingException e){
-            System.err.println("Cannot parse "+object.getClass()+" to JSON.");
+        } catch (JsonProcessingException e) {
+            System.err.println("Cannot parse " + object.getClass() + " to JSON.");
             throw e;
         }
     }
@@ -50,8 +48,8 @@ public class RequestManager {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, tClass);
-        } catch (JsonProcessingException e){
-            System.err.println("Cannot parse JSON to "+tClass);
+        } catch (JsonProcessingException e) {
+            System.err.println("Cannot parse JSON to " + tClass);
             throw e;
         }
     }
