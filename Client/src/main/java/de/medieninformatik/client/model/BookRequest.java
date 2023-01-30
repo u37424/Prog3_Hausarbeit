@@ -67,7 +67,7 @@ public class BookRequest {
 
     public boolean createBook() {
         Response response = request.serverRequest("POST", bookPath, selection);
-        return request.isOk(response);
+        return request.isCreated(response);
     }
 
     public boolean deleteBook(String isbn) {

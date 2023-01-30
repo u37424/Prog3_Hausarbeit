@@ -85,6 +85,8 @@ public class BookViewController extends ViewController<Book> {
             this.description.setDisable(false);
         }
 
+        setBookRating(book.getRating());
+
         //Load Publisher into Label
         if (book.getPublisher() != null) this.publisher.setText(book.getPublisher().toString());
 
@@ -112,22 +114,56 @@ public class BookViewController extends ViewController<Book> {
         sceneController.loadMainBookScene();
     }
 
+
     //--------EDIT VALUES
-
     public void editBookTitle() {
-
+        String eingabe = sceneController.editMessage("Edit Title", this.title.getText(), "Book Title");
+        if (eingabe == null || this.title.getText().equals(eingabe)) return;
+        this.title.setText(eingabe);
+        model.getBookRequest().getSelection().setTitle(eingabe);
     }
 
     public void editBookISBN() {
-
+        String eingabe = sceneController.editMessage("Edit ISBN", this.isbn.getText(), "Book ISBN");
+        if (eingabe == null || this.isbn.getText().equals(eingabe)) return;
+        this.isbn.setText(eingabe);
+        model.getBookRequest().getSelection().setIsbn(eingabe);
     }
 
     public void editBookYear() {
-
+        try {
+            int eingabe = Integer.parseInt(sceneController.editMessage("Edit Release Year", this.year.getText(), "Release Year"));
+            if (Integer.parseInt(this.year.getText()) == eingabe) return;
+            this.year.setText(String.valueOf(eingabe));
+            model.getBookRequest().getSelection().setReleaseYear(eingabe);
+        } catch (NumberFormatException e) {
+            sceneController.errorMessage("Invalid Type", "No valid Number entered.");
+        }
     }
 
     public void editBookPages() {
+        try {
+            int eingabe = Integer.parseInt(sceneController.editMessage("Edit Pages", this.pages.getText(), "Book Pages"));
+            if (Integer.parseInt(this.pages.getText()) == eingabe) return;
+            this.pages.setText(String.valueOf(eingabe));
+            model.getBookRequest().getSelection().setPages(eingabe);
+        } catch (NumberFormatException e) {
+            sceneController.errorMessage("Invalid Type", "No valid Number entered.");
+        }
+    }
 
+    private void setBookRating(double rating) {
+        int r = (int) rating;
+        if (r == 0) return;
+        String id = "star" + r;
+        String image = "star_filled.png";
+
+        for (Node n : ratingBox.getChildren()) {
+            ((ImageView) n).setImage(new Image(image));
+            if (id.equals(n.getId())) {
+                image = "star_empty.png";
+            }
+        }
     }
 
     public void editBookRating(String id) {
@@ -159,10 +195,19 @@ public class BookViewController extends ViewController<Book> {
 
     @Override
     public void submitChanges() {
+        Book book = model.getBookRequest().getSelection();
+        if (book.getTitle() == null || book.getIsbn() == null || book.getReleaseYear() <= 0 ||
+                book.getRating() < 0 || book.getPages() <= 0 || book.getDescription() == null ||
+                book.getAuthors().size() == 0 || book.getCategories().size() == 0) {
+            sceneController.errorMessage("Invalid Object", "Please enter valid Values for all Fields!");
+            return;
+        }
+
         boolean res = model.isCreateMode() ? model.getBookRequest().createBook() : model.getBookRequest().editBook();
         if (res) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
-            returnToMain();
+            super.returnToMain();
+            sceneController.loadMainBookScene();
         } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
 
     }
@@ -171,8 +216,11 @@ public class BookViewController extends ViewController<Book> {
     public void deleteItem() {
         if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getIsbn() + " ?")) {
             boolean res = model.getBookRequest().deleteBook(model.getBookRequest().getSelection().getIsbn());
-            if (res) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+            if (res) {
+                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+                super.returnToMain();
+                sceneController.loadMainBookScene();
+            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }

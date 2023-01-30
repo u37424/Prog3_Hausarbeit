@@ -12,8 +12,6 @@ public class Publisher {
     private String country;
 
     public Publisher() {
-        name = "";
-        country = "";
     }
 
     @JsonGetter("publisherId")

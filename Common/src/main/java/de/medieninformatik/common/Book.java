@@ -19,9 +19,6 @@ public class Book {
     private LinkedList<Author> authors;
 
     public Book(){
-        isbn = "";
-        title ="";
-        description = "";
         categories = new LinkedList<>();
         authors = new LinkedList<>();
     }

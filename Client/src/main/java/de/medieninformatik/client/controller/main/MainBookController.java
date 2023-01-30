@@ -6,12 +6,13 @@ import de.medieninformatik.common.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -66,31 +67,41 @@ public class MainBookController extends MainController {
         if (books == null || books.size() == 0) return list;
         //List HBox
         for (Book book : books) {
-            HBox hbox = new HBox();
-            hbox.setId(book.getIsbn());
+                HBox hBox = new HBox();
+                hBox.setId(book.getIsbn());
+                hBox.setSpacing(10);
+                hBox.setAlignment(Pos.CENTER_LEFT);
 
-            TextFlow textFlow = new TextFlow();
-            String title = book.getTitle();
-            String checkTitle = title.toLowerCase(Locale.ROOT);
-            String checkString = this.userString.toLowerCase(Locale.ROOT);
-            int index = checkTitle.indexOf(checkString);
-            if (index >= 0) {
-                if (index > 0) {
-                    textFlow.getChildren().add(new Text(title.substring(0, index)));
-                }
-                Text fill = new Text(title.substring(index, index+checkString.length()));
-                fill.setFill(Color.RED);
-                textFlow.getChildren().add(fill);
-                textFlow.getChildren().add(new Text(title.substring(index + userString.length())));
-            } else {
-                textFlow.getChildren().add(new Text(title));
-            }
-            hbox.getChildren().add(textFlow);
+                TextFlow title = buildTitle(book);
+                Label publisher = new Label(book.getPublisher().getName());
+                Label author = new Label(book.getAuthors().get(0).getAlias());
 
-            list.add(hbox);
+                hBox.getChildren().addAll(title, publisher, author);
+
+                list.add(hBox);
         }
 
         return list;
+    }
+
+    private TextFlow buildTitle(Book book) {
+        TextFlow textFlow = new TextFlow();
+        String title = book.getTitle();
+        String checkTitle = title.toLowerCase(Locale.ROOT);
+        String checkString = this.userString.toLowerCase(Locale.ROOT);
+        int index = checkTitle.indexOf(checkString);
+        if (index >= 0) {
+            if (index > 0) {
+                textFlow.getChildren().add(new Text(title.substring(0, index)));
+            }
+            Text fill = new Text(title.substring(index, index+checkString.length()));
+            fill.setFill(Color.RED);
+            textFlow.getChildren().add(fill);
+            textFlow.getChildren().add(new Text(title.substring(index + userString.length())));
+        } else {
+            textFlow.getChildren().add(new Text(title));
+        }
+        return textFlow;
     }
 
     @Override

@@ -86,31 +86,58 @@ public class AuthorViewController extends ViewController<Author> {
     //--------EDIT VALUES
 
     public void editFirstName() {
-
+        String eingabe = sceneController.editMessage("Edit First Name", this.firstName.getText(), "Fist Name");
+        if (eingabe == null || this.firstName.getText().equals(eingabe)) return;
+        this.firstName.setText(eingabe);
+        model.getAuthorRequest().getSelection().setFirstName(eingabe);
     }
 
     public void editLastName() {
-
+        String eingabe = sceneController.editMessage("Edit Last Name", this.lastName.getText(), "Last Name");
+        if (eingabe == null || this.lastName.getText().equals(eingabe)) return;
+        this.lastName.setText(eingabe);
+        model.getAuthorRequest().getSelection().setLastName(eingabe);
     }
 
     public void editAlias() {
-
+        String eingabe = sceneController.editMessage("Edit Alias Name", this.alias.getText(), "Alias Name");
+        if (eingabe == null || this.alias.getText().equals(eingabe)) return;
+        this.alias.setText(eingabe);
+        model.getAuthorRequest().getSelection().setAlias(eingabe);
     }
 
     public void editAge() {
-
+        try {
+            int eingabe = Integer.parseInt(sceneController.editMessage("Edit Pages", this.age.getText(), "Book Pages"));
+            if (Integer.parseInt(this.age.getText()) == eingabe) return;
+            this.age.setText(String.valueOf(eingabe));
+            model.getAuthorRequest().getSelection().setAge(eingabe);
+        } catch (NumberFormatException e) {
+            sceneController.errorMessage("Invalid Type", "No valid Number entered.");
+        }
     }
 
     public void editBirthday() {
-
+        String eingabe = String.valueOf(this.editBirthday.getValue());
+        model.getAuthorRequest().getSelection().setBirthday(eingabe);
     }
 
     @Override
     public void submitChanges() {
+        Author author = model.getAuthorRequest().getSelection();
+        if (author.getFirstName() == null || author.getLastName() == null || author.getBirthday() == null || author.getAge() <= 0) {
+            sceneController.errorMessage("Invalid Object", "Please enter valid Values for all Fields!");
+            return;
+        }
+
+        if (author.getAlias() == null || author.getAlias().isBlank())
+            model.getAuthorRequest().getSelection().setAlias(author.getFirstName().charAt(0) + ". " + author.getLastName());
+
         boolean res = model.isCreateMode() ? model.getAuthorRequest().createAuthor() : model.getAuthorRequest().editAuthor();
         if (res) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
-            returnToMain();
+            super.returnToMain();
+            sceneController.loadMainAuthorScene();
         } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
 
     }
@@ -119,8 +146,11 @@ public class AuthorViewController extends ViewController<Author> {
     public void deleteItem() {
         if (sceneController.confirmMessage("Delete Author", "Do you really want to delete " + model.getAuthorRequest().getSelection().getAlias() + " ?")) {
             boolean res = model.getAuthorRequest().deleteAuthor(model.getAuthorRequest().getSelection().getAuthorId());
-            if (res) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+            if (res) {
+                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+                super.returnToMain();
+                sceneController.loadMainAuthorScene();
+            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }

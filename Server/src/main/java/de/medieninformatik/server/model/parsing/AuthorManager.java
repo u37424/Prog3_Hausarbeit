@@ -20,7 +20,7 @@ public class AuthorManager {
     public LinkedList<Author> getSelection(int start, int size, boolean orderAsc, String string) throws SQLException {
         String queryStart = "SELECT * FROM authors a ";
         boolean hasString = string != null && !string.isBlank();
-        String filterString = hasString ? ("first_name LIKE('%" + string + "%') OR last_name LIKE('%\" + string + \"%') ") : "";
+        String filterString = hasString ? (" first_name LIKE('%" + string + "%') OR last_name LIKE('%" + string + "%') ") : "";
         String order = orderAsc ? " ASC " : " DESC ";
         String range = "LIMIT " + start + "," + size;
 
@@ -30,6 +30,12 @@ public class AuthorManager {
                 range +
                 ";";
 
+        ResultSet set = Database.getInstance().query(query);
+        return parseAuthors(set);
+    }
+
+    public LinkedList<Author> getBookAuthors(String isbn) throws SQLException {
+        String query = "SELECT * from authors a, books b, book_authors ba WHERE a.author_id = ba.author_id AND b.ISBN = ba.ISBN AND b.ISBN ='" + isbn + "';";
         ResultSet set = Database.getInstance().query(query);
         return parseAuthors(set);
     }
@@ -67,7 +73,7 @@ public class AuthorManager {
                 "','" + author.getAlias() +
                 "','" + author.getBirthday() +
                 "'," + author.getAge() +
-                ";";
+                ");";
         int res = Database.getInstance().update(insert);
         return res == 1;
     }
@@ -99,7 +105,7 @@ public class AuthorManager {
     }
 
     public int getMax(String string) throws SQLException {
-        if(string == null) string = "";
+        if (string == null) string = "";
         String query = "SELECT COUNT(*) FROM authors WHERE first_name LIKE('%" + string + "%') || last_name LIKE('" + string + "');";
         ResultSet set = Database.getInstance().query(query);
         return count(set);

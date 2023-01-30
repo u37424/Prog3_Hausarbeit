@@ -1,6 +1,7 @@
 package de.medieninformatik.client.controller.inspector;
 
 import de.medieninformatik.client.model.MainModel;
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Category;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -62,15 +63,25 @@ public class CategoryViewController extends ViewController<Category> {
     //--------EDIT VALUES
 
     public void editCategoryName() {
-
+        String eingabe = sceneController.editMessage("Edit Name", this.name.getText(), "Category Name");
+        if (eingabe == null || this.name.getText().equals(eingabe)) return;
+        this.name.setText(eingabe);
+        model.getCategoryRequest().getSelection().setName(eingabe);
     }
 
     @Override
     public void submitChanges() {
+        Category category = model.getCategoryRequest().getSelection();
+        if (category.getName() == null) {
+            sceneController.errorMessage("Invalid Object", "Please enter valid Values for all Fields!");
+            return;
+        }
+
         boolean res = model.isCreateMode() ? model.getCategoryRequest().createCategory() : model.getCategoryRequest().editCategory();
         if (res) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
-            returnToMain();
+            super.returnToMain();
+            sceneController.loadMainCategoryScene();
         } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
 
     }
@@ -79,8 +90,11 @@ public class CategoryViewController extends ViewController<Category> {
     public void deleteItem() {
         if (sceneController.confirmMessage("Delete Category", "Do you really want to delete " + model.getCategoryRequest().getSelection().getName() + " ?")) {
             boolean res = model.getBookRequest().deleteBook(model.getBookRequest().getSelection().getIsbn());
-            if (res) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+            if (res) {
+                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+                super.returnToMain();
+                sceneController.loadMainCategoryScene();
+            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }

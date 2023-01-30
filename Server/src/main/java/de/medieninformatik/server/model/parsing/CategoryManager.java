@@ -33,6 +33,13 @@ public class CategoryManager {
         return parseCategories(set);
     }
 
+
+    public LinkedList<Category> getBookCategories(String isbn) throws SQLException {
+        String query = "SELECT * from categories c, books b, book_categories bc WHERE c.category_id = bc.category_id AND b.ISBN = bc.ISBN AND b.ISBN ='" + isbn + "';";
+        ResultSet set = Database.getInstance().query(query);
+        return parseCategories(set);
+    }
+
     public Category getItem(int id) throws SQLException {
         String getQuery = "SELECT * FROM categories WHERE category_id = " + id + ";";
         ResultSet set = Database.getInstance().query(getQuery);
@@ -58,7 +65,7 @@ public class CategoryManager {
         String insert = "INSERT INTO categories (category_id, name)" +
                 " VALUES(" + id +
                 ",'" + category.getName() +
-                "';";
+                "');";
         int res = Database.getInstance().update(insert);
         return res == 1;
     }

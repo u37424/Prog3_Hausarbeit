@@ -11,11 +11,12 @@ import de.medieninformatik.client.controller.main.MainPublisherController;
 import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.model.MainModel;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class SceneController {
     private IController authorViewController;
     private IController publisherViewController;
 
-    public SceneController(){
+    public SceneController() {
         this.scene = new Scene(new AnchorPane());
         this.login = new LoginController();
         this.mainBook = new MainBookController();
@@ -61,31 +62,31 @@ public class SceneController {
         stage.setScene(scene);
     }
 
-    public void loadLoginScene(){
+    public void loadLoginScene() {
         loadScene("/login.fxml", login);
     }
 
-    public void loadMainBookScene(){
+    public void loadMainBookScene() {
         loadScene("/main.fxml", mainBook);
     }
 
-    public void loadMainCategoryScene(){
+    public void loadMainCategoryScene() {
         loadScene("/main.fxml", mainCategory);
     }
 
-    public void loadMainAuthorScene(){
+    public void loadMainAuthorScene() {
         loadScene("/main.fxml", mainAuthor);
     }
 
-    public void loadMainPublisherScene(){
+    public void loadMainPublisherScene() {
         loadScene("/main.fxml", mainPublisher);
     }
 
-    public void loadBookViewScene(){
+    public void loadBookViewScene() {
         loadScene("/book.fxml", bookViewController);
     }
 
-    public void loadCategoryViewScene(){
+    public void loadCategoryViewScene() {
         loadScene("/category.fxml", categoryViewController);
     }
 
@@ -142,5 +143,42 @@ public class SceneController {
         alert.setContentText(message);
         Optional<ButtonType> res = alert.showAndWait();
         return res.isPresent() && res.get().equals(ButtonType.OK);
+    }
+
+    public String editMessage(String type, String def, String message) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle(type);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 10, 10, 10));
+
+        TextField textField = new TextField();
+        textField.setText(def);
+        textField.setPrefWidth(350);
+        grid.add(new Label(message), 0, 0);
+        grid.add(textField, 1, 0);
+
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("CANCEL", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+
+        dialog.setResultConverter((ButtonType b) -> {
+            if (b == buttonTypeOk) {
+                return textField.getText();
+            }
+            if (b == buttonTypeCancel) {
+                return def;
+            }
+            return def;
+        });
+
+        Optional<String> result = dialog.showAndWait();
+
+        return result.orElse(null);
     }
 }

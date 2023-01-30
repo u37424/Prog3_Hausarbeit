@@ -1,10 +1,8 @@
 package de.medieninformatik.client.controller.main;
 
 import de.medieninformatik.client.controller.SceneController;
-import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.client.view.View;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -40,14 +38,14 @@ public abstract class MainController implements IMainController {
     protected boolean ascending;
     protected int pageStart;
     protected int pageSize;
-    private int minPage;
-    private int maxPage;
+    private int minPageSize;
+    private int maxPageSize;
     private int increment;
 
     @FXML
     public void initialize() {
         //Limits des Spinners setzen
-        setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minPage, maxPage, pageStart, increment));
+        setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minPageSize, maxPageSize, pageSize, increment));
         //Onclick eines Listen Items (HBox.getID() == someISBN)
         page.setOnMouseClicked((e) -> {
             if (e.getClickCount() > 1) {
@@ -66,9 +64,9 @@ public abstract class MainController implements IMainController {
         this.userSelection = "";
         this.ascending = true;
         this.pageStart = 0;
-        this.pageSize = 5;
-        this.minPage = 5;
-        this.maxPage = 100;
+        this.pageSize = 10;
+        this.minPageSize = 5;
+        this.maxPageSize = 100;
         this.increment = 5;
     }
 
@@ -213,6 +211,7 @@ public abstract class MainController implements IMainController {
             if (model.resetDatabase()) {
                 sceneController.infoMessage("Database Reset", "Succeeded!");
                 resetFilter();
+                loadItemList();
             } else sceneController.errorMessage("Database Reset", "Database Reset failed!");
         }
     }

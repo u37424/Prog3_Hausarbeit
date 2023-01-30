@@ -63,7 +63,7 @@ public class PublisherManager {
                 ",'" + publisher.getName() +
                 "','" + publisher.getCountry() +
                 "'," + publisher.getFoundation() +
-                ";";
+                ");";
         int res = Database.getInstance().update(insert);
         return res == 1;
     }

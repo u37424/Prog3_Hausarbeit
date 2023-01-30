@@ -66,7 +66,7 @@ public class CategoryRequest {
 
     public boolean createCategory() {
         Response response = request.serverRequest("POST", categoryPath, selection);
-        return request.isOk(response);
+        return request.isCreated(response);
     }
 
     public boolean deleteCategory(int id) {

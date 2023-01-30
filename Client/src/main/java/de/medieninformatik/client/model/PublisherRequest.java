@@ -66,7 +66,7 @@ public class PublisherRequest {
 
     public boolean createPublisher() {
         Response response = request.serverRequest("POST", publisherPath, selection);
-        return request.isOk(response);
+        return request.isCreated(response);
     }
 
     public boolean deletePublisher(int id) {

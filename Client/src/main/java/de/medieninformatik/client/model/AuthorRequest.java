@@ -66,7 +66,7 @@ public class AuthorRequest {
 
     public boolean createAuthor() {
         Response response = request.serverRequest("POST", authorPath, selection);
-        return request.isOk(response);
+        return request.isCreated(response);
     }
 
     public boolean deleteAuthor(int id) {

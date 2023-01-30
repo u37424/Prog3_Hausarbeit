@@ -14,10 +14,6 @@ public class Author {
     private int age;
 
     public Author(){
-        firstName = "";
-        lastName = "";
-        alias = "";
-        birthday = "";
     }
 
     @JsonGetter("authorId")

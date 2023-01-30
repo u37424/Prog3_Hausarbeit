@@ -72,6 +72,11 @@ public class Request {
         return status(response) == 200;
     }
 
+    public boolean isCreated(Response response) {
+        if (response == null) return false;
+        return status(response) == 201;
+    }
+
     <T> T createObject(Response response, Class<T> tClass) {
         T object = null;
         if (isOk(response)) object = parseJSON(response, tClass);

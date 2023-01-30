@@ -1,8 +1,6 @@
 package de.medieninformatik.server.model.parsing;
 
-import de.medieninformatik.common.Book;
-import de.medieninformatik.common.DBMeta;
-import de.medieninformatik.common.Publisher;
+import de.medieninformatik.common.*;
 import de.medieninformatik.server.model.database.Database;
 
 import java.sql.ResultSet;
@@ -17,7 +15,7 @@ public class BookManager {
     }
 
     public LinkedList<Book> getSelection(int start, int size, boolean orderAsc, String string, String category) throws SQLException {
-        String queryStart = "SELECT * FROM books b ";
+        String queryStart = "SELECT * FROM books b";
 
         if (string == null) string = "";
 
@@ -80,7 +78,7 @@ public class BookManager {
                 "," + book.getPages() +
                 "," + book.getRating() +
                 ",'" + book.getDescription() +
-                "';";
+                ")';";
         int res = Database.getInstance().update(insert);
         return res == 1;
     }
@@ -102,8 +100,16 @@ public class BookManager {
             book.setPages(set.getInt("Pages"));
             book.setRating(set.getDouble("Rating"));
             book.setDescription(set.getString("Description"));
+
             Publisher publisher = RequestManager.getInstance().getPublisherManager().getItem(set.getInt("Publisher_ID"));
             book.setPublisher(publisher);
+
+            LinkedList<Author> authors = RequestManager.getInstance().getAuthorManager().getBookAuthors(book.getIsbn());
+            book.setAuthors(authors);
+
+            LinkedList<Category> categories = RequestManager.getInstance().getCategoryManager().getBookCategories(book.getIsbn());
+            book.setCategories(categories);
+
             books.add(book);
         }
         return books;
@@ -116,7 +122,7 @@ public class BookManager {
     public int getMax(String string, String category) throws SQLException {
         boolean hasCategory = category != null && !category.isBlank();
         String filterCategory = (hasCategory) ? (" AND b.isbn = bc.isbn AND bc.category_id = c.category_id AND c.name = '" + category + "' ") : "";
-        String query = "SELECT COUNT(*) FROM books" +
+        String query = "SELECT COUNT(*) FROM books b" +
                 (hasCategory ? ", categories c, book_categories bc " : "") +
                 " WHERE title LIKE('%" + string + "%') " +
                 filterCategory +
