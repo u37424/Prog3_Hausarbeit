@@ -1,5 +1,6 @@
 package de.medieninformatik.server.model.parsing;
 
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.DBMeta;
 import de.medieninformatik.server.model.database.Database;
@@ -80,17 +81,22 @@ public class CategoryManager {
         return categories;
     }
 
-    public DBMeta asDBMeta(LinkedList<Category> categories) throws SQLException {
-        DBMeta meta = new DBMeta();
-        meta.setResultMax(getMax());
-        meta.setCategories(categories);
-        return meta;
+    public int getMax() throws SQLException {
+        return getMax(null);
     }
 
-    public int getMax() throws SQLException {
-        String query = "SELECT COUNT(*) FROM categories;";
+    public int getMax(String string) throws SQLException {
+        if(string == null) string = "";
+        String query = "SELECT COUNT(*) FROM categories WHERE name LIKE('%" + string + "%');";
         ResultSet set = Database.getInstance().query(query);
         return count(set);
+    }
+
+    public DBMeta asDBMeta(LinkedList<Category> categories, int max) throws SQLException {
+        DBMeta meta = new DBMeta();
+        meta.setResultMax(max);
+        meta.setCategories(categories);
+        return meta;
     }
 
     private int countByID(int id) throws SQLException {

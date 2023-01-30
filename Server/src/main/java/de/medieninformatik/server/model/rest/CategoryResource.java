@@ -20,7 +20,8 @@ public class CategoryResource {
     public Response getAll() {
         try {
             LinkedList<Category> categories = manager.getCategoryManager().getAll();
-            DBMeta meta = manager.getCategoryManager().asDBMeta(categories);
+            int max = manager.getCategoryManager().getMax();
+            DBMeta meta = manager.getCategoryManager().asDBMeta(categories, max);
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -37,7 +38,8 @@ public class CategoryResource {
                                       @QueryParam("string") String string) {
         try {
             LinkedList<Category> categories = manager.getCategoryManager().getSelection(start, size, orderAsc, string);
-            DBMeta meta = manager.getCategoryManager().asDBMeta(categories);
+            int max = manager.getCategoryManager().getMax(string);
+            DBMeta meta = manager.getCategoryManager().asDBMeta(categories, max);
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();

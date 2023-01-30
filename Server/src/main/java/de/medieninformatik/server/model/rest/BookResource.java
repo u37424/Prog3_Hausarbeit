@@ -20,7 +20,8 @@ public class BookResource {
     public Response getAll() {
         try {
             LinkedList<Book> books = manager.getBookManager().getAll();
-            DBMeta meta = manager.getBookManager().asDBMeta(books);
+            int max = manager.getBookManager().getMax();
+            DBMeta meta = manager.getBookManager().asDBMeta(books, max);
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -37,7 +38,8 @@ public class BookResource {
                                       @QueryParam("string") String string, @QueryParam("category") String category) {
         try {
             LinkedList<Book> books = manager.getBookManager().getSelection(start, size, orderAsc, string, category);
-            DBMeta meta = manager.getBookManager().asDBMeta(books);
+            int max = manager.getBookManager().getMax(string, category);
+            DBMeta meta = manager.getBookManager().asDBMeta(books, max);
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();

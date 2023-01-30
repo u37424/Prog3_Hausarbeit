@@ -94,17 +94,22 @@ public class AuthorManager {
         return authors;
     }
 
-    public DBMeta asDBMeta(LinkedList<Author> authors) throws SQLException {
-        DBMeta meta = new DBMeta();
-        meta.setResultMax(getMax());
-        meta.setAuthors(authors);
-        return meta;
+    public int getMax() throws SQLException {
+        return getMax(null);
     }
 
-    public int getMax() throws SQLException {
-        String query = "SELECT COUNT(*) FROM authors;";
+    public int getMax(String string) throws SQLException {
+        if(string == null) string = "";
+        String query = "SELECT COUNT(*) FROM authors WHERE first_name LIKE('%" + string + "%') || last_name LIKE('" + string + "');";
         ResultSet set = Database.getInstance().query(query);
         return count(set);
+    }
+
+    public DBMeta asDBMeta(LinkedList<Author> authors, int max) throws SQLException {
+        DBMeta meta = new DBMeta();
+        meta.setResultMax(max);
+        meta.setAuthors(authors);
+        return meta;
     }
 
     private int countByID(int id) throws SQLException {

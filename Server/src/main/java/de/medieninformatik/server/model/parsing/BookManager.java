@@ -18,17 +18,18 @@ public class BookManager {
 
     public LinkedList<Book> getSelection(int start, int size, boolean orderAsc, String string, String category) throws SQLException {
         String queryStart = "SELECT * FROM books b ";
-        boolean hasString = string != null && !string.isBlank();
+
+        if (string == null) string = "";
+
         boolean hasCategory = category != null && !category.isBlank();
-        String filterString = (hasString) ? " title LIKE('%" + string + "%') " : "";
-        String filterCategory = (hasCategory) ? (" b.isbn = bc.isbn AND bc.category_id = c.category_id AND c.name = '" + category + "' ") : "";
+        String filterCategory = (hasCategory) ? (" AND b.isbn = bc.isbn AND bc.category_id = c.category_id AND c.name = '" + category + "' ") : "";
+
         String order = orderAsc ? " ASC " : " DESC ";
         String range = "LIMIT " + start + "," + size;
 
         String query = queryStart +
                 (hasCategory ? ", categories c, book_categories bc " : "") +
-                (hasString || hasCategory ? " WHERE " : "") + filterString +
-                ((hasString && hasCategory) ? " AND " : "") +
+                " WHERE title LIKE('%" + string + "%') " +
                 filterCategory +
                 "ORDER BY title" + order +
                 range +
@@ -108,17 +109,27 @@ public class BookManager {
         return books;
     }
 
-    public DBMeta asDBMeta(LinkedList<Book> books) throws SQLException {
-        DBMeta meta = new DBMeta();
-        meta.setResultMax(getMax());
-        meta.setBooks(books);
-        return meta;
+    public int getMax() throws SQLException {
+        return getMax(null, null);
     }
 
-    public int getMax() throws SQLException {
-        String query = "SELECT COUNT(*) FROM books;";
+    public int getMax(String string, String category) throws SQLException {
+        boolean hasCategory = category != null && !category.isBlank();
+        String filterCategory = (hasCategory) ? (" AND b.isbn = bc.isbn AND bc.category_id = c.category_id AND c.name = '" + category + "' ") : "";
+        String query = "SELECT COUNT(*) FROM books" +
+                (hasCategory ? ", categories c, book_categories bc " : "") +
+                " WHERE title LIKE('%" + string + "%') " +
+                filterCategory +
+                ";";
         ResultSet set = Database.getInstance().query(query);
         return count(set);
+    }
+
+    public DBMeta asDBMeta(LinkedList<Book> books, int max) throws SQLException {
+        DBMeta meta = new DBMeta();
+        meta.setResultMax(max);
+        meta.setBooks(books);
+        return meta;
     }
 
     private int countByISBN(String isbn) throws SQLException {

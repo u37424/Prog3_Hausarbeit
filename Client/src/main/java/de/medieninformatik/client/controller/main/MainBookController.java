@@ -90,8 +90,6 @@ public class MainBookController extends MainController {
             list.add(hbox);
         }
 
-
-
         return list;
     }
 

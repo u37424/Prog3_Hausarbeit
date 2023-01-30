@@ -20,7 +20,8 @@ public class PublisherResource {
     public Response getAll() {
         try {
             LinkedList<Publisher> publishers = manager.getPublisherManager().getAll();
-            DBMeta meta = manager.getPublisherManager().asDBMeta(publishers);
+            int max = manager.getPublisherManager().getMax();
+            DBMeta meta = manager.getPublisherManager().asDBMeta(publishers, max);
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -37,7 +38,8 @@ public class PublisherResource {
                                       @QueryParam("string") String string) {
         try {
             LinkedList<Publisher> publishers = manager.getPublisherManager().getSelection(start, size, orderAsc, string);
-            DBMeta meta = manager.getPublisherManager().asDBMeta(publishers);
+            int max = manager.getPublisherManager().getMax(string);
+            DBMeta meta = manager.getPublisherManager().asDBMeta(publishers, max);
             return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();

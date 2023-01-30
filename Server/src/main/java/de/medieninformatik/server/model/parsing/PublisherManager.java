@@ -1,5 +1,6 @@
 package de.medieninformatik.server.model.parsing;
 
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.DBMeta;
 import de.medieninformatik.common.Publisher;
 import de.medieninformatik.server.model.database.Database;
@@ -87,17 +88,22 @@ public class PublisherManager {
         return publishers;
     }
 
-    public DBMeta asDBMeta(LinkedList<Publisher> publishers) throws SQLException {
-        DBMeta meta = new DBMeta();
-        meta.setResultMax(getMax());
-        meta.setPublishers(publishers);
-        return meta;
+    public int getMax() throws SQLException {
+        return getMax(null);
     }
 
-    public int getMax() throws SQLException {
-        String query = "SELECT COUNT(*) FROM publishers;";
+    public int getMax(String string) throws SQLException {
+        if(string == null) string = "";
+        String query = "SELECT COUNT(*) FROM publishers WHERE name LIKE('%" + string + "%');";
         ResultSet set = Database.getInstance().query(query);
         return count(set);
+    }
+
+    public DBMeta asDBMeta(LinkedList<Publisher> publishers, int max) throws SQLException {
+        DBMeta meta = new DBMeta();
+        meta.setResultMax(max);
+        meta.setPublishers(publishers);
+        return meta;
     }
 
     private int countByID(int id) throws SQLException {
