@@ -50,10 +50,6 @@ public class MainModel {
         return publisherRequest;
     }
 
-    public void resetSelection() {
-        this.bookRequest.reset();
-    }
-
     public boolean resetDatabase() {
         return request.resetDatabase();
     }

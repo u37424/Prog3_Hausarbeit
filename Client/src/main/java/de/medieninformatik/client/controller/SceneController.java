@@ -32,7 +32,9 @@ public class SceneController {
         this.scene = new Scene(new AnchorPane());
         this.login = new LoginController();
         this.mainBook = new MainBookController();
+        this.mainCategory = new MainCategoryController();
         this.bookViewController = new BookViewController();
+        this.categoryViewController = new CategoryViewController();
     }
 
     public void setModel(MainModel model) {
@@ -52,8 +54,16 @@ public class SceneController {
         loadScene("/main.fxml", mainBook);
     }
 
+    public void loadMainCategoryScene(){
+        loadScene("/main.fxml", mainCategory);
+    }
+
     public void loadBookViewScene(){
         loadScene("/book.fxml", bookViewController);
+    }
+
+    public void loadCategoryViewScene(){
+        loadScene("/category.fxml", categoryViewController);
     }
 
     private void loadScene(String resource, IController controller) {

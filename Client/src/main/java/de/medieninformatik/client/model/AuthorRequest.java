@@ -34,7 +34,7 @@ public class AuthorRequest {
         return authors;
     }
 
-    public int getAuthorMax() {
+    public int getMax() {
         return authorMax;
     }
 

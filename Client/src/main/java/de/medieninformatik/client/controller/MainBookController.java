@@ -32,7 +32,7 @@ public class MainBookController extends MainController {
 
     public void setModel(MainModel model) {
         super.setModel(model);
-        //Specific selection for books
+        //Specific filter for books
         loadCategorySelection();
     }
 
@@ -75,7 +75,7 @@ public class MainBookController extends MainController {
     @Override
     public void createItem() {
         super.createItem();
-        model.resetSelection();
+        model.getBookRequest().reset();
         sceneController.loadBookViewScene();
     }
 
@@ -86,7 +86,7 @@ public class MainBookController extends MainController {
 
     @Override
     public void categoryPressed() {
-
+        sceneController.loadMainCategoryScene();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class MainBookController extends MainController {
 
     @Override
     public void pageForward() {
-        if (pageStart + pageSize < model.getBookRequest().getBookMax()) this.pageStart += pageSize;
+        if (pageStart + pageSize < model.getBookRequest().getMax()) this.pageStart += pageSize;
         //Reload Book List
         loadItemList();
     }
@@ -114,7 +114,7 @@ public class MainBookController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getIsbn() + " ?")) {
+        if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getTitle() + " ?")) {
             if (model.getBookRequest().deleteBook(id)) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
             else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }

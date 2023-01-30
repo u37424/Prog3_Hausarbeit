@@ -34,7 +34,7 @@ public class PublisherRequest {
         return publishers;
     }
 
-    public int getPublisherMax() {
+    public int getMax() {
         return publisherMax;
     }
 

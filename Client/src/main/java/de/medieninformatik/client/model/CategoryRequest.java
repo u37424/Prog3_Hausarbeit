@@ -34,7 +34,7 @@ public class CategoryRequest {
         return categories;
     }
 
-    public int getCategoryMax() {
+    public int getMax() {
         return categoryMax;
     }
 

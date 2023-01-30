@@ -34,7 +34,7 @@ public class BookRequest {
         return books;
     }
 
-    public int getBookMax() {
+    public int getMax() {
         return bookMax;
     }
 
