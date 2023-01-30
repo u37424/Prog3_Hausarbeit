@@ -1,16 +1,19 @@
 package de.medieninformatik.server.model.parsing;
 
 import de.medieninformatik.common.Author;
+import de.medieninformatik.common.Category;
 import de.medieninformatik.common.DBMeta;
+
+import java.util.LinkedList;
 
 public class AuthorManager {
     RequestManager manager = RequestManager.getInstance();
 
-    public DBMeta getAll() {
+    public LinkedList<Author> getAll() {
         return null;
     }
 
-    public DBMeta getSelection(int start, int size, boolean orderAsc, String string) {
+    public LinkedList<Author> getSelection(int start, int size, boolean orderAsc, String string) {
         return null;
     }
 
@@ -28,5 +31,16 @@ public class AuthorManager {
 
     public boolean deleteItem(int id) {
         return false;
+    }
+
+    public DBMeta asDBMeta(LinkedList<Author> authors) {
+        DBMeta meta = new DBMeta();
+        meta.setResultMax(getMax());
+        meta.setAuthors(authors);
+        return meta;
+    }
+
+    private int getMax() {
+        return 0;
     }
 }

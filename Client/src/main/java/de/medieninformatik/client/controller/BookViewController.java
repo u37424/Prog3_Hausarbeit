@@ -1,6 +1,5 @@
 package de.medieninformatik.client.controller;
 
-import de.medieninformatik.client.interfaces.IViewController;
 import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.common.Book;
 import javafx.fxml.FXML;
@@ -13,12 +12,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class BookViewController extends ViewController {
+public class BookViewController extends ViewController<Book> {
     @FXML
-    private Label title, isbn, pages, year, rating;
+    private Label title, isbn, pages, year, rating, publisher;
 
     @FXML
-    private HBox publisher, authors, categories, ratingBox;
+    private HBox authors, categories, ratingBox;
 
     @FXML
     private TextArea description;
@@ -32,17 +31,13 @@ public class BookViewController extends ViewController {
     }
 
     public void setModel(MainModel model) {
-        this.model = model;
+        super.setModel(model);
         //Model received
         setOptions();
-        Book book = model.getBookRequest().getSelection();
-        if (book == null) return;
-        displayBook(book);
-    }
 
-    @Override
-    public void setSceneController(SceneController sceneController) {
-        this.sceneController = sceneController;
+        //Load Book when Model received
+        Book book = model.getBookRequest().getSelection();
+        displayValues(book);
     }
 
     @Override
@@ -53,15 +48,17 @@ public class BookViewController extends ViewController {
         boolean isEdit = model.isEditMode();
         boolean isCreate = model.isCreateMode();
 
+        //Specific edit Buttons
         this.editTitle.setVisible(isEdit);
         this.editYear.setVisible(isEdit);
         this.editPages.setVisible(isEdit);
         this.editPublisher.setVisible(isEdit);
         this.editAuthors.setVisible(isEdit);
         this.editCategories.setVisible(isEdit);
-        this.editIsbn.setVisible(isEdit && isCreate);
+
 
         //Wenn im Create Modus
+        this.editIsbn.setVisible(isCreate);
         this.description.setEditable(isCreate);
         this.description.setDisable(!isCreate);
         if (isCreate)
@@ -70,7 +67,8 @@ public class BookViewController extends ViewController {
     }
 
     @Override
-    public void displayBook(Book book) {
+    public void displayValues(Book book) {
+        if (book == null) return;
         //Fill with Book Data
         if (book.getTitle() != null && !book.getTitle().isBlank())
             this.title.setText(book.getTitle());
@@ -82,12 +80,13 @@ public class BookViewController extends ViewController {
         this.pages.setText(String.valueOf(book.getPages()));
         this.rating.setText(String.valueOf(book.getRating()));
 
-        if (book.getDescription() != null && !book.getDescription().isBlank())
+        if (book.getDescription() != null && !book.getDescription().isBlank()) {
             this.description.setText(book.getDescription());
+            this.description.setDisable(false);
+        }
 
         //Load Publisher into Label
-        if (book.getPublisher() != null)
-            ((Label) this.publisher.getChildren().get(0)).setText(book.getPublisher().toString());
+        if (book.getPublisher() != null) this.publisher.setText(book.getPublisher().toString());
 
         //Build HBox representations of Authors and Categories
         if (book.getAuthors() != null) buildAuthorBox();
@@ -108,27 +107,25 @@ public class BookViewController extends ViewController {
         if (model.isCreateMode() || model.isEditMode()) {
             if (!sceneController.confirmMessage("Leave Editing", "Unsaved Changes will be lost!")) return;
         }
-        model.setCreateMode(false);
-        model.setEditMode(false);
+        super.returnToMain();
+
         sceneController.loadMainBookScene();
     }
 
-    @Override
+    //--------EDIT VALUES
+
     public void editBookTitle() {
 
     }
 
-    @Override
     public void editBookISBN() {
 
     }
 
-    @Override
     public void editBookYear() {
 
     }
 
-    @Override
     public void editBookPages() {
 
     }
@@ -145,22 +142,19 @@ public class BookViewController extends ViewController {
                 model.getBookRequest().getSelection().setRating(val);
             }
         }
-        displayBook(model.getBookRequest().getSelection());
+        displayValues(model.getBookRequest().getSelection());
     }
 
-    @Override
     public void editBookAuthors() {
-        displayBook(model.getBookRequest().getSelection());
+        displayValues(model.getBookRequest().getSelection());
     }
 
-    @Override
     public void editBookPublisher() {
-        displayBook(model.getBookRequest().getSelection());
+        displayValues(model.getBookRequest().getSelection());
     }
 
-    @Override
     public void editBookCategories() {
-        displayBook(model.getBookRequest().getSelection());
+        displayValues(model.getBookRequest().getSelection());
     }
 
     @Override
@@ -174,7 +168,7 @@ public class BookViewController extends ViewController {
     }
 
     @Override
-    public void deleteBook() {
+    public void deleteItem() {
         if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getIsbn() + " ?")) {
             boolean res = model.getBookRequest().deleteBook(model.getBookRequest().getSelection().getIsbn());
             if (res) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");

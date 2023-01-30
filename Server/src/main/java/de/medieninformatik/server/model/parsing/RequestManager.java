@@ -46,7 +46,7 @@ public class RequestManager {
         }
     }
 
-    public <T> T asObject(String json, Class<T> tClass) throws JsonProcessingException {
+    public <T> T JSONasObject(String json, Class<T> tClass) throws JsonProcessingException {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, tClass);

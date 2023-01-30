@@ -7,6 +7,8 @@ import de.medieninformatik.server.model.parsing.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
+import java.util.LinkedList;
+
 @Path("publisher")
 public class PublisherResource {
     RequestManager manager = RequestManager.getInstance();
@@ -15,8 +17,9 @@ public class PublisherResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         try {
-            DBMeta publishers = manager.getPublisherManager().getAll();
-            return Response.ok(manager.asJSON(publishers)).build();
+            LinkedList<Publisher> publishers = manager.getPublisherManager().getAll();
+            DBMeta meta = manager.getPublisherManager().asDBMeta(publishers);
+            return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -28,8 +31,9 @@ public class PublisherResource {
     public Response getAllBySelection(@PathParam("start") int start, @PathParam("size") int size, @PathParam("orderAsc") boolean orderAsc,
                                       @QueryParam("string") String string) {
         try {
-            DBMeta publishers = manager.getPublisherManager().getSelection(start, size, orderAsc, string);
-            return Response.ok(manager.asJSON(publishers)).build();
+            LinkedList<Publisher> publishers = manager.getPublisherManager().getSelection(start, size, orderAsc, string);
+            DBMeta meta = manager.getPublisherManager().asDBMeta(publishers);
+            return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -51,7 +55,7 @@ public class PublisherResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putPublisher(String json) {
         try {
-            Publisher publisher = manager.asObject(json, Publisher.class);
+            Publisher publisher = manager.JSONasObject(json, Publisher.class);
             if (manager.getPublisherManager().putItem(publisher)) return Response.ok().build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -63,7 +67,7 @@ public class PublisherResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postPublisher(@Context UriInfo uriInfo, String json) {
         try {
-            Publisher publisher = manager.asObject(json, Publisher.class);
+            Publisher publisher = manager.JSONasObject(json, Publisher.class);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(String.valueOf(publisher.getPublisherId()));
             if (manager.getPublisherManager().postItem(publisher)) return Response.created(builder.build()).build();

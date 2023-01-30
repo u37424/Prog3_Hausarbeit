@@ -24,6 +24,11 @@ public class LoginController implements ILoginController {
         this.stage.setTitle("Login");
     }
 
+    @Override
+    public void initialize() {
+
+    }
+
     public void setModel(MainModel model) {
         this.model = model;
     }

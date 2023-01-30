@@ -7,6 +7,8 @@ import de.medieninformatik.server.model.parsing.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
+import java.util.LinkedList;
+
 @Path("author")
 public class AuthorResource {
     RequestManager manager = RequestManager.getInstance();
@@ -15,8 +17,9 @@ public class AuthorResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         try {
-            DBMeta authors = manager.getAuthorManager().getAll();
-            return Response.ok(manager.asJSON(authors)).build();
+            LinkedList<Author> authors = manager.getAuthorManager().getAll();
+            DBMeta meta = manager.getAuthorManager().asDBMeta(authors);
+            return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -28,8 +31,9 @@ public class AuthorResource {
     public Response getAllBySelection(@PathParam("start") int start, @PathParam("size") int size, @PathParam("orderAsc") boolean orderAsc,
                                       @QueryParam("string") String string) {
         try {
-            DBMeta authors = manager.getAuthorManager().getSelection(start, size, orderAsc, string);
-            return Response.ok(manager.asJSON(authors)).build();
+            LinkedList<Author> authors = manager.getAuthorManager().getSelection(start, size, orderAsc, string);
+            DBMeta meta = manager.getAuthorManager().asDBMeta(authors);
+            return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -51,7 +55,7 @@ public class AuthorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putAuthor(String json) {
         try {
-            Author author = manager.asObject(json, Author.class);
+            Author author = manager.JSONasObject(json, Author.class);
             if (manager.getAuthorManager().putItem(author)) return Response.ok().build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -63,7 +67,7 @@ public class AuthorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postAuthor(@Context UriInfo uriInfo, String json) {
         try {
-            Author author = manager.asObject(json, Author.class);
+            Author author = manager.JSONasObject(json, Author.class);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(String.valueOf(author.getAuthorId()));
             if (manager.getAuthorManager().postItem(author)) return Response.created(builder.build()).build();

@@ -22,14 +22,14 @@ public abstract class ViewController<T> implements IViewController<T> {
     }
 
     @Override
-    public void setModel(MainModel model) {
-        this.model = model;
-        setOptions();
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     @Override
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void setModel(MainModel model) {
+        this.model = model;
+        setOptions();
     }
 
     @Override
@@ -44,6 +44,7 @@ public abstract class ViewController<T> implements IViewController<T> {
         boolean isEdit = model.isEditMode();
         boolean isCreate = model.isCreateMode();
 
+        //Set Submit, Back, Delete
         this.submitButton.setVisible(isEdit);
         this.deleteButton.setVisible(isEdit && !isCreate);
         ((ImageView) this.backButton.getGraphic()).setImage(new Image((isEdit) ? "exit.png" : "return.png"));
@@ -51,7 +52,7 @@ public abstract class ViewController<T> implements IViewController<T> {
     }
 
     @Override
-    public abstract void setValues(T book);
+    public abstract void displayValues(T item);
 
     @Override
     public void returnToMain() {

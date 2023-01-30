@@ -6,12 +6,11 @@ import de.medieninformatik.common.DBMeta;
 import java.util.LinkedList;
 
 public class CategoryManager {
-    public DBMeta getAll() {
-        LinkedList<Category> categories = new LinkedList<>();
-        return asDBMeta(categories);
+    public LinkedList<Category> getAll() {
+        return null;
     }
 
-    public DBMeta getSelection(int start, int size, boolean orderAsc, String string) {
+    public LinkedList<Category> getSelection(int start, int size, boolean orderAsc, String string) {
         return null;
     }
 
@@ -31,7 +30,7 @@ public class CategoryManager {
         return false;
     }
 
-    private DBMeta asDBMeta(LinkedList<Category> categories) {
+    public DBMeta asDBMeta(LinkedList<Category> categories) {
         DBMeta meta = new DBMeta();
         meta.setResultMax(getMax());
         meta.setCategories(categories);

@@ -7,6 +7,8 @@ import de.medieninformatik.server.model.parsing.RequestManager;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
+import java.util.LinkedList;
+
 @Path("book")
 public class BookResource {
     RequestManager manager = RequestManager.getInstance();
@@ -15,8 +17,9 @@ public class BookResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
         try {
-            DBMeta books = manager.getBookManager().getAll();
-            return Response.ok(manager.asJSON(books)).build();
+            LinkedList<Book> books = manager.getBookManager().getAll();
+            DBMeta meta = manager.getBookManager().asDBMeta(books);
+            return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -28,8 +31,9 @@ public class BookResource {
     public Response getAllBySelection(@PathParam("start") int start, @PathParam("size") int size, @PathParam("orderAsc") boolean orderAsc,
                                       @QueryParam("string") String string, @QueryParam("category") String category) {
         try {
-            DBMeta books = manager.getBookManager().getSelection(start, size, orderAsc, string, category);
-            return Response.ok(manager.asJSON(books)).build();
+            LinkedList<Book> books = manager.getBookManager().getSelection(start, size, orderAsc, string, category);
+            DBMeta meta = manager.getBookManager().asDBMeta(books);
+            return Response.ok(manager.asJSON(meta)).build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -51,7 +55,7 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putBook(String json) {
         try {
-            Book book = manager.asObject(json, Book.class);
+            Book book = manager.JSONasObject(json, Book.class);
             if (manager.getBookManager().putItem(book)) return Response.ok().build();
         } catch (JsonProcessingException e) {
             return Response.noContent().status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -63,7 +67,7 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postBook(@Context UriInfo uriInfo, String json) {
         try {
-            Book book = manager.asObject(json, Book.class);
+            Book book = manager.JSONasObject(json, Book.class);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(String.valueOf(book.getIsbn()));
             if (manager.getBookManager().postItem(book)) return Response.created(builder.build()).build();

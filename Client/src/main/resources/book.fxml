@@ -160,9 +160,9 @@
       <Separator style="-fx-background-color: darkgray;" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
       <Separator style="-fx-background-color: darkgray;" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
       <Separator style="-fx-background-color: darkgray;" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-      <HBox fx:id="publisher" alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="11" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <HBox fx:id="publisherBox" alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="11" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="Publisher Name (Country)">
+            <Label fx:id="publisher" alignment="CENTER" text="Publisher Name (Country)">
                <font>
                   <Font size="18.0" />
                </font>
@@ -171,7 +171,7 @@
       </HBox>
       <HBox fx:id="authors" alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="11" GridPane.rowIndex="3" />
       <HBox fx:id="categories" alignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="11" GridPane.rowIndex="4" />
-      <Button fx:id="deleteButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBook" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" visible="false" GridPane.columnIndex="13" GridPane.halignment="RIGHT" GridPane.rowIndex="14" GridPane.valignment="CENTER">
+      <Button fx:id="deleteButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteItem" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" visible="false" GridPane.columnIndex="13" GridPane.halignment="RIGHT" GridPane.rowIndex="14" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
