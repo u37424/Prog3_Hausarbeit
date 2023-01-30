@@ -39,9 +39,13 @@ public class SceneController {
         this.scene = new Scene(new AnchorPane());
         this.login = new LoginController();
         this.mainBook = new MainBookController();
+        mainBook.setup();
         this.mainCategory = new MainCategoryController();
+        mainCategory.setup();
         this.mainAuthor = new MainAuthorController();
+        mainAuthor.setup();
         this.mainPublisher = new MainPublisherController();
+        mainPublisher.setup();
         this.bookViewController = new BookViewController();
         this.categoryViewController = new CategoryViewController();
         this.authorViewController = new AuthorViewController();

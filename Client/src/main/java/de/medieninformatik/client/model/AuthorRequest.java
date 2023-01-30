@@ -41,7 +41,7 @@ public class AuthorRequest {
     //-----------REQUESTS TO SERVER
 
     public void getAuthor(int id) {
-        Response response = request.serverRequest("GET", "/" + authorPath + "/" + id);
+        Response response = request.serverRequest("GET",  authorPath + "/" + id);
         this.selection =  request.createObject(response, Author.class);
     }
 

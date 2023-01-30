@@ -41,7 +41,7 @@ public class PublisherRequest {
     //--------REQUESTS TO SERVER
 
     public void getPublisher(int id) {
-        Response response = request.serverRequest("GET", "/" + publisherPath + "/" + id);
+        Response response = request.serverRequest("GET",  publisherPath + "/" + id);
         this.selection = request.createObject(response, Publisher.class);
     }
 

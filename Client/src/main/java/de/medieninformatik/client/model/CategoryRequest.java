@@ -41,7 +41,7 @@ public class CategoryRequest {
     //--------REQUESTS TO SERVER
 
     public void getCategory(int id) {
-        Response response = request.serverRequest("GET", "/" + categoryPath + "/" + id);
+        Response response = request.serverRequest("GET",  categoryPath + "/" + id);
         this.selection = request.createObject(response, Category.class);
     }
 

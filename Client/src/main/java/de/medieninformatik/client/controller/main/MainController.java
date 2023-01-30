@@ -40,17 +40,13 @@ public abstract class MainController implements IMainController {
     protected boolean ascending;
     protected int pageStart;
     protected int pageSize;
+    private int minPage;
+    private int maxPage;
 
     @FXML
     public void initialize() {
-        this.userString = "";
-        this.userSelection = "";
-        this.ascending = true;
-        this.pageStart = 0;
-        this.pageSize = 5;
         //Limits des Spinners setzen
-        setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 100, 5, 5));
-
+        setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minPage, maxPage, pageStart, pageSize));
         //Onclick eines Listen Items (HBox.getID() == someISBN)
         page.setOnMouseClicked((e) -> {
             if (e.getClickCount() > 1) {
@@ -62,6 +58,16 @@ public abstract class MainController implements IMainController {
 
         this.selector.setPrefWidth(0);
         this.selector.setVisible(false);
+    }
+
+    public void setup(){
+        this.userString = "";
+        this.userSelection = "";
+        this.ascending = true;
+        this.pageStart = 0;
+        this.pageSize = 5;
+        this.minPage = 5;
+        this.maxPage = 100;
     }
 
     public void setStage(Stage stage) {

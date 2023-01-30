@@ -22,6 +22,10 @@ public abstract class ViewController<T> implements IViewController<T> {
 
     }
 
+    public void setup(){
+
+    }
+
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;

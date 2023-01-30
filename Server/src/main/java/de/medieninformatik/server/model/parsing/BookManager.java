@@ -19,15 +19,16 @@ public class BookManager {
     public LinkedList<Book> getSelection(int start, int size, boolean orderAsc, String string, String category) throws SQLException {
         String queryStart = "SELECT * FROM books b ";
         boolean hasString = string != null && !string.isBlank();
-        boolean hasCategory = category != null && !string.isBlank();
+        boolean hasCategory = category != null && !category.isBlank();
         String filterString = (hasString) ? " title LIKE('%" + string + "%') " : "";
         String filterCategory = (hasCategory) ? (" b.isbn = bc.isbn AND bc.category_id = c.category_id AND c.name = '" + category + "' ") : "";
         String order = orderAsc ? " ASC " : " DESC ";
         String range = "LIMIT " + start + "," + size;
 
         String query = queryStart +
-                (hasCategory ? " categories c, book_categories bc " : "") +
+                (hasCategory ? ", categories c, book_categories bc " : "") +
                 (hasString || hasCategory ? " WHERE " : "") + filterString +
+                ((hasString && hasCategory) ? " AND " : "") +
                 filterCategory +
                 "ORDER BY title" + order +
                 range +
@@ -129,7 +130,7 @@ public class BookManager {
     private int count(ResultSet set) throws SQLException {
         int count = 0;
         while (set.next()) {
-
+            count = set.getInt(1);
         }
         return count;
     }

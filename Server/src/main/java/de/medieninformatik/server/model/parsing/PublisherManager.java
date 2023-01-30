@@ -17,14 +17,14 @@ public class PublisherManager {
     }
 
     public LinkedList<Publisher> getSelection(int start, int size, boolean orderAsc, String string) throws SQLException {
-        String queryStart = "SELECT * FROM publishers p ";
-        String filterString = (string == null || string.isBlank()) ? "" : " name LIKE('%" + string + "%') ";
-        String order = orderAsc ? " ASC " : " DESC ";
-        String range = "LIMIT " + start + "," + size;
+        String queryStart = "SELECT * FROM publishers ";
         boolean hasString = string != null && !string.isBlank();
+        String filterString = hasString ? " name LIKE('%" + string + "%') " : "";
+        String range = "LIMIT " + start + "," + size;
+        String order = orderAsc ? " ASC " : " DESC ";
 
         String query = queryStart +
-                (hasString ? "" : (" WHERE ")) + filterString +
+                (hasString ?  (" WHERE ") : "") + filterString +
                 "ORDER BY name" + order +
                 range +
                 ";";
@@ -109,7 +109,7 @@ public class PublisherManager {
     private int count(ResultSet set) throws SQLException {
         int count = 0;
         while (set.next()) {
-
+            count = set.getInt(1);
         }
         return count;
     }

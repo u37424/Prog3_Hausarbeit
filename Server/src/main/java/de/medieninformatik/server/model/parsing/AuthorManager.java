@@ -1,7 +1,6 @@
 package de.medieninformatik.server.model.parsing;
 
 import de.medieninformatik.common.Author;
-import de.medieninformatik.common.Category;
 import de.medieninformatik.common.DBMeta;
 import de.medieninformatik.server.model.database.Database;
 
@@ -21,12 +20,12 @@ public class AuthorManager {
     public LinkedList<Author> getSelection(int start, int size, boolean orderAsc, String string) throws SQLException {
         String queryStart = "SELECT * FROM authors a ";
         boolean hasString = string != null && !string.isBlank();
-        String filterString = (string == null || string.isBlank()) ? "" : " first_name LIKE('%" + string + "%') OR last_name LIKE('%\" + string + \"%') ";
+        String filterString = hasString ? ("first_name LIKE('%" + string + "%') OR last_name LIKE('%\" + string + \"%') ") : "";
         String order = orderAsc ? " ASC " : " DESC ";
         String range = "LIMIT " + start + "," + size;
 
         String query = queryStart +
-                (hasString ? "" : (" WHERE ")) + filterString +
+                (hasString ? (" WHERE ") : "") + filterString +
                 "ORDER BY alias" + order +
                 range +
                 ";";
@@ -117,7 +116,7 @@ public class AuthorManager {
     private int count(ResultSet set) throws SQLException {
         int count = 0;
         while (set.next()) {
-
+            count = set.getInt(1);
         }
         return count;
     }

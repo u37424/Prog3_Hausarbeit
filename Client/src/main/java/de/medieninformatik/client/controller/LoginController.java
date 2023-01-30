@@ -19,14 +19,18 @@ public class LoginController implements ILoginController {
     @FXML
     private Button hostButton;
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-        this.stage.setTitle("Login");
-    }
-
     @Override
     public void initialize() {
 
+    }
+
+    public void setup(){
+
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        this.stage.setTitle("Login");
     }
 
     public void setModel(MainModel model) {
