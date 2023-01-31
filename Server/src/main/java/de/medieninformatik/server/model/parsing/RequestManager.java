@@ -2,7 +2,18 @@ package de.medieninformatik.server.model.parsing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse stellt alle Manager fuer die einzelnen Ressourcen bereit.
+ * Ebenso enthaelt sie Methoden zum Wandeln zwischen Objekten und JSON.
+ * Der ResourceManager ist ein genereller Manager und wurde als Singleton entworfen, um fuer alle resourcen benutzt werden zu koennen.
+ */
 public class RequestManager {
     private final static RequestManager instance = new RequestManager();
 
@@ -18,22 +29,45 @@ public class RequestManager {
         this.publisherManager = new PublisherManager();
     }
 
+    /**
+     * Gibt dem manager fuer Buecher zurueck
+     * @return instanz des BookManager
+     */
     public BookManager getBookManager() {
         return bookManager;
     }
 
+    /**
+     * Gibt dem manager fuer Kategorien zurueck
+     * @return instanz des CategoryManager
+     */
     public CategoryManager getCategoryManager() {
         return categoryManager;
     }
 
+    /**
+     * Gibt dem manager fuer Autoren zurueck
+     * @return instanz des AutorManager
+     */
     public AuthorManager getAuthorManager() {
         return authorManager;
     }
 
+    /**
+     * Gibt dem manager fuer Publisher zurueck
+     * @return instanz des PublisherManager
+     */
     public PublisherManager getPublisherManager() {
         return publisherManager;
     }
 
+    /**
+     * Wandelt ein Objekt in einen JSON String um.
+     * @param object Objekt das umgewandlet werden soll
+     * @param <T> Art des Objektes
+     * @return JSON String
+     * @throws JsonProcessingException Wenn Umwandlung fehlerhaft
+     */
     public <T> String asJSON(T object) throws JsonProcessingException {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -44,6 +78,14 @@ public class RequestManager {
         }
     }
 
+    /**
+     * Wandelt einen JSON String auf ein Objekt um.
+     * @param json JSON String, der umgewandlet werden soll
+     * @param tClass Klasse des Objektes
+     * @param <T> Art des Objektes
+     * @return Objekt, das aus dem JSON String befuellt wurde
+     * @throws JsonProcessingException wenn Umwandlung fehlerhaft
+     */
     public <T> T JSONasObject(String json, Class<T> tClass) throws JsonProcessingException {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -54,6 +96,10 @@ public class RequestManager {
         }
     }
 
+    /**
+     * Gibt die Instanz des Managers zurueck.
+     * @return Singleton Instanz.
+     */
     public static RequestManager getInstance() {
         return instance;
     }
