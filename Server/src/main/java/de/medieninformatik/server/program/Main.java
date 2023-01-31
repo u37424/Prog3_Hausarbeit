@@ -6,6 +6,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
@@ -25,7 +26,6 @@ public class Main {
 
         ResourceConfig config = ResourceConfig.forApplicationClass(DBApplication.class);
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
-
         Database.getInstance();
 
         if (!server.isStarted()) server.start();
