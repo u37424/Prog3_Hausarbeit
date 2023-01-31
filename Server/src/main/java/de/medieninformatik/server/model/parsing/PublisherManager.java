@@ -1,6 +1,5 @@
 package de.medieninformatik.server.model.parsing;
 
-import de.medieninformatik.common.Author;
 import de.medieninformatik.common.DBMeta;
 import de.medieninformatik.common.Publisher;
 import de.medieninformatik.server.model.database.Database;
@@ -8,7 +7,18 @@ import de.medieninformatik.server.model.database.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse wird zur Arbeit mit Datenbankanfragen und Ergebnisumwandlungen fuer Publisher benutzt.
+ * Es werden entsprechende SQL Anfragen nach den Anforderungen erstellt und an die Datenbank weitergeleitet.
+ * Es koennen Publisher aus den Ergebnissen erstellt werden, oder Publisher in Anfragen umngewandelt werden.
+ */
 public class PublisherManager {
 
     public LinkedList<Publisher> getAll() throws SQLException {

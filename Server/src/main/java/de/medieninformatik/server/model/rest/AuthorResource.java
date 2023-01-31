@@ -10,7 +10,19 @@ import jakarta.ws.rs.core.*;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
-
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse stellt alle REST Anfragen zu Autoren bereit.
+ * Autoren koennen angefragt, erstellt, veraendert oder geloescht werden.
+ * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
+ * Diese resource benutzt primaer den AutorManager zum Bearbeiten von Datenbankanfragen.
+ */
 @Path("author")
 public class AuthorResource {
     RequestManager manager = RequestManager.getInstance();

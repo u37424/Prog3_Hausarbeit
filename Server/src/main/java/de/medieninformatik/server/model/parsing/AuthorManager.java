@@ -7,7 +7,18 @@ import de.medieninformatik.server.model.database.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
-
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse wird zur Arbeit mit Datenbankanfragen und Ergebnisumwandlungen fuer Autoren benutzt.
+ * Es werden entsprechende SQL Anfragen nach den Anforderungen erstellt und an die Datenbank weitergeleitet.
+ * Es koennen Autoren aus den Ergebnissen erstellt werden, oder Autoren in Anfragen umngewandelt werden.
+ */
 public class AuthorManager {
 
     public LinkedList<Author> getAll() throws SQLException {

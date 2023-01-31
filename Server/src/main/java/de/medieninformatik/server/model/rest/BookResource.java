@@ -19,9 +19,10 @@ import java.util.LinkedList;
  * <p>
  * 2023-01-31
  * <p>
- * Die Klasse stellt alle Anfragen zu generellen Benutzereinstellungen bereit.
- * Es kann nur ein Hauptbenutzer beim Server angemeldet sein.
- * Ebenso wird hier die Server Reset funktion bereitgestellt.
+ * Die Klasse stellt alle REST Anfragen zu Buechern bereit.
+ * Buecher koennen angefragt, erstellt, veraendert oder geloescht werden.
+ * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
+ * Diese resource benutzt primaer den BookManager zum Bearbeiten von Datenbankanfragen.
  */
 @Path("book")
 public class BookResource {

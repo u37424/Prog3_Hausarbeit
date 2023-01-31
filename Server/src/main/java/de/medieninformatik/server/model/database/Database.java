@@ -6,7 +6,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ResourceBundle;
-
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse stellt eine Verbindung zu einer MySQL Datenbank mithilfe eines MySQL Treibers her.
+ * Wenn die Datenbank noch nicht erstellt wurde, werden die Befehle aus der database_startup.sql ausgefuehrt.
+ */
 public class Database {
 
     private static final Database instance = new Database();
@@ -24,6 +34,9 @@ public class Database {
         if (connect()) init();
     }
 
+    /**
+     * Laedt alle Parameter zur Verbindung mit der Datenbank (Name, user, passwort usw.)
+     */
     private void loadResources() {
         ResourceBundle bundle = ResourceBundle.getBundle("Database_Connection");
         this.driver = bundle.getString("Driver");
@@ -36,6 +49,10 @@ public class Database {
         this.baseURL = url + "/" + dbName;
     }
 
+    /**
+     * Versucht eine Verbindung zur Datenbank mithilfe eines MySQL Treibers aufzubauen.
+     * @return Erfolgsstatus der verbindung
+     */
     private boolean connect() {
         try {
             Class.forName(driver);
@@ -49,6 +66,10 @@ public class Database {
         return false;
     }
 
+    /**
+     * Findet heraus, ob die Datenbank korrekt erstellt wurde, und fuehrt bei bedarf einen initialen reset aus.
+     * Ansonsten wird angenommen, das eine Verbindung zu einer Datenbank besteht, die alle Tabellen besitzt.
+     */
     private void init() {
         try {
             ResultSet initQuery = query("SELECT COUNT(*) AS amount FROM information_schema.tables WHERE table_schema = '" + dbName + "';");
@@ -67,6 +88,10 @@ public class Database {
         }
     }
 
+    /**
+     * Setzt die Datenbank auf Werkseinstellungen zurueck, durch das ausfuehren der database_startup.sql.
+     * @return Erfolgsstatus des Zuruecksetzens.
+     */
     public boolean resetDatabase() {
         try {
             // read the SQL file
@@ -94,16 +119,32 @@ public class Database {
         return false;
     }
 
+    /**
+     * Fuehrt eingehende SQL Anfragen aus und liefert das entsprechende resultSet der Datenbank.
+     * @param query SQL Anfrage.
+     * @return ResultSet mit Daten der Datenbank.
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
+     */
     public synchronized ResultSet query(String query) throws SQLException {
         Statement statement = connection.createStatement();
         return statement.executeQuery(query);
     }
 
+    /**
+     * Fuehrt eingehende SQL Updates aus und liefert den entsprechenden Erfolgsstatus der Datenbank.
+     * @param update SQL Update.
+     * @return Erfolgsstatus des Updates
+     * @throws SQLException, wenn SQL Update fehlerhaft
+     */
     public synchronized int update(String update) throws SQLException {
         Statement statement = connection.createStatement();
         return statement.executeUpdate(update);
     }
 
+    /**
+     * Kann benutzt werden, um einheiltich alle SQL Fehler auszugeben.
+     * @param e SQL Fehler
+     */
     public void printSQLErrors(SQLException e) {
         while (e != null) {
             System.err.printf("""
@@ -117,6 +158,10 @@ public class Database {
         }
     }
 
+    /**
+     * Gibt Instanz der Datenbank zurueck
+     * @return Singleton instanz
+     */
     public static Database getInstance() {
         return instance;
     }
