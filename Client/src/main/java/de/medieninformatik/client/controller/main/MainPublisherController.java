@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -29,13 +30,13 @@ public class MainPublisherController extends MainController {
         //Aktuelle Daten laden
         model.getPublisherRequest().loadSelection(pageStart, pageSize, ascending, userString);
         //Liste aus den Daten erstellen
-        ObservableList<HBox> list = FXCollections.observableArrayList(buildPublisherItems());
+        ObservableList<GridPane> list = FXCollections.observableArrayList(buildPublisherItems());
         //Elemente in die ListView einsetzen
         page.setItems(list);
     }
 
-    private LinkedList<HBox> buildPublisherItems() {
-        LinkedList<HBox> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
+    private LinkedList<GridPane> buildPublisherItems() {
+        LinkedList<GridPane> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
         //Liste aus den Daten erstellen
         LinkedList<Publisher> publishers = model.getPublisherRequest().getPublishers();
         if (publishers == null || publishers.size() == 0) return list;
@@ -45,7 +46,6 @@ public class MainPublisherController extends MainController {
             hbox.setId(String.valueOf(publisher.getPublisherId()));
             Label name = new Label(publisher.getName());
             hbox.getChildren().add(name);
-            list.add(hbox);
         }
         return list;
     }
@@ -86,8 +86,12 @@ public class MainPublisherController extends MainController {
 
     @Override
     public void inspectItem(String id) {
+        try {
         model.getPublisherRequest().getPublisher(Integer.parseInt(id));
         sceneController.loadPublisherViewScene();
+        } catch (NumberFormatException e) {
+            sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
+        }
     }
 
     @Override

@@ -3,12 +3,21 @@ package de.medieninformatik.client.controller.main;
 import de.medieninformatik.client.controller.SceneController;
 import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;
+import de.medieninformatik.common.Book;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+
+import java.util.Locale;
 
 public abstract class MainController implements IMainController {
     @FXML
@@ -27,7 +36,7 @@ public abstract class MainController implements IMainController {
     protected ChoiceBox<String> selector;
 
     @FXML
-    protected ListView<HBox> page;
+    protected ListView<GridPane> page;
 
     protected Stage stage;
     protected MainModel model;
@@ -112,6 +121,38 @@ public abstract class MainController implements IMainController {
 
     @Override
     abstract public void loadItemList();
+
+    protected GridPane paneBuilder(){
+        GridPane pane = new GridPane();
+        pane.getColumnConstraints().addAll(new ColumnConstraints( GridPane.USE_COMPUTED_SIZE, 200, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.LEFT, true),
+                new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true),
+                new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true),
+                new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true),
+                new ColumnConstraints(0, 0, 0, Priority.NEVER, HPos.CENTER, false),
+                new ColumnConstraints(0, 0,0, Priority.NEVER, HPos.RIGHT, false));
+        pane.getRowConstraints().addAll(new RowConstraints(GridPane.USE_COMPUTED_SIZE, GridPane.USE_COMPUTED_SIZE, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, VPos.CENTER, true));
+        return pane;
+    }
+
+    protected TextFlow buildFrontItem(String string) {
+        TextFlow textFlow = new TextFlow();
+        textFlow.setPadding(new Insets(15));
+        String checkTitle = string.toLowerCase(Locale.ROOT);
+        String checkString = this.userString.toLowerCase(Locale.ROOT);
+        int index = checkTitle.indexOf(checkString);
+        if (index >= 0) {
+            if (index > 0) {
+                textFlow.getChildren().add(new Text(string.substring(0, index)));
+            }
+            Text fill = new Text(string.substring(index, index + checkString.length()));
+            fill.setFill(Color.RED);
+            textFlow.getChildren().add(fill);
+            textFlow.getChildren().add(new Text(string.substring(index + userString.length())));
+        } else {
+            textFlow.getChildren().add(new Text(string));
+        }
+        return textFlow;
+    }
 
     @Override
     public void createItem() {

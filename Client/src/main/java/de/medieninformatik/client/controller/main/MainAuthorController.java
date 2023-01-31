@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -29,13 +30,13 @@ public class MainAuthorController extends MainController {
         //Aktuelle Daten laden
         model.getAuthorRequest().loadSelection(pageStart, pageSize, ascending, userString);
         //Liste aus den Daten erstellen
-        ObservableList<HBox> list = FXCollections.observableArrayList(buildAuthorItems());
+        ObservableList<GridPane> list = FXCollections.observableArrayList(buildAuthorItems());
         //Elemente in die ListView einsetzen
         page.setItems(list);
     }
 
-    private LinkedList<HBox> buildAuthorItems() {
-        LinkedList<HBox> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
+    private LinkedList<GridPane> buildAuthorItems() {
+        LinkedList<GridPane> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
         //Liste aus den Daten erstellen
         LinkedList<Author> authors = model.getAuthorRequest().getAuthors();
         if (authors == null || authors.size() == 0) return list;
@@ -45,7 +46,6 @@ public class MainAuthorController extends MainController {
             hbox.setId(String.valueOf(author.getAuthorId()));
             Label alias = new Label(author.getAlias());
             hbox.getChildren().add(alias);
-            list.add(hbox);
         }
         return list;
     }
@@ -86,8 +86,12 @@ public class MainAuthorController extends MainController {
 
     @Override
     public void inspectItem(String id) {
-        model.getAuthorRequest().getAuthor(Integer.parseInt(id));
-        sceneController.loadAuthorViewScene();
+        try {
+            model.getAuthorRequest().getAuthor(Integer.parseInt(id));
+            sceneController.loadAuthorViewScene();
+        } catch (NumberFormatException e) {
+            sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
+        }
     }
 
     @Override

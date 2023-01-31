@@ -1,7 +1,9 @@
 package de.medieninformatik.client.controller.inspector;
 
 import de.medieninformatik.client.model.MainModel;
+import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
+import de.medieninformatik.common.Category;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -11,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
+import java.util.LinkedList;
 
 public class BookViewController extends ViewController<Book> {
     @FXML
@@ -186,10 +190,26 @@ public class BookViewController extends ViewController<Book> {
     }
 
     public void addBookAuthor() {
+        model.getAuthorRequest().loadAll();
+        LinkedList<Author> sel = model.getBookRequest().getSelection().getAuthors();
+        LinkedList<Author> all = model.getAuthorRequest().getAuthors();
+        for (Author author : sel) {
+            all.removeIf(e -> e.getAuthorId() == author.getAuthorId());
+        }
+        LinkedList<Author> selection = sceneController.editList("Author Selector", sel, all);
+        model.getBookRequest().getSelection().setAuthors(selection);
         displayValues(model.getBookRequest().getSelection());
     }
 
     public void addBookCategory() {
+        model.getCategoryRequest().loadAll();
+        LinkedList<Category> sel = model.getBookRequest().getSelection().getCategories();
+        LinkedList<Category> all = model.getCategoryRequest().getCategories();
+        for (Category category : sel) {
+            all.removeIf(e -> e.getCategoryId() == category.getCategoryId());
+        }
+        LinkedList<Category> selection = sceneController.editList("Category Selector", sel, all);
+        model.getBookRequest().getSelection().setCategories(selection);
         displayValues(model.getBookRequest().getSelection());
     }
 

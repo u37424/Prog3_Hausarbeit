@@ -20,6 +20,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 public class SceneController {
@@ -120,18 +122,18 @@ public class SceneController {
         controller.setSceneController(this);
     }
 
-    public void infoMessage(String type, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Info Message");
-        alert.setHeaderText(type);
-        alert.setContentText(message);
-        alert.showAndWait();
+    public void infoMessage(String title, String message) {
+        message(title, message, Alert.AlertType.INFORMATION);
     }
 
-    public void errorMessage(String type, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error Message");
-        alert.setHeaderText(type);
+    public void errorMessage(String title, String message) {
+        message(title, message, Alert.AlertType.ERROR);
+    }
+
+    private void message(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(type.name() + " Message");
+        alert.setHeaderText(title);
         alert.setContentText(message);
         alert.showAndWait();
     }
@@ -162,23 +164,68 @@ public class SceneController {
 
         dialog.getDialogPane().setContent(grid);
 
-        ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        ButtonType buttonTypeCancel = new ButtonType("CANCEL", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
-        dialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
+        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
 
         dialog.setResultConverter((ButtonType b) -> {
-            if (b == buttonTypeOk) {
+            if (b == submitButtonType) {
                 return textField.getText();
-            }
-            if (b == buttonTypeCancel) {
-                return def;
-            }
-            return def;
+            } else return def;
         });
 
         Optional<String> result = dialog.showAndWait();
 
         return result.orElse(null);
+    }
+
+    public <T> LinkedList<T> editList(String type, LinkedList<T> selection, LinkedList<T> all) {
+        Dialog<List<T>> dialog = new Dialog<>();
+        dialog.setTitle(type);
+
+        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 20, 10, 10));
+
+        ListView<T> listViewLeft = new ListView<>();
+        listViewLeft.getItems().addAll(selection);
+        listViewLeft.setPrefWidth(200);
+        grid.add(listViewLeft, 0, 0);
+
+        ListView<T> listViewRight = new ListView<>();
+        if (all != null) listViewRight.getItems().addAll(all);
+        listViewRight.setPrefWidth(200);
+        grid.add(listViewRight, 1, 0);
+
+        setItemClickedEvent(listViewRight, listViewLeft);
+        setItemClickedEvent(listViewLeft, listViewRight);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == submitButtonType) {
+                return listViewLeft.getItems();
+            }
+            return null;
+        });
+
+        Optional<List<T>> result = dialog.showAndWait();
+
+        result.ifPresent(items -> System.out.println("Selected items: " + items));
+        return new LinkedList<>(result.orElseGet(LinkedList::new));
+    }
+
+
+    private <T> void setItemClickedEvent(ListView<T> destination, ListView<T> source) {
+        source.setOnMouseClicked(event -> {
+            if (event.getClickCount() < 2) return;
+            T selectedItem = source.getSelectionModel().getSelectedItem();
+            if (selectedItem == null) return;
+            source.getItems().remove(selectedItem);
+            destination.getItems().add(selectedItem);
+        });
     }
 }
