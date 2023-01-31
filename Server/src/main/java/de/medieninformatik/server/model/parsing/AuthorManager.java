@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 public class AuthorManager {
-    RequestManager manager = RequestManager.getInstance();
 
     public LinkedList<Author> getAll() throws SQLException {
         String query = "SELECT * FROM authors;";
