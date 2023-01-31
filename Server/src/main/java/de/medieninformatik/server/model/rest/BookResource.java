@@ -11,10 +11,26 @@ import jakarta.ws.rs.core.*;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse stellt alle Anfragen zu generellen Benutzereinstellungen bereit.
+ * Es kann nur ein Hauptbenutzer beim Server angemeldet sein.
+ * Ebenso wird hier die Server Reset funktion bereitgestellt.
+ */
 @Path("book")
 public class BookResource {
     RequestManager manager = RequestManager.getInstance();
 
+    /**
+     * Fragt eine Liste aller Buecher an.
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
@@ -31,6 +47,15 @@ public class BookResource {
         }
     }
 
+    /**
+     * Fragt eine partielle Liste von Buechern an.
+     * @param start Start der Liste.
+     * @param size Groesse der Liste
+     * @param orderAsc Ordnung der Liste
+     * @param string String, nach dem die Liste gefiltert werden soll
+     * @param category Kategorie, nach der die Liste gefiltert werden soll
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,6 +74,11 @@ public class BookResource {
         }
     }
 
+    /**
+     * Gibt ein spezifisches Buch zurueck
+     * @param isbn ISBN des Buches
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{isbn}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +94,11 @@ public class BookResource {
         }
     }
 
+    /**
+     * Aendert die Daten eines spezifischen Buches
+     * @param json Json String, der das veraenderte Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putBook(String json) {
@@ -79,6 +114,12 @@ public class BookResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Erstellt ein neues Buch
+     * @param uriInfo UriInfo
+     * @param json  Json String, der das neue Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postBook(@Context UriInfo uriInfo, String json) {
@@ -96,6 +137,11 @@ public class BookResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Loescht ein spezifisches Buch
+     * @param isbn ISBN des Buches
+     * @return Erfolgsstatus
+     */
     @DELETE
     @Path("/{isbn}")
     public Response deleteBook(@PathParam("isbn") String isbn) {

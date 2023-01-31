@@ -15,6 +15,10 @@ import java.util.LinkedList;
 public class PublisherResource {
     RequestManager manager = RequestManager.getInstance();
 
+    /**
+     * Fragt eine Liste aller Publisher an.
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
@@ -31,6 +35,14 @@ public class PublisherResource {
         }
     }
 
+    /**
+     * Fragt eine partielle Liste von Publishern an.
+     * @param start Start der Liste.
+     * @param size Groesse der Liste
+     * @param orderAsc Ordnung der Liste
+     * @param string String, nach dem die Liste gefiltert werden soll
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,6 +61,12 @@ public class PublisherResource {
         }
     }
 
+
+    /**
+     * Gibt einen spezifischen Publisher zurueck
+     * @param id id des Publishers
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,7 +81,11 @@ public class PublisherResource {
             return Response.noContent().build();
         }
     }
-
+    /**
+     * Aendert die Daten eines spezifischen Publishers
+     * @param json Json String, der das veraenderte Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putPublisher(String json) {
@@ -79,6 +101,12 @@ public class PublisherResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Erstellt einen neuen Publisher
+     * @param uriInfo UriInfo
+     * @param json  Json String, der das neue Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postPublisher(@Context UriInfo uriInfo, String json) {
@@ -96,6 +124,11 @@ public class PublisherResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Loescht einen spezifischen Publisher
+     * @param id id des Publishers
+     * @return Erfolgsstatus
+     */
     @DELETE
     @Path("/{id}")
     public Response deletePublisher(@PathParam("id") int id) {

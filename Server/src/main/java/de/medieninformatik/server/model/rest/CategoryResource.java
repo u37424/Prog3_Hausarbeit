@@ -15,6 +15,10 @@ import java.util.LinkedList;
 public class CategoryResource {
     RequestManager manager = RequestManager.getInstance();
 
+    /**
+     * Fragt eine Liste aller Kategorien an.
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
@@ -31,6 +35,14 @@ public class CategoryResource {
         }
     }
 
+    /**
+     * Fragt eine partielle Liste von Kategorien an.
+     * @param start Start der Liste.
+     * @param size Groesse der Liste
+     * @param orderAsc Ordnung der Liste
+     * @param string String, nach dem die Liste gefiltert werden soll
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,6 +61,12 @@ public class CategoryResource {
         }
     }
 
+
+    /**
+     * Gibt eine spezifische Kategorie zurueck
+     * @param id id der Kategorie
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +82,11 @@ public class CategoryResource {
         }
     }
 
+    /**
+     * Aendert die Daten einer Kategorie
+     * @param json Json String, der das veraenderte Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putCategory(String json) {
@@ -79,6 +102,12 @@ public class CategoryResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Erstellt eine neue Kategorie
+     * @param uriInfo UriInfo
+     * @param json  Json String, der das neue Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postCategory(@Context UriInfo uriInfo, String json) {
@@ -96,6 +125,11 @@ public class CategoryResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Loescht eine spezifische kategorie
+     * @param id id der kategorie
+     * @return Erfolgsstatus
+     */
     @DELETE
     @Path("/{id}")
     public Response deleteCategory(@PathParam("id") int id) {

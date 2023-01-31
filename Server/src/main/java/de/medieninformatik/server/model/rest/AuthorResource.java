@@ -15,6 +15,10 @@ import java.util.LinkedList;
 public class AuthorResource {
     RequestManager manager = RequestManager.getInstance();
 
+    /**
+     * Fragt eine Liste aller Autoren an.
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
@@ -31,6 +35,14 @@ public class AuthorResource {
         }
     }
 
+    /**
+     * Fragt eine partielle Liste von Autoen an.
+     * @param start Start der Liste.
+     * @param size Groesse der Liste
+     * @param orderAsc Ordnung der Liste
+     * @param string String, nach dem die Liste gefiltert werden soll
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,6 +61,11 @@ public class AuthorResource {
         }
     }
 
+    /**
+     * Gibt einen spezifischen Autor zurueck
+     * @param id id des Autors
+     * @return Antwort des Servers mit potentiellem JSON.
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,6 +81,11 @@ public class AuthorResource {
         }
     }
 
+    /**
+     * Aendert die Daten eines spezifischen Autors
+     * @param json Json String, der das veraenderte Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putAuthor(String json) {
@@ -79,6 +101,12 @@ public class AuthorResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Erstellt einen neuen Autor
+     * @param uriInfo UriInfo
+     * @param json  Json String, der das neue Objekt enthaelt
+     * @return Erfolgsstatus
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postAuthor(@Context UriInfo uriInfo, String json) {
@@ -96,6 +124,11 @@ public class AuthorResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+    /**
+     * Loescht einen spezifischen Author
+     * @param id id des Autors
+     * @return Erfolgsstatus
+     */
     @DELETE
     @Path("/{id}")
     public Response deleteAuthor(@PathParam("id") int id) {
