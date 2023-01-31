@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
@@ -42,10 +42,13 @@ public class MainPublisherController extends MainController {
         if (publishers == null || publishers.size() == 0) return list;
         //List HBox
         for (Publisher publisher : publishers) {
-            HBox hbox = new HBox();
-            hbox.setId(String.valueOf(publisher.getPublisherId()));
-            Label name = new Label(publisher.getName());
-            hbox.getChildren().add(name);
+            GridPane pane = paneBuilder(2, String.valueOf(publisher.getPublisherId()));
+            TextFlow flow = buildFrontItem(publisher.getName());
+            Label country = new Label(publisher.getCountry());
+            pane.addColumn(0, flow);
+            pane.addColumn(1, country);
+            if (model.isMainUser()) addButtons(2, pane);
+            list.add(pane);
         }
         return list;
     }
@@ -69,7 +72,7 @@ public class MainPublisherController extends MainController {
 
     @Override
     public void authorPressed() {
-      sceneController.loadMainAuthorScene();
+        sceneController.loadMainAuthorScene();
     }
 
     @Override
@@ -87,8 +90,8 @@ public class MainPublisherController extends MainController {
     @Override
     public void inspectItem(String id) {
         try {
-        model.getPublisherRequest().getPublisher(Integer.parseInt(id));
-        sceneController.loadPublisherViewScene();
+            model.getPublisherRequest().getPublisher(Integer.parseInt(id));
+            sceneController.loadPublisherViewScene();
         } catch (NumberFormatException e) {
             sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
         }
@@ -96,9 +99,11 @@ public class MainPublisherController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Publisher", "Do you really want to delete " + model.getPublisherRequest().getSelection().getName() + " ?")) {
-            if (model.getPublisherRequest().deletePublisher(Integer.parseInt(id))) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+        if (sceneController.confirmMessage("Delete Publisher", "Do you really want to delete this item?")) {
+            if (model.getPublisherRequest().deletePublisher(Integer.parseInt(id))) {
+                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+                loadItemList();
+            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }

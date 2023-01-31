@@ -69,7 +69,7 @@ public class PublisherManager {
     }
 
     public boolean deleteItem(int id) throws SQLException {
-        if (countByID(id) != 0) return false;
+        if (countByID(id) == 0) return false;
         String delete = "DELETE FROM publishers WHERE publisher_id = " + id + ";";
         int res = Database.getInstance().update(delete);
         return res == 1;

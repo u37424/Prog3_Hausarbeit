@@ -84,7 +84,7 @@ public class BookManager {
     }
 
     public boolean deleteItem(String id) throws SQLException {
-        if (countByISBN(id) != 0) return false;
+        if (countByISBN(id) == 0) return false;
         String delete = "DELETE FROM books WHERE isbn = '" + id + "';";
         int res = Database.getInstance().update(delete);
         return res == 1;

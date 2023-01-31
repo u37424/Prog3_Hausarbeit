@@ -5,9 +5,12 @@ import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -63,7 +66,7 @@ public class BookViewController extends ViewController<Book> {
 
         //Wenn im Create Modus
         this.editIsbn.setVisible(isCreate);
-        this.description.setEditable(isCreate);
+        this.description.setEditable(isEdit);
         this.description.setDisable(!isCreate);
         if (isCreate)
             ratingBox.getChildren().forEach(n -> n.setOnMouseClicked(e -> editBookRating(n.getId())));    //Rating durch Klicks auf Sterne
@@ -100,12 +103,30 @@ public class BookViewController extends ViewController<Book> {
         if (book.getCategories() != null) buildCategoryBox();
     }
 
-    private void buildCategoryBox() {
-        this.categories.getChildren().clear();
-    }
-
     private void buildAuthorBox() {
         this.authors.getChildren().clear();
+        boolean insertSeparator = true;
+        for (Author author : model.getBookRequest().getSelection().getAuthors()) {
+            if (insertSeparator) insertSeparator = false;
+            else this.authors.getChildren().add(new Separator(Orientation.VERTICAL));
+
+            Label label = new Label(author.toString());
+            label.setPadding(new Insets(10));
+            this.authors.getChildren().add(label);
+        }
+    }
+
+    private void buildCategoryBox() {
+        this.categories.getChildren().clear();
+        boolean insertSeparator = true;
+        for (Category category : model.getBookRequest().getSelection().getCategories()) {
+            if (insertSeparator) insertSeparator = false;
+            else this.categories.getChildren().add(new Separator(Orientation.VERTICAL));
+
+            Label label = new Label(category.toString());
+            label.setPadding(new Insets(10));
+            this.categories.getChildren().add(label);
+        }
     }
 
     @Override

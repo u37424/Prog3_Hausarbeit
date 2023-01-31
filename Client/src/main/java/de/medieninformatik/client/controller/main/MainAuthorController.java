@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
@@ -42,10 +42,15 @@ public class MainAuthorController extends MainController {
         if (authors == null || authors.size() == 0) return list;
         //List HBox
         for (Author author : authors) {
-            HBox hbox = new HBox();
-            hbox.setId(String.valueOf(author.getAuthorId()));
+            GridPane pane = paneBuilder(3, String.valueOf(author.getAuthorId()));
+            TextFlow flow = buildFrontItem(author.getFirstName() + " " + author.getLastName());
             Label alias = new Label(author.getAlias());
-            hbox.getChildren().add(alias);
+            Label birthday = new Label(author.getBirthday().substring(0, 4));
+            pane.addColumn(0, flow);
+            pane.addColumn(1, alias);
+            pane.addColumn(2, birthday);
+            if (model.isMainUser()) addButtons(3, pane);
+            list.add(pane);
         }
         return list;
     }
@@ -96,9 +101,11 @@ public class MainAuthorController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Author", "Do you really want to delete " + model.getAuthorRequest().getSelection().getAlias() + " ?")) {
-            if (model.getAuthorRequest().deleteAuthor(Integer.parseInt(id))) sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+        if (sceneController.confirmMessage("Delete Author", "Do you really want to delete this item ?")) {
+            if (model.getAuthorRequest().deleteAuthor(Integer.parseInt(id))) {
+                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+                loadItemList();
+            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }

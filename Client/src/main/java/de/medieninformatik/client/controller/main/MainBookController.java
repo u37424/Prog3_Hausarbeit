@@ -6,8 +6,13 @@ import de.medieninformatik.common.Category;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
@@ -64,19 +69,34 @@ public class MainBookController extends MainController {
         if (books == null || books.size() == 0) return list;
         //List HBox
         for (Book book : books) {
-            GridPane pane = paneBuilder();
+            GridPane pane = paneBuilder(5, book.getIsbn());
             TextFlow flow = buildFrontItem(book.getTitle());
-            Label label2 = new Label("label");
-            Label label3 = new Label("label");
-            Label label4 = new Label("label");
+            Label year = new Label(String.valueOf(book.getReleaseYear()));
+            Label author = new Label(book.getAuthors().get(0).getAlias() + ((book.getAuthors().size() > 1) ? "..." : ""));
+            Label publisher = new Label(book.getPublisher().toString());
+            HBox rating = buildRatingBox((int) book.getRating());
+            rating.setAlignment(Pos.CENTER);
             pane.addColumn(0, flow);
-            pane.addColumn(1, label2);
-            pane.addColumn(2, label3);
-            pane.addColumn(3, label4);
+            pane.addColumn(1, year);
+            pane.addColumn(2, author);
+            pane.addColumn(3, publisher);
+            pane.addColumn(4, rating);
+            if (model.isMainUser()) addButtons(5, pane);
             list.add(pane);
         }
-
         return list;
+    }
+
+    private HBox buildRatingBox(int r) {
+        HBox rating = new HBox();
+        rating.setPadding(new Insets(15));
+        for (int i = 0; i < 5; i++) {
+            ImageView imageView = new ImageView(new Image(r > i ? "star_filled.png" : "star_empty.png"));
+            imageView.setFitWidth(20);
+            imageView.setFitHeight(20);
+            rating.getChildren().add(imageView);
+        }
+        return rating;
     }
 
     @Override
@@ -125,10 +145,11 @@ public class MainBookController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Book", "Do you really want to delete " + model.getBookRequest().getSelection().getTitle() + " ?")) {
-            if (model.getBookRequest().deleteBook(id))
+        if (sceneController.confirmMessage("Delete Book", "Do you really want to delete this item?")) {
+            if (model.getBookRequest().deleteBook(id)) {
                 sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-            else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
+                loadItemList();
+            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
         }
     }
 }

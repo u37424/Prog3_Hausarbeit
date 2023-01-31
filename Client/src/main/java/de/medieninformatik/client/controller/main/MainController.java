@@ -3,11 +3,11 @@ package de.medieninformatik.client.controller.main;
 import de.medieninformatik.client.controller.SceneController;
 import de.medieninformatik.client.interfaces.IMainController;
 import de.medieninformatik.client.model.MainModel;
-import de.medieninformatik.common.Book;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -68,7 +68,7 @@ public abstract class MainController implements IMainController {
         this.selector.setVisible(false);
     }
 
-    public void setup(){
+    public void setup() {
         this.userString = "";
         this.userSelection = "";
         this.ascending = true;
@@ -103,7 +103,7 @@ public abstract class MainController implements IMainController {
     }
 
     @Override
-    public void setSceneController(SceneController controller){
+    public void setSceneController(SceneController controller) {
         this.sceneController = controller;
     }
 
@@ -122,36 +122,64 @@ public abstract class MainController implements IMainController {
     @Override
     abstract public void loadItemList();
 
-    protected GridPane paneBuilder(){
+    protected GridPane paneBuilder(int columns, String id) {
         GridPane pane = new GridPane();
-        pane.getColumnConstraints().addAll(new ColumnConstraints( GridPane.USE_COMPUTED_SIZE, 200, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.LEFT, true),
-                new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true),
-                new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true),
-                new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true),
-                new ColumnConstraints(0, 0, 0, Priority.NEVER, HPos.CENTER, false),
-                new ColumnConstraints(0, 0,0, Priority.NEVER, HPos.RIGHT, false));
+        pane.setId(id);
+        for (int i = 0; i < columns; i++) {
+            if(i == 0)pane.getColumnConstraints().add(new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 200, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.LEFT , true));
+            else pane.getColumnConstraints().add(new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true));
+        }
+        pane.getColumnConstraints().addAll(new ColumnConstraints(GridPane.USE_PREF_SIZE, 20, GridPane.USE_COMPUTED_SIZE, Priority.NEVER, HPos.CENTER, false),
+                new ColumnConstraints(GridPane.USE_PREF_SIZE, 20, GridPane.USE_COMPUTED_SIZE, Priority.NEVER, HPos.CENTER, false));
         pane.getRowConstraints().addAll(new RowConstraints(GridPane.USE_COMPUTED_SIZE, GridPane.USE_COMPUTED_SIZE, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, VPos.CENTER, true));
         return pane;
     }
 
     protected TextFlow buildFrontItem(String string) {
-        TextFlow textFlow = new TextFlow();
-        textFlow.setPadding(new Insets(15));
+        TextFlow pane = new TextFlow();
+
+        pane.setPadding(new Insets(15));
         String checkTitle = string.toLowerCase(Locale.ROOT);
         String checkString = this.userString.toLowerCase(Locale.ROOT);
         int index = checkTitle.indexOf(checkString);
         if (index >= 0) {
             if (index > 0) {
-                textFlow.getChildren().add(new Text(string.substring(0, index)));
+                pane.getChildren().add(new Text(string.substring(0, index)));
             }
             Text fill = new Text(string.substring(index, index + checkString.length()));
             fill.setFill(Color.RED);
-            textFlow.getChildren().add(fill);
-            textFlow.getChildren().add(new Text(string.substring(index + userString.length())));
+            pane.getChildren().add(fill);
+            pane.getChildren().add(new Text(string.substring(index + userString.length())));
         } else {
-            textFlow.getChildren().add(new Text(string));
+            pane.getChildren().add(new Text(string));
         }
-        return textFlow;
+        return pane;
+    }
+
+    protected void addButtons(int columnIndex, GridPane pane) {
+        Button edit = new Button();
+        ImageView edView = new ImageView(new Image("edit.png"));
+        edView.setFitWidth(15);
+        edView.setFitHeight(15);
+        edit.setGraphic(edView);
+        edit.setStyle("-fx-background-color:  #73dab4;");
+        edit.setPrefSize(15,15);
+        edit.setMinSize(15,15);
+        edit.setCursor(Cursor.HAND);
+        edit.setOnAction((e) -> editItem(pane.getId()));
+
+        Button delete = new Button();
+        ImageView delView = new ImageView(new Image("delete.png"));
+        delView.setFitWidth(15);
+        delView.setFitHeight(15);
+        delete.setGraphic(delView);
+        delete.setStyle("-fx-background-color: #cc4b4b;");
+        delete.setPrefSize(15,15);
+        delete.setMinSize(15,15);
+        delete.setCursor(Cursor.HAND);
+        delete.setOnAction((e) -> deleteItem(pane.getId()));
+        pane.addColumn(columnIndex, edit);
+        pane.addColumn(columnIndex+1, delete);
     }
 
     @Override
@@ -227,7 +255,8 @@ public abstract class MainController implements IMainController {
 
     @Override
     public void returnToLogin() {
-        if (model.isMainUser() && !model.logout()) sceneController.errorMessage("Logout Denied", "Server refused logout.");
+        if (model.isMainUser() && !model.logout())
+            sceneController.errorMessage("Logout Denied", "Server refused logout.");
         else {
             setOptions();
             sceneController.loadLoginScene();

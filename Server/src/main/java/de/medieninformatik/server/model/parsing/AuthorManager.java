@@ -79,7 +79,7 @@ public class AuthorManager {
     }
 
     public boolean deleteItem(int id) throws SQLException {
-        if (countByID(id) != 0) return false;
+        if (countByID(id) == 0) return false;
         String delete = "DELETE FROM authors WHERE author_id = " + id + ";";
         int res = Database.getInstance().update(delete);
         return res == 1;

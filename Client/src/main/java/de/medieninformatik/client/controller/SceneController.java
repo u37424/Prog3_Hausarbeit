@@ -181,6 +181,7 @@ public class SceneController {
     public <T> LinkedList<T> editList(String type, LinkedList<T> selection, LinkedList<T> all) {
         Dialog<List<T>> dialog = new Dialog<>();
         dialog.setTitle(type);
+        dialog.setResizable(true);
 
         ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
