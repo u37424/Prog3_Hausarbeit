@@ -47,21 +47,18 @@ public class BookManager {
         if (book == null) return false;
         String isbn = book.getIsbn();
         if (countByISBN(isbn) != 1) return false;
-
-        //INSERT BOOK_CATEGORIES
-        //if true
-        //INSERT BOOK_AUTHORS
-        //if true
-
-        String update = "UPDATE books SET" +
-                " isbn = '" + isbn +
-                "', title = '" + book.getTitle() +
+        RequestManager.getInstance().getAuthorManager().deleteBookAuthors(isbn);
+        RequestManager.getInstance().getCategoryManager().deleteBookCategories(isbn);
+        RequestManager.getInstance().getAuthorManager().addBookAuthors(book.getAuthors(), isbn);
+        RequestManager.getInstance().getCategoryManager().addBookCategories(book.getCategories(), isbn);
+        String update = "UPDATE books SET " +
+                " title = '" + book.getTitle() +
                 "', publisher_id = " + book.getPublisher().getPublisherId() +
                 ", release_year = " + book.getReleaseYear() +
                 ", pages = " + book.getPages() +
                 ", rating = " + book.getRating() +
                 ", description = '" + book.getDescription() +
-                "';";
+                "' WHERE ISBN = '" + isbn + "';";
         int res = Database.getInstance().update(update);
         return res == 1;
     }
@@ -70,21 +67,29 @@ public class BookManager {
         if (book == null) return false;
         String isbn = book.getIsbn();
         if (countByISBN(isbn) != 0) return false;
+
         String insert = "INSERT INTO books (ISBN, title, publisher_id, release_year, pages, rating, description)" +
-                " VALUES('" + isbn + "'" +
-                ",'" + book.getTitle() +
+                " VALUES('" + isbn +
+                "','" + book.getTitle() +
                 "'," + book.getPublisher().getPublisherId() +
                 "," + book.getReleaseYear() +
                 "," + book.getPages() +
                 "," + book.getRating() +
                 ",'" + book.getDescription() +
-                ")';";
+                "');";
         int res = Database.getInstance().update(insert);
+
+        RequestManager.getInstance().getAuthorManager().addBookAuthors(book.getAuthors(), isbn);
+        RequestManager.getInstance().getCategoryManager().addBookCategories(book.getCategories(), isbn);
         return res == 1;
     }
 
     public boolean deleteItem(String id) throws SQLException {
         if (countByISBN(id) == 0) return false;
+
+        RequestManager.getInstance().getCategoryManager().deleteBookCategories(id);
+        RequestManager.getInstance().getAuthorManager().deleteBookAuthors(id);
+        System.out.println("here");
         String delete = "DELETE FROM books WHERE isbn = '" + id + "';";
         int res = Database.getInstance().update(delete);
         return res == 1;

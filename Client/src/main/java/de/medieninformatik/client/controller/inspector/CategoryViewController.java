@@ -89,7 +89,7 @@ public class CategoryViewController extends ViewController<Category> {
     @Override
     public void deleteItem() {
         if (sceneController.confirmMessage("Delete Category", "Do you really want to delete " + model.getCategoryRequest().getSelection().getName() + " ?")) {
-            boolean res = model.getBookRequest().deleteBook(model.getBookRequest().getSelection().getIsbn());
+            boolean res = model.getCategoryRequest().deleteCategory(model.getCategoryRequest().getSelection().getCategoryId());
             if (res) {
                 sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
                 super.returnToMain();

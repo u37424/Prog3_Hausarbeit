@@ -52,7 +52,7 @@
    <children>
       <Label fx:id="title" prefHeight="69.0" text="No Title found" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
          <font>
-            <Font name="Arial" size="45.0" />
+            <Font size="35.0" />
          </font>
       </Label>
       <Separator style="-fx-background-color: black; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.columnSpan="13" GridPane.valignment="BOTTOM" />

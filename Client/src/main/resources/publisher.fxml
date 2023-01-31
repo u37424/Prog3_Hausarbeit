@@ -33,29 +33,25 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" prefHeight="70.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" prefHeight="70.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="name" text="Publisher Name" textOverrun="CLIP" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Label fx:id="name" text="Publisher Name" textOverrun="CLIP" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <font>
             <Font size="35.0" />
          </font>
       </Label>
-      <Button fx:id="backButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#returnToMain" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Button fx:id="backButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#returnToMain" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -70,7 +66,7 @@
             <Insets bottom="5.0" left="-5.0" right="5.0" top="5.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="deleteButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteItem" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="15" GridPane.valignment="CENTER">
+      <Button fx:id="deleteButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteItem" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #cc4b4b;" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="11" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -85,7 +81,7 @@
             <Insets bottom="15.0" left="15.0" top="15.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="submitButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#submitChanges" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #5dc367;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="15" GridPane.valignment="CENTER">
+      <Button fx:id="submitButton" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#submitChanges" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 100; -fx-background-color: #5dc367;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="11" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -100,7 +96,7 @@
             <Insets bottom="15.0" right="15.0" top="15.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="editName" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editName" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Button fx:id="editName" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editName" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -115,14 +111,14 @@
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </GridPane.margin>
       </Button>
-      <Separator prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-      <Label fx:id="country" text="Country Name" textOverrun="CLIP" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <Separator prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+      <Label fx:id="country" text="Country Name" textOverrun="CLIP" GridPane.columnIndex="3" GridPane.rowIndex="5">
          <font>
             <Font size="35.0" />
          </font>
       </Label>
-      <Separator prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
-      <Button fx:id="editCountry" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editCountry" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+      <Separator prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="5" GridPane.valignment="BOTTOM" />
+      <Button fx:id="editCountry" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editCountry" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -134,13 +130,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label fx:id="year" text="Year of Foundation" textOverrun="CLIP" GridPane.columnIndex="3" GridPane.rowIndex="6">
+      <Label fx:id="year" text="Year of Foundation" textOverrun="CLIP" GridPane.columnIndex="3" GridPane.rowIndex="7">
          <font>
             <Font size="35.0" />
          </font>
       </Label>
-      <Separator prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
-      <Button fx:id="editYear" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editYear" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+      <Separator prefWidth="200.0" style="-fx-background-color: black;" GridPane.columnIndex="3" GridPane.rowIndex="7" GridPane.valignment="BOTTOM" />
+      <Button fx:id="editYear" alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#editYear" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: #73dab4;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
          <graphic>
             <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -152,7 +148,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label text="Name:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Label text="Name:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <font>
             <Font size="35.0" />
          </font>
@@ -160,7 +156,7 @@
             <Insets right="20.0" />
          </GridPane.margin>
       </Label>
-      <Label text="Country:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="4">
+      <Label text="Country:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <font>
             <Font size="35.0" />
          </font>
@@ -168,7 +164,7 @@
             <Insets right="20.0" />
          </GridPane.margin>
       </Label>
-      <Label text="Foundation:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="6">
+      <Label text="Foundation:" textOverrun="CLIP" GridPane.columnIndex="1" GridPane.rowIndex="7">
          <font>
             <Font size="35.0" />
          </font>

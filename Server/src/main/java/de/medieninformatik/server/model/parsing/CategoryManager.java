@@ -1,6 +1,5 @@
 package de.medieninformatik.server.model.parsing;
 
-import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Category;
 import de.medieninformatik.common.DBMeta;
 import de.medieninformatik.server.model.database.Database;
@@ -24,7 +23,7 @@ public class CategoryManager {
         String range = "LIMIT " + start + "," + size;
 
         String query = queryStart +
-                (hasString ?  (" WHERE ") : "") + filterString +
+                (hasString ? (" WHERE ") : "") + filterString +
                 "ORDER BY name" + order +
                 range +
                 ";";
@@ -51,11 +50,18 @@ public class CategoryManager {
         int id = category.getCategoryId();
         if (countByID(id) != 1) return false;
         String update = "UPDATE categories SET" +
-                " category_id = " + id +
-                ", name = '" + category.getName() +
-                "';";
+                " name = '" + category.getName() +
+                "' WHERE category_id = " + category.getCategoryId() + ";";
         int res = Database.getInstance().update(update);
         return res == 1;
+    }
+
+    public void addBookCategories(LinkedList<Category> categories, String isbn) throws SQLException {
+        for (Category category : categories) {
+            String insert = "INSERT INTO book_categories (ISBN, Category_ID) VALUES('" +
+                    isbn + "', " + category.getCategoryId() + ");";
+            Database.getInstance().update(insert);
+        }
     }
 
     public boolean postItem(Category category) throws SQLException {
@@ -77,6 +83,11 @@ public class CategoryManager {
         return res == 1;
     }
 
+    public void deleteBookCategories(String id) throws SQLException {
+        String delete = "DELETE FROM book_categories WHERE isbn = '" + id + "';";
+        int res = Database.getInstance().update(delete);
+    }
+
     private LinkedList<Category> parseCategories(ResultSet set) throws SQLException {
         LinkedList<Category> categories = new LinkedList<>();
         while (set.next()) {
@@ -93,7 +104,7 @@ public class CategoryManager {
     }
 
     public int getMax(String string) throws SQLException {
-        if(string == null) string = "";
+        if (string == null) string = "";
         String query = "SELECT COUNT(*) FROM categories WHERE name LIKE('%" + string + "%');";
         ResultSet set = Database.getInstance().query(query);
         return count(set);

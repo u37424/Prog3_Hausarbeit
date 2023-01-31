@@ -4,6 +4,7 @@ import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
+import de.medieninformatik.common.Publisher;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -30,7 +31,7 @@ public class BookViewController extends ViewController<Book> {
     private TextArea description;
 
     @FXML
-    private Button editIsbn, editYear, editPages, editTitle, editPublisher, addAuthor, addCategory;
+    private Button editIsbn, editYear, editPages, editTitle, editPublisher, editAuthors, editCategories;
 
     public void setStage(Stage stage) {
         super.setStage(stage);
@@ -41,6 +42,10 @@ public class BookViewController extends ViewController<Book> {
         super.setModel(model);
         //Model received
         setOptions();
+
+        this.description.textProperty().addListener((obs) -> {
+            model.getBookRequest().getSelection().setDescription(this.description.getText());
+        });
 
         //Load Book when Model received
         Book book = model.getBookRequest().getSelection();
@@ -60,8 +65,8 @@ public class BookViewController extends ViewController<Book> {
         this.editYear.setVisible(isEdit);
         this.editPages.setVisible(isEdit);
         this.editPublisher.setVisible(isEdit);
-        this.addAuthor.setVisible(isEdit);
-        this.addCategory.setVisible(isEdit);
+        this.editAuthors.setVisible(isEdit);
+        this.editCategories.setVisible(isEdit);
 
 
         //Wenn im Create Modus
@@ -207,36 +212,54 @@ public class BookViewController extends ViewController<Book> {
     }
 
     public void editBookPublisher() {
+        model.getPublisherRequest().loadAll();
+
+        Publisher publisher = sceneController.choiceMessage("Select Publisher",
+                model.getBookRequest().getSelection().getPublisher(), model.getPublisherRequest().getPublishers());
+
+        model.getBookRequest().getSelection().setPublisher(publisher);
+
         displayValues(model.getBookRequest().getSelection());
     }
 
-    public void addBookAuthor() {
+    public void editBookAuthors() {
         model.getAuthorRequest().loadAll();
+
         LinkedList<Author> sel = model.getBookRequest().getSelection().getAuthors();
         LinkedList<Author> all = model.getAuthorRequest().getAuthors();
+
         for (Author author : sel) {
             all.removeIf(e -> e.getAuthorId() == author.getAuthorId());
         }
         LinkedList<Author> selection = sceneController.editList("Author Selector", sel, all);
+
         model.getBookRequest().getSelection().setAuthors(selection);
         displayValues(model.getBookRequest().getSelection());
     }
 
-    public void addBookCategory() {
+    public void editBookCategories() {
         model.getCategoryRequest().loadAll();
+
         LinkedList<Category> sel = model.getBookRequest().getSelection().getCategories();
         LinkedList<Category> all = model.getCategoryRequest().getCategories();
+
         for (Category category : sel) {
             all.removeIf(e -> e.getCategoryId() == category.getCategoryId());
         }
         LinkedList<Category> selection = sceneController.editList("Category Selector", sel, all);
+
         model.getBookRequest().getSelection().setCategories(selection);
         displayValues(model.getBookRequest().getSelection());
+    }
+
+    public void updateText(){
+        model.getBookRequest().getSelection().setDescription(this.description.getText());
     }
 
     @Override
     public void submitChanges() {
         Book book = model.getBookRequest().getSelection();
+
         if (book.getTitle() == null || book.getIsbn() == null || book.getReleaseYear() <= 0 ||
                 book.getRating() < 0 || book.getPages() <= 0 || book.getDescription() == null ||
                 book.getAuthors().size() == 0 || book.getCategories().size() == 0) {
@@ -245,6 +268,7 @@ public class BookViewController extends ViewController<Book> {
         }
 
         boolean res = model.isCreateMode() ? model.getBookRequest().createBook() : model.getBookRequest().editBook();
+
         if (res) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
             super.returnToMain();

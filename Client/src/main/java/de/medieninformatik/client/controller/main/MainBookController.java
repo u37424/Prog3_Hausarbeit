@@ -70,16 +70,25 @@ public class MainBookController extends MainController {
         //List HBox
         for (Book book : books) {
             GridPane pane = paneBuilder(5, book.getIsbn());
+
             TextFlow flow = buildFrontItem(book.getTitle());
+            pane.addColumn(0, flow);
+
             Label year = new Label(String.valueOf(book.getReleaseYear()));
-            Label author = new Label(book.getAuthors().get(0).getAlias() + ((book.getAuthors().size() > 1) ? "..." : ""));
-            Label publisher = new Label(book.getPublisher().toString());
+            pane.addColumn(1, year);
+
+            if(book.getAuthors() != null && book.getAuthors().size() != 0) {
+                Label author = new Label(book.getAuthors().get(0).getAlias() + ((book.getAuthors().size() > 1) ? "..." : ""));
+                pane.addColumn(2, author);
+            }
+
+            if(book.getPublisher() != null) {
+                Label publisher = new Label(book.getPublisher().toString());
+                pane.addColumn(3, publisher);
+            }
+
             HBox rating = buildRatingBox((int) book.getRating());
             rating.setAlignment(Pos.CENTER);
-            pane.addColumn(0, flow);
-            pane.addColumn(1, year);
-            pane.addColumn(2, author);
-            pane.addColumn(3, publisher);
             pane.addColumn(4, rating);
             if (model.isMainUser()) addButtons(5, pane);
             list.add(pane);

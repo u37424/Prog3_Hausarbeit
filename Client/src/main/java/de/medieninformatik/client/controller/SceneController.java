@@ -10,6 +10,8 @@ import de.medieninformatik.client.controller.main.MainCategoryController;
 import de.medieninformatik.client.controller.main.MainPublisherController;
 import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.model.MainModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -138,18 +140,18 @@ public class SceneController {
         alert.showAndWait();
     }
 
-    public boolean confirmMessage(String type, String message) {
+    public boolean confirmMessage(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Message");
-        alert.setHeaderText(type);
+        alert.setHeaderText(title);
         alert.setContentText(message);
         Optional<ButtonType> res = alert.showAndWait();
         return res.isPresent() && res.get().equals(ButtonType.OK);
     }
 
-    public String editMessage(String type, String def, String message) {
+    public String editMessage(String title, String def, String message) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle(type);
+        dialog.setTitle(title);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -157,7 +159,7 @@ public class SceneController {
         grid.setPadding(new Insets(20, 10, 10, 10));
 
         TextField textField = new TextField();
-        textField.setText(def);
+        textField.setPromptText(def);
         textField.setPrefWidth(350);
         grid.add(new Label(message), 0, 0);
         grid.add(textField, 1, 0);
@@ -173,14 +175,16 @@ public class SceneController {
             } else return def;
         });
 
+        textField.requestFocus();
+
         Optional<String> result = dialog.showAndWait();
 
         return result.orElse(null);
     }
 
-    public <T> LinkedList<T> editList(String type, LinkedList<T> selection, LinkedList<T> all) {
+    public <T> LinkedList<T> editList(String title, LinkedList<T> selection, LinkedList<T> all) {
         Dialog<List<T>> dialog = new Dialog<>();
-        dialog.setTitle(type);
+        dialog.setTitle(title);
         dialog.setResizable(true);
 
         ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
@@ -215,7 +219,6 @@ public class SceneController {
 
         Optional<List<T>> result = dialog.showAndWait();
 
-        result.ifPresent(items -> System.out.println("Selected items: " + items));
         return new LinkedList<>(result.orElseGet(LinkedList::new));
     }
 
@@ -228,5 +231,34 @@ public class SceneController {
             source.getItems().remove(selectedItem);
             destination.getItems().add(selectedItem);
         });
+    }
+
+    public<T> T choiceMessage(String title, T def, LinkedList<T> list) {
+        Dialog<T> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setResizable(true);
+
+        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+        ChoiceBox<T> choiceBox = new ChoiceBox<>();
+        choiceBox.setPrefHeight(50);
+        choiceBox.setValue(def);
+        choiceBox.setPadding(new Insets(10));
+        ObservableList<T> observableList = FXCollections.observableList(list);
+        choiceBox.setItems(observableList);
+
+        dialog.getDialogPane().setContent(choiceBox);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == submitButtonType) {
+                return choiceBox.getValue();
+            }
+            return null;
+        });
+
+        Optional<T> result = dialog.showAndWait();
+
+        return result.orElse(def);
     }
 }

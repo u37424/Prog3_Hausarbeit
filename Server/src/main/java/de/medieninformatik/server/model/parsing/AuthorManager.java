@@ -51,15 +51,22 @@ public class AuthorManager {
         int id = author.getAuthorId();
         if (countByID(id) != 1) return false;
         String update = "UPDATE authors SET" +
-                " author_id = " + id +
-                ", first_name = '" + author.getFirstName() +
+                " first_name = '" + author.getFirstName() +
                 "', last_name = '" + author.getLastName() +
                 "', alias = '" + author.getAlias() +
                 "', birthday = '" + author.getBirthday() +
-                "', age = '" + author.getAge() +
-                ";";
+                "', age = " + author.getAge() +
+                " WHERE author_id = " + author.getAuthorId() + ";";
         int res = Database.getInstance().update(update);
         return res == 1;
+    }
+
+    public void addBookAuthors(LinkedList<Author> authors, String isbn) throws SQLException {
+        for (Author author : authors) {
+            String insert = "INSERT INTO book_authors (ISBN, Author_ID) VALUES('"+
+                    isbn + "', " + author.getAuthorId() + ");";
+            Database.getInstance().update(insert);
+        }
     }
 
     public boolean postItem(Author author) throws SQLException {
@@ -83,6 +90,11 @@ public class AuthorManager {
         String delete = "DELETE FROM authors WHERE author_id = " + id + ";";
         int res = Database.getInstance().update(delete);
         return res == 1;
+    }
+
+    public void deleteBookAuthors(String id) throws SQLException {
+        String delete = "DELETE FROM book_authors WHERE isbn = '" + id + "';";
+        int res = Database.getInstance().update(delete);
     }
 
     private LinkedList<Author> parseAuthors(ResultSet set) throws SQLException {

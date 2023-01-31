@@ -45,11 +45,10 @@ public class PublisherManager {
         int id = publisher.getPublisherId();
         if (countByID(id) != 1) return false;
         String update = "UPDATE publishers SET" +
-                " publisher_id = " + id +
-                ", name = '" + publisher.getName() +
+                " name = '" + publisher.getName() +
                 "', main_country = '" + publisher.getCountry() +
                 "', year_of_foundation = " + publisher.getFoundation() +
-                ";";
+                " WHERE publisher_id = "+publisher.getPublisherId()+";";
         int res = Database.getInstance().update(update);
         return res == 1;
     }
