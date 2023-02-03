@@ -16,7 +16,7 @@ subprojects {
         jaxbVersion = '3.0.1'
         grizzlyVersion = '3.0.1'
         jsonVersion = '2.14.1'
-        mysqlVersion = '8.0.31'
+        mariadbVersion = '3.1.2'
     }
 
     run {

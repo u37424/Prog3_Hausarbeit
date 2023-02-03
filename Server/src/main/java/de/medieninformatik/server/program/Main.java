@@ -41,6 +41,7 @@ public class Main {
         if (!server.isStarted()) server.start();
         System.out.println("ENTER stoppt den Server.");
         System.in.read();
+        Database.getInstance().shutdown();
         server.shutdownNow();
     }
 }

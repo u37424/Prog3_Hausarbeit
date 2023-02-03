@@ -29,28 +29,18 @@ import java.util.Optional;
 public class SceneController {
     private MainModel model;
     private Stage stage;
-    private Scene scene;
-    private IController login;
-    private IController mainBook;
-    private IController mainCategory;
-    private IController mainAuthor;
-    private IController mainPublisher;
-    private IController bookViewController;
-    private IController categoryViewController;
-    private IController authorViewController;
-    private IController publisherViewController;
+    private final Scene scene;
+    private final IController login;
+    private final IController mainBook, mainCategory, mainAuthor, mainPublisher;
+    private final IController bookViewController, categoryViewController, authorViewController, publisherViewController;
 
     public SceneController() {
-        this.scene = new Scene(new AnchorPane());
+        this.scene = new Scene(new AnchorPane());   //Empty default Scene
         this.login = new LoginController();
-        this.mainBook = new MainBookController();
-        mainBook.setup();
-        this.mainCategory = new MainCategoryController();
-        mainCategory.setup();
-        this.mainAuthor = new MainAuthorController();
-        mainAuthor.setup();
-        this.mainPublisher = new MainPublisherController();
-        mainPublisher.setup();
+        this.mainBook = new MainBookController().setup();
+        this.mainCategory = new MainCategoryController().setup();
+        this.mainAuthor = new MainAuthorController().setup();
+        this.mainPublisher = new MainPublisherController().setup();
         this.bookViewController = new BookViewController();
         this.categoryViewController = new CategoryViewController();
         this.authorViewController = new AuthorViewController();
@@ -104,16 +94,15 @@ public class SceneController {
 
     private void loadScene(String resource, IController controller) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));
-            loader.setController(controller);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));   //Laden
+            loader.setController(controller);   //Controller setzen
 
-            Parent parent = loader.load();
+            Parent parent = loader.load();  //Laden der FXML Daten (Insert in Controller)
 
-            setParameters(controller);
+            setParameters(controller);  //Parameter erst setzen, nachdem Controller die FXML Daten erhalten hat
 
-            scene.setRoot(parent);
+            scene.setRoot(parent);  //Anzeigen
         } catch (IOException | RuntimeException e) {
-            e.printStackTrace();
             errorMessage("Resource Error", "Fehler beim laden von Resource: " + resource);
         }
     }
@@ -134,7 +123,7 @@ public class SceneController {
 
     private void message(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
-        alert.setTitle(type.name() + " Message");
+        alert.setTitle(type.name() + " MESSAGE");
         alert.setHeaderText(title);
         alert.setContentText(message);
         alert.showAndWait();
@@ -149,37 +138,40 @@ public class SceneController {
         return res.isPresent() && res.get().equals(ButtonType.OK);
     }
 
-    public String editMessage(String title, String def, String message) {
+    public int editNumberMessage(String title, String def, String message) {
+        try {
+            return Integer.parseInt(editStringMessage(title, def, message));
+        } catch (NumberFormatException e) {
+            errorMessage("Invalid Type", "No valid Number entered.");
+            editNumberMessage(title, def, message);
+        }
+        return Integer.parseInt(def);
+    }
+
+    public String editStringMessage(String title, String def, String message) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(title);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
-        grid.setVgap(10);
         grid.setPadding(new Insets(20, 10, 10, 10));
 
         TextField textField = new TextField();
         textField.setPromptText(def);
+        if (!model.isCreateMode()) textField.setText(def);
         textField.setPrefWidth(350);
+
         grid.add(new Label(message), 0, 0);
         grid.add(textField, 1, 0);
 
         dialog.getDialogPane().setContent(grid);
 
-        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
-        dialog.setResultConverter((ButtonType b) -> {
-            if (b == submitButtonType) {
-                return textField.getText();
-            } else return def;
-        });
+        dialog.setResultConverter(b -> b == ButtonType.OK ? textField.getText() : def);
 
-        textField.requestFocus();
-
-        Optional<String> result = dialog.showAndWait();
-
-        return result.orElse(null);
+        return dialog.showAndWait().orElse(def);
     }
 
     public <T> LinkedList<T> editList(String title, LinkedList<T> selection, LinkedList<T> all) {
@@ -187,12 +179,11 @@ public class SceneController {
         dialog.setTitle(title);
         dialog.setResizable(true);
 
-        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
-        grid.setVgap(10);
         grid.setPadding(new Insets(20, 20, 10, 10));
 
         ListView<T> listViewLeft = new ListView<>();
@@ -201,29 +192,21 @@ public class SceneController {
         grid.add(listViewLeft, 0, 0);
 
         ListView<T> listViewRight = new ListView<>();
-        if (all != null) listViewRight.getItems().addAll(all);
+        listViewRight.getItems().addAll(all);
         listViewRight.setPrefWidth(200);
         grid.add(listViewRight, 1, 0);
 
-        setItemClickedEvent(listViewRight, listViewLeft);
-        setItemClickedEvent(listViewLeft, listViewRight);
+        setEditListTransfer(listViewRight, listViewLeft);
+        setEditListTransfer(listViewLeft, listViewRight);
 
         dialog.getDialogPane().setContent(grid);
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == submitButtonType) {
-                return listViewLeft.getItems();
-            }
-            return null;
-        });
+        dialog.setResultConverter(b -> b == ButtonType.OK ? listViewLeft.getItems() : new LinkedList<>());
 
-        Optional<List<T>> result = dialog.showAndWait();
-
-        return new LinkedList<>(result.orElseGet(LinkedList::new));
+        return new LinkedList<>(dialog.showAndWait().orElse(new LinkedList<>()));
     }
 
-
-    private <T> void setItemClickedEvent(ListView<T> destination, ListView<T> source) {
+    private <T> void setEditListTransfer(ListView<T> destination, ListView<T> source) {
         source.setOnMouseClicked(event -> {
             if (event.getClickCount() < 2) return;
             T selectedItem = source.getSelectionModel().getSelectedItem();
@@ -233,13 +216,12 @@ public class SceneController {
         });
     }
 
-    public<T> T choiceMessage(String title, T def, LinkedList<T> list) {
+    public <T> T choiceMessage(String title, T def, LinkedList<T> list) {
         Dialog<T> dialog = new Dialog<>();
         dialog.setTitle(title);
-        dialog.setResizable(true);
 
-        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
         ChoiceBox<T> choiceBox = new ChoiceBox<>();
         choiceBox.setPrefHeight(50);
@@ -250,15 +232,8 @@ public class SceneController {
 
         dialog.getDialogPane().setContent(choiceBox);
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == submitButtonType) {
-                return choiceBox.getValue();
-            }
-            return null;
-        });
+        dialog.setResultConverter(b -> b == ButtonType.OK ? choiceBox.getValue() : def);
 
-        Optional<T> result = dialog.showAndWait();
-
-        return result.orElse(def);
+        return dialog.showAndWait().orElse(def);
     }
 }

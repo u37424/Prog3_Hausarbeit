@@ -11,7 +11,10 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -42,33 +45,29 @@ public abstract class MainController implements IMainController {
     protected MainModel model;
     protected SceneController sceneController;
 
-    protected String userString;
-    protected String userSelection;
+    protected String userString, userSelection;
     protected boolean ascending;
     protected int pageStart;
     protected int pageSize;
-    private int minPageSize;
-    private int maxPageSize;
-    private int increment;
+    private int minPageSize, maxPageSize, increment;
 
     @FXML
     public void initialize() {
         //Limits des Spinners setzen
         setPageSize.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minPageSize, maxPageSize, pageSize, increment));
-        //Onclick eines Listen Items (HBox.getID() == someISBN)
+        //Onclick eines Listen Items (HBox id == Object ID)
         page.setOnMouseClicked((e) -> {
-            if (e.getClickCount() > 1) {
-                if (page.getSelectionModel().getSelectedItem() == null) return;
-                String id = page.getSelectionModel().getSelectedItem().getId();
-                inspectItem(id);
-            }
+            if (e.getClickCount() <= 1) return;
+            if (page.getSelectionModel().getSelectedItem() == null) return;
+            String id = page.getSelectionModel().getSelectedItem().getId();
+            inspectItem(id);
         });
 
         this.selector.setPrefWidth(0);
         this.selector.setVisible(false);
     }
 
-    public void setup() {
+    public MainController setup() {
         this.userString = "";
         this.userSelection = "";
         this.ascending = true;
@@ -77,6 +76,7 @@ public abstract class MainController implements IMainController {
         this.minPageSize = 5;
         this.maxPageSize = 100;
         this.increment = 5;
+        return this;
     }
 
     public void setStage(Stage stage) {
@@ -85,20 +85,18 @@ public abstract class MainController implements IMainController {
 
     public void setModel(MainModel model) {
         this.model = model;
-        //On Model received
-        //Optionen des Users setzen
         setOptions();
 
         //Sync Filter
         this.stringInput.setText(userString);
         this.selector.setValue(userSelection);
         this.setPageSize.getValueFactory().setValue(pageSize);
-        if (ascending) ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
-        else ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
+        //Setze Order Button
+        ((ImageView) orderButton.getGraphic()).setImage(new Image(ascending ? "asc.png" : "desc.png"));
 
-        //Set Change Listener for Spinner after loading
+        //Change Listener fuer Spinner
         setPageSize.valueProperty().addListener((obs) -> updatePageSize(setPageSize.getValue()));
-        //Load BookList
+        //Liste laden
         loadItemList();
     }
 
@@ -115,56 +113,62 @@ public abstract class MainController implements IMainController {
         this.categoryButton.setVisible(mainUser);
         this.authorButton.setVisible(mainUser);
         this.publisherButton.setVisible(mainUser);
-        if (mainUser) this.returnButton.setText("Log Out");
-        else this.returnButton.setText("Return");
+        this.returnButton.setText(mainUser ? "Log Out" : "Return");
     }
 
     @Override
     abstract public void loadItemList();
 
-    protected GridPane paneBuilder(int columns, String id) {
+    protected GridPane listPaneBuilder(int columns, String id) {
         GridPane pane = new GridPane();
         pane.setId(id);
+
         for (int i = 0; i < columns; i++) {
-            if(i == 0)pane.getColumnConstraints().add(new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 200, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.LEFT , true));
-            else pane.getColumnConstraints().add(new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true));
+            if (i == 0)
+                pane.getColumnConstraints().add(new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 200, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.LEFT, true));
+            else
+                pane.getColumnConstraints().add(new ColumnConstraints(GridPane.USE_COMPUTED_SIZE, 100, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, HPos.CENTER, true));
         }
-        pane.getColumnConstraints().addAll(new ColumnConstraints(GridPane.USE_PREF_SIZE, 20, GridPane.USE_COMPUTED_SIZE, Priority.NEVER, HPos.CENTER, false),
-                new ColumnConstraints(GridPane.USE_PREF_SIZE, 20, GridPane.USE_COMPUTED_SIZE, Priority.NEVER, HPos.CENTER, false));
+
+        pane.getColumnConstraints().addAll(
+                new ColumnConstraints(GridPane.USE_PREF_SIZE, 20, GridPane.USE_COMPUTED_SIZE, Priority.NEVER, HPos.CENTER, false),
+                new ColumnConstraints(GridPane.USE_PREF_SIZE, 20, GridPane.USE_COMPUTED_SIZE, Priority.NEVER, HPos.CENTER, false)
+        );
+
         pane.getRowConstraints().addAll(new RowConstraints(GridPane.USE_COMPUTED_SIZE, GridPane.USE_COMPUTED_SIZE, GridPane.USE_COMPUTED_SIZE, Priority.ALWAYS, VPos.CENTER, true));
         return pane;
     }
 
-    protected TextFlow buildFrontItem(String string) {
+    protected TextFlow buildFrontItem(String filter) {
         TextFlow pane = new TextFlow();
 
         pane.setPadding(new Insets(15));
-        String checkTitle = string.toLowerCase(Locale.ROOT);
-        String checkString = this.userString.toLowerCase(Locale.ROOT);
-        int index = checkTitle.indexOf(checkString);
+        //Finde Filter im Titel
+        String item = filter.toLowerCase(Locale.ROOT);
+        String match = this.userString.toLowerCase(Locale.ROOT);
+        int index = item.indexOf(match);
+
+        //Filter im Text
         if (index >= 0) {
-            if (index > 0) {
-                pane.getChildren().add(new Text(string.substring(0, index)));
-            }
-            Text fill = new Text(string.substring(index, index + checkString.length()));
+            if (index > 0) pane.getChildren().add(new Text(filter.substring(0, index)));
+
+            Text fill = new Text(filter.substring(index, index + match.length()));
             fill.setFill(Color.RED);
-            pane.getChildren().add(fill);
-            pane.getChildren().add(new Text(string.substring(index + userString.length())));
-        } else {
-            pane.getChildren().add(new Text(string));
-        }
+            pane.getChildren().addAll(fill, new Text(filter.substring(index + userString.length())));
+        } else pane.getChildren().add(new Text(filter));
+
         return pane;
     }
 
-    protected void addButtons(int columnIndex, GridPane pane) {
+    protected void enableEditorButtons(int columnIndex, GridPane pane) {
         Button edit = new Button();
         ImageView edView = new ImageView(new Image("edit.png"));
         edView.setFitWidth(15);
         edView.setFitHeight(15);
         edit.setGraphic(edView);
         edit.setStyle("-fx-background-color:  #73dab4;");
-        edit.setPrefSize(15,15);
-        edit.setMinSize(15,15);
+        edit.setPrefSize(15, 15);
+        edit.setMinSize(15, 15);
         edit.setCursor(Cursor.HAND);
         edit.setOnAction((e) -> editItem(pane.getId()));
 
@@ -174,12 +178,13 @@ public abstract class MainController implements IMainController {
         delView.setFitHeight(15);
         delete.setGraphic(delView);
         delete.setStyle("-fx-background-color: #cc4b4b;");
-        delete.setPrefSize(15,15);
-        delete.setMinSize(15,15);
+        delete.setPrefSize(15, 15);
+        delete.setMinSize(15, 15);
         delete.setCursor(Cursor.HAND);
         delete.setOnAction((e) -> deleteItem(pane.getId()));
+
         pane.addColumn(columnIndex, edit);
-        pane.addColumn(columnIndex+1, delete);
+        pane.addColumn(columnIndex + 1, delete);
     }
 
     @Override
@@ -205,15 +210,13 @@ public abstract class MainController implements IMainController {
 
     @Override
     public void setOrder() {
-        if (ascending) ((ImageView) orderButton.getGraphic()).setImage(new Image("desc.png"));
-        else ((ImageView) orderButton.getGraphic()).setImage(new Image("asc.png"));
+        ((ImageView) orderButton.getGraphic()).setImage(new Image(ascending ? "desc.png" : "asc.png"));
         this.ascending = !this.ascending;
         loadItemList();
     }
 
     @Override
     public void updatePageSize(int size) {
-        //Listengroesse aktualisieren
         pageSize = size;
         loadItemList();
     }
@@ -221,21 +224,20 @@ public abstract class MainController implements IMainController {
     @Override
     public void pageBackward() {
         if (pageStart - pageSize >= 0) this.pageStart -= pageSize;
-        //Reload Book List
         loadItemList();
     }
 
     @Override
-    abstract public void pageForward();
+    abstract public void pageForward(); //Braucht spezifische Result Size
 
     @Override
     public void updateFilter() {
         String string = stringInput.getText();
         String category = selector.getValue();
-        //Only reload on filter change
         if (string == null) string = "";
         if (category == null) category = "";
 
+        //Nur neu laden, wenn es einen Unterschied gibt
         if (userString.equals(string) && userSelection.equals(category)) return;
         this.userString = string;
         this.userSelection = category;
@@ -257,10 +259,7 @@ public abstract class MainController implements IMainController {
     public void returnToLogin() {
         if (model.isMainUser() && !model.logout())
             sceneController.errorMessage("Logout Denied", "Server refused logout.");
-        else {
-            setOptions();
-            sceneController.loadLoginScene();
-        }
+        else sceneController.loadLoginScene();
     }
 
     @Override
@@ -277,12 +276,11 @@ public abstract class MainController implements IMainController {
 
     @Override
     public void resetDatabase() {
-        if (sceneController.confirmMessage("Reset Database", "Do you want to reset the Database?")) {
-            if (model.resetDatabase()) {
-                sceneController.infoMessage("Database Reset", "Succeeded!");
-                resetFilter();
-                loadItemList();
-            } else sceneController.errorMessage("Database Reset", "Database Reset failed!");
-        }
+        if (!sceneController.confirmMessage("Reset Database", "Do you want to reset the Database?")) return;
+
+        if (model.resetDatabase()) {
+            resetFilter();
+            sceneController.infoMessage("Database Reset", "Succeeded!");
+        } else sceneController.errorMessage("Database Reset", "Database Reset failed!");
     }
 }

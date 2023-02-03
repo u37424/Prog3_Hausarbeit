@@ -36,20 +36,24 @@ public class MainAuthorController extends MainController {
     }
 
     private LinkedList<GridPane> buildAuthorItems() {
-        LinkedList<GridPane> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
-        //Liste aus den Daten erstellen
-        LinkedList<Author> authors = model.getAuthorRequest().getAuthors();
+        LinkedList<GridPane> list = new LinkedList<>();
+
+        LinkedList<Author> authors = model.getAuthorRequest().getItemList();
         if (authors == null || authors.size() == 0) return list;
-        //List HBox
+        //HBox pro Autor aus Daten bauen
         for (Author author : authors) {
-            GridPane pane = paneBuilder(3, String.valueOf(author.getAuthorId()));
+            GridPane pane = listPaneBuilder(3, String.valueOf(author.getAuthorId()));
             TextFlow flow = buildFrontItem(author.getFirstName() + " " + author.getLastName());
-            Label alias = new Label(author.getAlias());
-            Label birthday = new Label(author.getBirthday().substring(0, 4));
             pane.addColumn(0, flow);
+
+            Label alias = new Label(author.getAlias());
             pane.addColumn(1, alias);
+
+            Label birthday = new Label(author.getBirthday().substring(0, 4));
             pane.addColumn(2, birthday);
-            if (model.isMainUser()) addButtons(3, pane);
+
+            //Edit Buttons wenn im Edit Modus
+            if (model.isMainUser()) enableEditorButtons(3, pane);
             list.add(pane);
         }
         return list;
@@ -85,14 +89,13 @@ public class MainAuthorController extends MainController {
     @Override
     public void pageForward() {
         if (pageStart + pageSize < model.getAuthorRequest().getMax()) this.pageStart += pageSize;
-        //Reload List
         loadItemList();
     }
 
     @Override
     public void inspectItem(String id) {
         try {
-            model.getAuthorRequest().getAuthor(Integer.parseInt(id));
+            model.getAuthorRequest().loadItem(id);
             sceneController.loadAuthorViewScene();
         } catch (NumberFormatException e) {
             sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
@@ -101,11 +104,11 @@ public class MainAuthorController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Author", "Do you really want to delete this item ?")) {
-            if (model.getAuthorRequest().deleteAuthor(Integer.parseInt(id))) {
-                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-                loadItemList();
-            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
-        }
+        if (!sceneController.confirmMessage("Delete Author", "Do you really want to delete this item ?")) return;
+
+        if (model.getAuthorRequest().deleteItem(id)) {
+            sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            loadItemList();
+        } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
     }
 }

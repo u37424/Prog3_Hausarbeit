@@ -17,6 +17,6 @@ dependencies {
     implementation "org.glassfish.grizzly:grizzly-websockets:${grizzlyVersion}"
     implementation "org.glassfish.jersey.containers:jersey-container-grizzly2-http:${jerseyVersion}"
     implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jsonVersion}"
-    implementation "com.mysql:mysql-connector-j:${mysqlVersion}"
+    implementation "org.mariadb.jdbc:mariadb-java-client:${mariadbVersion}"
     implementation project(':Common')
 }

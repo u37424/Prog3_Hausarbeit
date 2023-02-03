@@ -35,16 +35,18 @@ public class MainCategoryController extends MainController {
     }
 
     private LinkedList<GridPane> buildCategoryItems() {
-        LinkedList<GridPane> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
-        //Liste aus den Daten erstellen
-        LinkedList<Category> categories = model.getCategoryRequest().getCategories();
+        LinkedList<GridPane> list = new LinkedList<>();
+
+        LinkedList<Category> categories = model.getCategoryRequest().getItemList();
         if (categories == null || categories.size() == 0) return list;
-        //List HBox
+        //HBox pro Kategorie aus Daten bauen
         for (Category category : categories) {
-            GridPane pane = paneBuilder(1, String.valueOf(category.getCategoryId()));
+            GridPane pane = listPaneBuilder(1, String.valueOf(category.getCategoryId()));
             TextFlow flow = buildFrontItem(category.getName());
             pane.addColumn(0, flow);
-            if (model.isMainUser()) addButtons(1, pane);
+
+            //Edit Buttons wenn im Edit Modus
+            if (model.isMainUser()) enableEditorButtons(1, pane);
             list.add(pane);
         }
         return list;
@@ -80,14 +82,13 @@ public class MainCategoryController extends MainController {
     @Override
     public void pageForward() {
         if (pageStart + pageSize < model.getCategoryRequest().getMax()) this.pageStart += pageSize;
-        //Reload List
         loadItemList();
     }
 
     @Override
     public void inspectItem(String id) {
         try {
-            model.getCategoryRequest().getCategory(Integer.parseInt(id));
+            model.getCategoryRequest().loadItem(id);
             sceneController.loadCategoryViewScene();
         } catch (NumberFormatException e) {
             sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
@@ -96,11 +97,11 @@ public class MainCategoryController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Category", "Do you really want to delete this item?")) {
-            if (model.getCategoryRequest().deleteCategory(Integer.parseInt(id))) {
-                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-                loadItemList();
-            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
-        }
+        if (!sceneController.confirmMessage("Delete Category", "Do you really want to delete this Category?")) return;
+
+        if (model.getCategoryRequest().deleteItem(id)) {
+            sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            loadItemList();
+        } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
     }
 }

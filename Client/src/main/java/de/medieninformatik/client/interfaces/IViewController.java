@@ -1,9 +1,10 @@
 package de.medieninformatik.client.interfaces;
 
-public interface IViewController<T> extends IController {
+public interface IViewController extends IController {
     void setOptions();
-    void displayValues(T book);
+    void displayValues();
     void returnToMain();
+    boolean validateItem();
     void submitChanges();
     void deleteItem();
 }

@@ -18,13 +18,11 @@ import java.util.ResourceBundle;
  * Wenn die Datenbank noch nicht erstellt wurde, werden die Befehle aus der database_startup.sql ausgefuehrt.
  */
 public class Database {
-
     private static final Database instance = new Database();
-
     private static Connection connection;
+
     private String driver;
-    private String user;
-    private String password;
+    private String user, password;
     private String dbName;
     private String baseURL;
     private int tableAmount;
@@ -155,6 +153,14 @@ public class Database {
                              """.stripIndent(),
                     e.getMessage(), e.getSQLState(), e.getErrorCode());
             e = e.getNextException();
+        }
+    }
+
+    public void shutdown(){
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            System.err.println("Error in Database disconnect.");
         }
     }
 

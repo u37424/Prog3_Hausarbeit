@@ -13,7 +13,7 @@ public class BookRequest {
     private final Request request;
     private final String bookPath;
 
-    private Book selection;
+    private Book item;
     private LinkedList<Book> books;
     private int bookMax;
 
@@ -26,11 +26,11 @@ public class BookRequest {
 
     //--------POJOS FOR MODEL
 
-    public Book getSelection() {
-        return selection;
+    public Book getItem() {
+        return item;
     }
 
-    public LinkedList<Book> getBooks() {
+    public LinkedList<Book> getItemList() {
         return books;
     }
 
@@ -40,9 +40,9 @@ public class BookRequest {
 
     //------------SERVER REQUESTS
 
-    public void getBook(String isbn) {
-        Response response = request.serverRequest("GET",  bookPath + "/" + isbn);
-        this.selection = request.createObject(response, Book.class);
+    public void loadItem(String id) {
+        Response response = request.serverRequest("GET",  bookPath + "/" + id);
+        this.item = request.createObject(response, Book.class);
     }
 
     public void loadAll() {
@@ -60,22 +60,22 @@ public class BookRequest {
         this.bookMax = result.getResultMax();
     }
 
-    public boolean editBook() {
-        Response response = request.serverRequest("PUT", bookPath, selection);
+    public boolean editItem() {
+        Response response = request.serverRequest("PUT", bookPath, item);
         return request.isOk(response);
     }
 
-    public boolean createBook() {
-        Response response = request.serverRequest("POST", bookPath, selection);
+    public boolean createItem() {
+        Response response = request.serverRequest("POST", bookPath, item);
         return request.isCreated(response);
     }
 
-    public boolean deleteBook(String isbn) {
-        Response response = request.serverRequest("DELETE",  bookPath + "/" + isbn);
+    public boolean deleteItem(String id) {
+        Response response = request.serverRequest("DELETE",  bookPath + "/" + id);
         return request.isOk(response);
     }
 
     public void reset() {
-        this.selection = new Book();
+        this.item = new Book();
     }
 }

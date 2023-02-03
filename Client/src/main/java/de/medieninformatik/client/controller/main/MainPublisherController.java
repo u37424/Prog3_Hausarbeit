@@ -36,18 +36,21 @@ public class MainPublisherController extends MainController {
     }
 
     private LinkedList<GridPane> buildPublisherItems() {
-        LinkedList<GridPane> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
-        //Liste aus den Daten erstellen
-        LinkedList<Publisher> publishers = model.getPublisherRequest().getPublishers();
+        LinkedList<GridPane> list = new LinkedList<>();
+
+        LinkedList<Publisher> publishers = model.getPublisherRequest().getItemList();
         if (publishers == null || publishers.size() == 0) return list;
-        //List HBox
+        //HBox pro Publisher aus Daten bauen
         for (Publisher publisher : publishers) {
-            GridPane pane = paneBuilder(2, String.valueOf(publisher.getPublisherId()));
+            GridPane pane = listPaneBuilder(2, String.valueOf(publisher.getPublisherId()));
             TextFlow flow = buildFrontItem(publisher.getName());
-            Label country = new Label(publisher.getCountry());
             pane.addColumn(0, flow);
+
+            Label country = new Label(publisher.getCountry());
             pane.addColumn(1, country);
-            if (model.isMainUser()) addButtons(2, pane);
+
+            //Edit Buttons wenn im Edit Modus
+            if (model.isMainUser()) enableEditorButtons(2, pane);
             list.add(pane);
         }
         return list;
@@ -83,14 +86,13 @@ public class MainPublisherController extends MainController {
     @Override
     public void pageForward() {
         if (pageStart + pageSize < model.getPublisherRequest().getMax()) this.pageStart += pageSize;
-        //Reload List
         loadItemList();
     }
 
     @Override
     public void inspectItem(String id) {
         try {
-            model.getPublisherRequest().getPublisher(Integer.parseInt(id));
+            model.getPublisherRequest().loadItem(id);
             sceneController.loadPublisherViewScene();
         } catch (NumberFormatException e) {
             sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
@@ -99,11 +101,11 @@ public class MainPublisherController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Publisher", "Do you really want to delete this item?")) {
-            if (model.getPublisherRequest().deletePublisher(Integer.parseInt(id))) {
-                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-                loadItemList();
-            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
-        }
+        if (!sceneController.confirmMessage("Delete Publisher", "Do you really want to delete this item?")) return;
+
+        if (model.getPublisherRequest().deleteItem(id)) {
+            sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            loadItemList();
+        } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
     }
 }

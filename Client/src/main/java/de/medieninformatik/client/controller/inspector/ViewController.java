@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
-public abstract class ViewController<T> implements IViewController<T> {
+public abstract class ViewController implements IViewController {
     @FXML
     protected Button submitButton, deleteButton, backButton;
 
@@ -19,11 +19,6 @@ public abstract class ViewController<T> implements IViewController<T> {
 
     @Override
     public void initialize() {
-
-    }
-
-    public void setup(){
-
     }
 
     @Override
@@ -45,25 +40,25 @@ public abstract class ViewController<T> implements IViewController<T> {
     @Override
     public void setOptions() {
         if (!model.isMainUser()) return;
-
         boolean isEdit = model.isEditMode();
         boolean isCreate = model.isCreateMode();
 
-        //Set Submit, Back, Delete
+        //Submit, Back, Delete
         this.submitButton.setVisible(isEdit);
         this.deleteButton.setVisible(isEdit && !isCreate);
         ((ImageView) this.backButton.getGraphic()).setImage(new Image((isEdit) ? "exit.png" : "return.png"));
-        if (isEdit) this.stage.setTitle("Book Editor");
     }
 
     @Override
-    public abstract void displayValues(T item);
+    public abstract void displayValues();
 
     @Override
     public void returnToMain() {
         model.setCreateMode(false);
-        model.setEditMode(false);
     }
+
+    @Override
+    public abstract boolean validateItem();
 
     @Override
     public abstract void submitChanges();

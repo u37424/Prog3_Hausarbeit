@@ -5,6 +5,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -24,35 +25,34 @@ public class UserResource {
     /**
      * Ermoeglicht dem Benutzer sich als Hauptbenutzer anzumelden.
      * Es kann jeweils nur ein hauptbenutzer angemeldet sein.
+     *
      * @return Erfolgsstatus
      */
     @GET
     @Path("/login")
     public Response login() {
-        if (!loggedIn) {
-            loggedIn = true;
-            return Response.ok().build();
-        }
-        return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        if (loggedIn) return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        loggedIn = true;
+        return Response.ok().build();
     }
 
     /**
      * Ermoeglicht dem hauptbenutzer sich abzumelden.
      * Beim erfolgreichen Abmelden wird der Hauptbenutzer wieder freigegeben
+     *
      * @return Erfolgsstatus
      */
     @GET
     @Path("/logout")
     public Response logout() {
-        if (loggedIn) {
-            loggedIn = false;
-            return Response.ok().build();
-        }
-        return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        if (!loggedIn) return Response.noContent().status(Response.Status.NOT_FOUND).build();
+        loggedIn = false;
+        return Response.ok().build();
     }
 
     /**
      * Setzt die Datenbank auf Werkseinstellungen zurueck.
+     *
      * @return Erfolgsstatus
      */
     @POST

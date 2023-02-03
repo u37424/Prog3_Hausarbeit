@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
-public class AuthorViewController extends ViewController<Author> {
+public class AuthorViewController extends ViewController {
     @FXML
     private Label firstName, lastName, alias, age, birthday;
 
@@ -27,23 +27,15 @@ public class AuthorViewController extends ViewController<Author> {
 
     public void setModel(MainModel model) {
         super.setModel(model);
-        //Model received
-        setOptions();
-
-        //Load Book when Model received
-        Author author = model.getAuthorRequest().getSelection();
-        displayValues(author);
+        displayValues();
     }
 
     @Override
     public void setOptions() {
         if (!model.isMainUser()) return;
         super.setOptions();
-
         boolean isEdit = model.isEditMode();
-        boolean isCreate = model.isCreateMode();
-
-        //Specific edit Buttons
+        //Edit Buttons
         this.editFirstName.setVisible(isEdit);
         this.editLastName.setVisible(isEdit);
         this.editAlias.setVisible(isEdit);
@@ -53,18 +45,13 @@ public class AuthorViewController extends ViewController<Author> {
     }
 
     @Override
-    public void displayValues(Author author) {
+    public void displayValues() {
+        Author author = model.getAuthorRequest().getItem();
         if (author == null) return;
-        //Fill with Book Data
-        if (author.getFirstName() != null && !author.getFirstName().isBlank())
-            this.firstName.setText(author.getFirstName());
 
-        if (author.getLastName() != null && !author.getLastName().isBlank())
-            this.lastName.setText(author.getLastName());
-
-        if (author.getAlias() != null && !author.getAlias().isBlank())
-            this.alias.setText(author.getAlias());
-
+        this.firstName.setText(author.getFirstName());
+        this.lastName.setText(author.getLastName());
+        this.alias.setText(author.getAlias());
         this.age.setText(String.valueOf(author.getAge()));
 
         if (author.getBirthday() != null && !author.getBirthday().isBlank()) {
@@ -75,82 +62,83 @@ public class AuthorViewController extends ViewController<Author> {
 
     @Override
     public void returnToMain() {
-        if (model.isCreateMode() || model.isEditMode()) {
-            if (!sceneController.confirmMessage("Leave Editing", "Unsaved Changes will be lost!")) return;
-        }
         super.returnToMain();
-
         sceneController.loadMainAuthorScene();
     }
 
     //--------EDIT VALUES
 
     public void editFirstName() {
-        String eingabe = sceneController.editMessage("Edit First Name", this.firstName.getText(), "Fist Name");
-        if (eingabe == null || this.firstName.getText().equals(eingabe)) return;
+        String eingabe = sceneController.editStringMessage("Edit First Name", this.firstName.getText(), "Fist Name");
+        if (eingabe == null) return;
         this.firstName.setText(eingabe);
-        model.getAuthorRequest().getSelection().setFirstName(eingabe);
+        model.getAuthorRequest().getItem().setFirstName(eingabe);
     }
 
     public void editLastName() {
-        String eingabe = sceneController.editMessage("Edit Last Name", this.lastName.getText(), "Last Name");
-        if (eingabe == null || this.lastName.getText().equals(eingabe)) return;
+        String eingabe = sceneController.editStringMessage("Edit Last Name", this.lastName.getText(), "Last Name");
+        if (eingabe == null) return;
         this.lastName.setText(eingabe);
-        model.getAuthorRequest().getSelection().setLastName(eingabe);
+        model.getAuthorRequest().getItem().setLastName(eingabe);
     }
 
     public void editAlias() {
-        String eingabe = sceneController.editMessage("Edit Alias Name", this.alias.getText(), "Alias Name");
-        if (eingabe == null || this.alias.getText().equals(eingabe)) return;
+        String eingabe = sceneController.editStringMessage("Edit Alias Name", this.alias.getText(), "Alias Name");
+        if (eingabe == null) return;
         this.alias.setText(eingabe);
-        model.getAuthorRequest().getSelection().setAlias(eingabe);
+        model.getAuthorRequest().getItem().setAlias(eingabe);
     }
 
     public void editAge() {
-        try {
-            int eingabe = Integer.parseInt(sceneController.editMessage("Edit Pages", this.age.getText(), "Book Pages"));
-            if (Integer.parseInt(this.age.getText()) == eingabe) return;
-            this.age.setText(String.valueOf(eingabe));
-            model.getAuthorRequest().getSelection().setAge(eingabe);
-        } catch (NumberFormatException e) {
-            sceneController.errorMessage("Invalid Type", "No valid Number entered.");
-        }
+        int eingabe = sceneController.editNumberMessage("Edit Age", this.age.getText(), "Age");
+        this.age.setText(String.valueOf(eingabe));
+        model.getAuthorRequest().getItem().setAge(eingabe);
     }
 
     public void editBirthday() {
         String eingabe = String.valueOf(this.editBirthday.getValue());
-        model.getAuthorRequest().getSelection().setBirthday(eingabe);
+        model.getAuthorRequest().getItem().setBirthday(eingabe);
+    }
+
+    @Override
+    public boolean validateItem() {
+        Author item = model.getAuthorRequest().getItem();
+        return item.getFirstName() != null && !item.getFirstName().isBlank() &&
+                item.getLastName() != null && !item.getLastName().isBlank() &&
+                item.getBirthday() != null && !item.getBirthday().isBlank() &&
+                item.getAge() > 0;
     }
 
     @Override
     public void submitChanges() {
-        Author author = model.getAuthorRequest().getSelection();
-        if (author.getFirstName() == null || author.getLastName() == null || author.getBirthday() == null || author.getAge() <= 0) {
+        if (!validateItem()) {
             sceneController.errorMessage("Invalid Object", "Please enter valid Values for all Fields!");
             return;
         }
 
+        //Alias ermitteln, wenn notwendig
+        Author author = model.getAuthorRequest().getItem();
         if (author.getAlias() == null || author.getAlias().isBlank())
-            model.getAuthorRequest().getSelection().setAlias(author.getFirstName().charAt(0) + ". " + author.getLastName());
+            model.getAuthorRequest().getItem().setAlias(author.getFirstName().charAt(0) + ". " + author.getLastName());
 
-        boolean res = model.isCreateMode() ? model.getAuthorRequest().createAuthor() : model.getAuthorRequest().editAuthor();
-        if (res) {
+        boolean executed = model.isCreateMode() ? model.getAuthorRequest().createItem() : model.getAuthorRequest().editItem();
+
+        if (executed) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
-            super.returnToMain();
-            sceneController.loadMainAuthorScene();
+            returnToMain();
         } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
-
     }
 
     @Override
     public void deleteItem() {
-        if (sceneController.confirmMessage("Delete Author", "Do you really want to delete " + model.getAuthorRequest().getSelection().getAlias() + " ?")) {
-            boolean res = model.getAuthorRequest().deleteAuthor(model.getAuthorRequest().getSelection().getAuthorId());
-            if (res) {
-                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-                super.returnToMain();
-                sceneController.loadMainAuthorScene();
-            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
-        }
+        if (!sceneController.confirmMessage("Delete Author", "Do you really want to delete this Author?")) return;
+
+        int id = model.getAuthorRequest().getItem().getAuthorId();
+        boolean executed = model.getAuthorRequest().deleteItem(String.valueOf(id));
+
+        if (executed) {
+            sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            returnToMain();
+        } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
     }
 }

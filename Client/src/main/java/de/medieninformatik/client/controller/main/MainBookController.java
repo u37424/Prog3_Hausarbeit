@@ -24,7 +24,7 @@ public class MainBookController extends MainController {
     public void initialize() {
         super.initialize();
         bookButton.setStyle(bookButton.getStyle() + "-fx-background-color: #5dc367;");
-        //Default Category Selection
+        //Default Category Auswahl
         selector.getItems().add("");
         this.selector.setPrefWidth(150);
         this.selector.setVisible(true);
@@ -38,17 +38,17 @@ public class MainBookController extends MainController {
 
     public void setModel(MainModel model) {
         super.setModel(model);
-        //Specific filter for books
+        //kategorie Filter laden
         loadCategorySelection();
     }
 
     private void loadCategorySelection() {
         model.getCategoryRequest().loadAll();
-        if (model.getCategoryRequest().getCategories() == null ||
-                model.getCategoryRequest().getCategories().size() == 0)
+        if (model.getCategoryRequest().getItemList() == null ||
+                model.getCategoryRequest().getItemList().size() == 0)
             return;
 
-        for (Category category : model.getCategoryRequest().getCategories())
+        for (Category category : model.getCategoryRequest().getItemList())
             this.selector.getItems().add(category.getName());
     }
 
@@ -63,26 +63,25 @@ public class MainBookController extends MainController {
     }
 
     private LinkedList<GridPane> buildBookItems() {
-        LinkedList<GridPane> list = new LinkedList<>(); //Baue einen HBox Container pro Buch
-        //Liste aus den Daten erstellen
-        LinkedList<Book> books = model.getBookRequest().getBooks();
-        if (books == null || books.size() == 0) return list;
-        //List HBox
-        for (Book book : books) {
-            GridPane pane = paneBuilder(5, book.getIsbn());
+        LinkedList<GridPane> list = new LinkedList<>();
 
+        LinkedList<Book> books = model.getBookRequest().getItemList();
+        if (books == null || books.size() == 0) return list;
+        //HBox pro Buch aus Daten bauen
+        for (Book book : books) {
+            GridPane pane = listPaneBuilder(5, book.getIsbn());
             TextFlow flow = buildFrontItem(book.getTitle());
             pane.addColumn(0, flow);
 
             Label year = new Label(String.valueOf(book.getReleaseYear()));
             pane.addColumn(1, year);
 
-            if(book.getAuthors() != null && book.getAuthors().size() != 0) {
+            if (book.getAuthors() != null && book.getAuthors().size() != 0) {
                 Label author = new Label(book.getAuthors().get(0).getAlias() + ((book.getAuthors().size() > 1) ? "..." : ""));
                 pane.addColumn(2, author);
             }
 
-            if(book.getPublisher() != null) {
+            if (book.getPublisher() != null) {
                 Label publisher = new Label(book.getPublisher().toString());
                 pane.addColumn(3, publisher);
             }
@@ -90,22 +89,24 @@ public class MainBookController extends MainController {
             HBox rating = buildRatingBox((int) book.getRating());
             rating.setAlignment(Pos.CENTER);
             pane.addColumn(4, rating);
-            if (model.isMainUser()) addButtons(5, pane);
+
+            //Edit Buttons wenn im Edit Modus
+            if (model.isMainUser()) enableEditorButtons(5, pane);
             list.add(pane);
         }
         return list;
     }
 
-    private HBox buildRatingBox(int r) {
-        HBox rating = new HBox();
-        rating.setPadding(new Insets(15));
+    private HBox buildRatingBox(int rating) {
+        HBox container = new HBox();
+        container.setPadding(new Insets(15));
         for (int i = 0; i < 5; i++) {
-            ImageView imageView = new ImageView(new Image(r > i ? "star_filled.png" : "star_empty.png"));
+            ImageView imageView = new ImageView(new Image(rating > i ? "star_filled.png" : "star_empty.png"));
             imageView.setFitWidth(20);
             imageView.setFitHeight(20);
-            rating.getChildren().add(imageView);
+            container.getChildren().add(imageView);
         }
-        return rating;
+        return container;
     }
 
     @Override
@@ -138,14 +139,13 @@ public class MainBookController extends MainController {
     @Override
     public void pageForward() {
         if (pageStart + pageSize < model.getBookRequest().getMax()) this.pageStart += pageSize;
-        //Reload List
         loadItemList();
     }
 
     @Override
     public void inspectItem(String id) {
         try {
-            model.getBookRequest().getBook(id);
+            model.getBookRequest().loadItem(id);
             sceneController.loadBookViewScene();
         } catch (NumberFormatException e) {
             sceneController.errorMessage("Parsing Error", "Item ID cannot be read.");
@@ -154,11 +154,11 @@ public class MainBookController extends MainController {
 
     @Override
     public void deleteItem(String id) {
-        if (sceneController.confirmMessage("Delete Book", "Do you really want to delete this item?")) {
-            if (model.getBookRequest().deleteBook(id)) {
-                sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
-                loadItemList();
-            } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
-        }
+        if (!sceneController.confirmMessage("Delete Book", "Do you really want to delete this item?")) return;
+
+        if (model.getBookRequest().deleteItem(id)) {
+            sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");
+            loadItemList();
+        } else sceneController.errorMessage("Deletion Failed", "Failed to delete the Entry!");
     }
 }

@@ -7,9 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 public class LoginController implements ILoginController {
 
-    private Stage stage;
     private MainModel model;
     private SceneController sceneController;
 
@@ -21,16 +22,12 @@ public class LoginController implements ILoginController {
 
     @Override
     public void initialize() {
-
-    }
-
-    public void setup(){
-
+        ResourceBundle bundle = ResourceBundle.getBundle("ServerResources");
+        hostName.setText(bundle.getString("Host.Address"));
     }
 
     public void setStage(Stage stage) {
-        this.stage = stage;
-        this.stage.setTitle("Login");
+        stage.setTitle("Login");
     }
 
     public void setModel(MainModel model) {
@@ -63,7 +60,7 @@ public class LoginController implements ILoginController {
         this.hostButton.setDisable(true);
     }
 
-    public void enableChangeButton(){
+    public void enableChangeButton() {
         this.hostButton.setDisable(false);
     }
 }

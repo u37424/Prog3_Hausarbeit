@@ -8,8 +8,7 @@ public class MainModel {
     private final PublisherRequest publisherRequest;
 
     private boolean mainUser;
-    private boolean editMode;
-    private boolean createMode;
+    private boolean editMode, createMode;
 
     public MainModel() {
         this.request = new Request();
@@ -31,8 +30,7 @@ public class MainModel {
         request.changeHostName(name);
     }
 
-    //---------RESET
-
+    //------REQUEST HANDLER
 
     public BookRequest getBookRequest() {
         return bookRequest;
@@ -54,7 +52,7 @@ public class MainModel {
         return request.resetDatabase();
     }
 
-    //-------------User Settings im Model, um Anmeldung ueber mehrere Views / Controller zu behalten
+    //-----------------USER SETTINGS
 
     public boolean isMainUser() {
         return mainUser;

@@ -1,19 +1,9 @@
 package de.medieninformatik.client.view;
 
-import de.medieninformatik.client.controller.LoginController;
 import de.medieninformatik.client.controller.SceneController;
-import de.medieninformatik.client.interfaces.IController;
 import de.medieninformatik.client.model.MainModel;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.Optional;
 
 public class View extends Application {
     /**
@@ -43,6 +33,7 @@ public class View extends Application {
         stage.setOnCloseRequest(e -> {
             if (model.isMainUser()) model.logout();
         });
+
         stage.show();
     }
 }

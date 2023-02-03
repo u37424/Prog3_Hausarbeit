@@ -18,9 +18,7 @@ import java.util.ResourceBundle;
 public class Request {
     //Path Attributes
     private final String userPath;
-    private final String loginPath;
-    private final String logoutPath;
-    private final String resetPath;
+    private final String loginPath, logoutPath, resetPath;
 
     private final String hostPort;
     private final String basePath;
@@ -65,7 +63,7 @@ public class Request {
         return isOk(response);
     }
 
-    //----------Converter Methods (JSON -> POJO)
+    //----------Response Reading/Converting Methoden
 
     boolean isOk(Response response) {
         if (response == null) return false;
@@ -123,7 +121,6 @@ public class Request {
                 case "DELETE" -> target.request().delete();
                 default -> null;
             };
-
         } catch (JsonProcessingException e) {
             System.err.println("Error parsing Object from " + object.getClass() + " to JSON.");
         } catch (RuntimeException e) {

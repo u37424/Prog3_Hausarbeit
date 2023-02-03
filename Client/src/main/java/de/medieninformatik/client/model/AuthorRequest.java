@@ -13,7 +13,7 @@ public class AuthorRequest {
     private final Request request;
     private final String authorPath;
 
-    private Author selection;
+    private Author item;
     private LinkedList<Author> authors;
     private int authorMax;
 
@@ -26,11 +26,11 @@ public class AuthorRequest {
 
     //----------POJOS FOR MODEL
 
-    public Author getSelection() {
-        return selection;
+    public Author getItem() {
+        return item;
     }
 
-    public LinkedList<Author> getAuthors() {
+    public LinkedList<Author> getItemList() {
         return authors;
     }
 
@@ -40,9 +40,9 @@ public class AuthorRequest {
 
     //-----------REQUESTS TO SERVER
 
-    public void getAuthor(int id) {
+    public void loadItem(String id) {
         Response response = request.serverRequest("GET",  authorPath + "/" + id);
-        this.selection =  request.createObject(response, Author.class);
+        this.item =  request.createObject(response, Author.class);
     }
 
     public void loadAll() {
@@ -59,22 +59,22 @@ public class AuthorRequest {
         this.authorMax = result.getResultMax();
     }
 
-    public boolean editAuthor() {
-        Response response = request.serverRequest("PUT", authorPath, selection);
+    public boolean editItem() {
+        Response response = request.serverRequest("PUT", authorPath, item);
         return request.isOk(response);
     }
 
-    public boolean createAuthor() {
-        Response response = request.serverRequest("POST", authorPath, selection);
+    public boolean createItem() {
+        Response response = request.serverRequest("POST", authorPath, item);
         return request.isCreated(response);
     }
 
-    public boolean deleteAuthor(int id) {
+    public boolean deleteItem(String id) {
         Response response = request.serverRequest("DELETE",  authorPath + "/" + id);
         return request.isOk(response);
     }
 
     public void reset() {
-        this.selection = new Author();
+        this.item = new Author();
     }
 }

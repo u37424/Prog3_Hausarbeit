@@ -13,7 +13,7 @@ public class CategoryRequest {
     private final Request request;
     private final String categoryPath;
 
-    private Category selection;
+    private Category item;
     private LinkedList<Category> categories;
     private int categoryMax;
 
@@ -26,11 +26,11 @@ public class CategoryRequest {
 
     //---------POJOS FOR MODEL
 
-    public Category getSelection() {
-        return selection;
+    public Category getItem() {
+        return item;
     }
 
-    public LinkedList<Category> getCategories() {
+    public LinkedList<Category> getItemList() {
         return categories;
     }
 
@@ -40,9 +40,9 @@ public class CategoryRequest {
 
     //--------REQUESTS TO SERVER
 
-    public void getCategory(int id) {
+    public void loadItem(String id) {
         Response response = request.serverRequest("GET",  categoryPath + "/" + id);
-        this.selection = request.createObject(response, Category.class);
+        this.item = request.createObject(response, Category.class);
     }
 
     public void loadAll() {
@@ -59,22 +59,22 @@ public class CategoryRequest {
         this.categoryMax = result.getResultMax();
     }
 
-    public boolean editCategory() {
-        Response response = request.serverRequest("PUT", categoryPath, selection);
+    public boolean editItem() {
+        Response response = request.serverRequest("PUT", categoryPath, item);
         return request.isOk(response);
     }
 
-    public boolean createCategory() {
-        Response response = request.serverRequest("POST", categoryPath, selection);
+    public boolean createItem() {
+        Response response = request.serverRequest("POST", categoryPath, item);
         return request.isCreated(response);
     }
 
-    public boolean deleteCategory(int id) {
+    public boolean deleteItem(String id) {
         Response response = request.serverRequest("DELETE",  categoryPath + "/" + id);
         return request.isOk(response);
     }
 
     public void reset() {
-        this.selection = new Category();
+        this.item = new Category();
     }
 }

@@ -13,7 +13,7 @@ public class PublisherRequest {
     private final Request request;
     private final String publisherPath;
 
-    private Publisher selection;
+    private Publisher item;
     private LinkedList<Publisher> publishers;
     private int publisherMax;
 
@@ -26,11 +26,11 @@ public class PublisherRequest {
 
     //----------POJOs FOR MODEL
 
-    public Publisher getSelection() {
-        return selection;
+    public Publisher getItem() {
+        return item;
     }
 
-    public LinkedList<Publisher> getPublishers() {
+    public LinkedList<Publisher> getItemList() {
         return publishers;
     }
 
@@ -40,9 +40,9 @@ public class PublisherRequest {
 
     //--------REQUESTS TO SERVER
 
-    public void getPublisher(int id) {
+    public void loadItem(String id) {
         Response response = request.serverRequest("GET",  publisherPath + "/" + id);
-        this.selection = request.createObject(response, Publisher.class);
+        this.item = request.createObject(response, Publisher.class);
     }
 
     public void loadAll() {
@@ -59,22 +59,22 @@ public class PublisherRequest {
         this.publisherMax = result.getResultMax();
     }
 
-    public boolean editPublisher() {
-        Response response = request.serverRequest("PUT", publisherPath, selection);
+    public boolean editItem() {
+        Response response = request.serverRequest("PUT", publisherPath, item);
         return request.isOk(response);
     }
 
-    public boolean createPublisher() {
-        Response response = request.serverRequest("POST", publisherPath, selection);
+    public boolean createItem() {
+        Response response = request.serverRequest("POST", publisherPath, item);
         return request.isCreated(response);
     }
 
-    public boolean deletePublisher(int id) {
+    public boolean deleteItem(String id) {
         Response response = request.serverRequest("DELETE",  publisherPath + "/" + id);
         return request.isOk(response);
     }
 
     public void reset() {
-        this.selection = new Publisher();
+        this.item = new Publisher();
     }
 }
