@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * <p>
  * 2023-01-31
  * <p>
- * Die Klasse dient als Schnittstelle fuer alle Daten die zu Autoren uebertragen werden sollen.
+ * Die Klasse dient als Schnittstelle fuer alle Daten die zu Autoren zwischen Server und Klient uebertragen werden sollen.
  * Autoren, die aus der Datenbank gelesen werden, koennen hiermit auf konkrete Objekte umgewandelt werden.
  * Die Klasse bietet ausserdem die Schnittstelle fuer die Umwandlung von konkreten Autoren in JSON und zurueck.
  */
@@ -27,7 +27,7 @@ public class Author {
 
     /**
      * Gibt die ID des Autors zurueck.
-     * @return Id des Autors.
+     * @return ID des Autors.
      */
     @JsonGetter("authorId")
     public int getAuthorId() {
@@ -36,7 +36,7 @@ public class Author {
 
     /**
      * Setzt die ID des Autors.
-     * @param authorId AutorId
+     * @param authorId ID des Autors
      */
     @JsonSetter("authorId")
     public void setAuthorId(int authorId) {
@@ -45,7 +45,7 @@ public class Author {
 
     /**
      * Gibt den Vornamen des Autors zurueck.
-     * @return Vorname des Autors.
+     * @return Vorname des Autors
      */
     @JsonGetter("firstName")
     public String getFirstName() {
@@ -54,7 +54,7 @@ public class Author {
 
     /**
      * Setzt den Vornamen des Autors.
-     * @param firstName Vorname des Autors.
+     * @param firstName Vorname des Autors
      */
     @JsonSetter("firstName")
     public void setFirstName(String firstName) {
@@ -63,7 +63,7 @@ public class Author {
 
     /**
      * Gibt den Nachnamen des Autors zurueck.
-     * @return Nachname des Autors.
+     * @return Nachname des Autors
      */
     @JsonGetter("lastName")
     public String getLastName() {
@@ -81,7 +81,7 @@ public class Author {
 
     /**
      * Gibt den Alias des Autors zurueck.
-     * @return Alias des Autors.
+     * @return Alias des Autors
      */
     @JsonGetter("alias")
     public String getAlias() {
@@ -89,7 +89,7 @@ public class Author {
     }
 
     /**
-     * Setzt den Alias des Autors
+     * Setzt den Alias des Autors.
      * @param alias Alias des Autors
      */
     @JsonSetter("alias")
@@ -99,7 +99,7 @@ public class Author {
 
     /**
      * Gibt den Geburtstag des Autors zurueck.
-     * @return Geburtstag des Autors.
+     * @return Geburtstag des Autors
      */
     @JsonGetter("birthday")
     public String getBirthday() {
@@ -107,7 +107,7 @@ public class Author {
     }
 
     /**
-     * Setzt den Geburtstag des Autors
+     * Setzt den Geburtstag des Autors.
      * @param birthday Geburtstag des Autors
      */
     @JsonSetter("birthday")
@@ -117,7 +117,7 @@ public class Author {
 
     /**
      * Gibt das Alter des Autors zurueck.
-     * @return Alter des Autors.
+     * @return Alter des Autors
      */
     @JsonGetter("age")
     public int getAge() {
@@ -126,7 +126,7 @@ public class Author {
 
     /**
      * Setzt das Alter des Autors.
-     * @param age Alter des Autors.
+     * @param age Alter des Autors
      */
     @JsonSetter("age")
     public void setAge(int age) {

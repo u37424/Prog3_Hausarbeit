@@ -26,10 +26,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse stellt alle Szenenuebergreifenden Funktionen bereit.
+ * Hier koennen Szenen gewechselt werden, ohne Model und View zu duplizieren.
+ * Alle verwendbaren Contoller werden hier gespeichert, damit sie wiederverwendet werden koennen.
+ * Ebenso koennen hier Dialoge von allen Controllern verwendet werden, um Nachrichten anzuzeigen und Eingaben abzufragen.
+ */
 public class SceneController {
     private MainModel model;
     private Stage stage;
     private final Scene scene;
+
+    //Alle Controller speichern, damit sie nicht dauernd neu erstellt werden muessen und ihre Einstellungen speichern koennen
     private final IController login;
     private final IController mainBook, mainCategory, mainAuthor, mainPublisher;
     private final IController bookViewController, categoryViewController, authorViewController, publisherViewController;
@@ -56,45 +71,79 @@ public class SceneController {
         stage.setScene(scene);
     }
 
+    /**
+     * Laedt die Login FXML Datei und uebertraegt automatisch den passenden Controller.
+     */
     public void loadLoginScene() {
         loadScene("/login.fxml", login);
     }
 
+    /**
+     * Laedt die Main FXML Datei und uebertraegt automatisch den passenden MainBookController.
+     */
     public void loadMainBookScene() {
         loadScene("/main.fxml", mainBook);
     }
 
+    /**
+     * Laedt die Main FXML Datei und uebertraegt automatisch den passenden MainCategoryController.
+     */
     public void loadMainCategoryScene() {
         loadScene("/main.fxml", mainCategory);
     }
 
+    /**
+     * Laedt die Main FXML Datei und uebertraegt automatisch den passenden MainAuthorController.
+     */
     public void loadMainAuthorScene() {
         loadScene("/main.fxml", mainAuthor);
     }
 
+    /**
+     * Laedt die Main FXML Datei und uebertraegt automatisch den passenden MainPublisherController.
+     */
     public void loadMainPublisherScene() {
         loadScene("/main.fxml", mainPublisher);
     }
 
+    /**
+     * Laedt die BookView FXML Datei und uebertraegt automatisch den passenden BookViewController.
+     */
     public void loadBookViewScene() {
         loadScene("/book.fxml", bookViewController);
     }
 
+    /**
+     * Laedt die CategoryView FXML Datei und uebertraegt automatisch den passenden CategoryViewController.
+     */
     public void loadCategoryViewScene() {
         loadScene("/category.fxml", categoryViewController);
     }
 
+    /**
+     * Laedt die AuthorView FXML Datei und uebertraegt automatisch den passenden AuthorViewController.
+     */
     public void loadAuthorViewScene() {
         loadScene("/author.fxml", authorViewController);
     }
 
+    /**
+     * Laedt die PublisherView FXML Datei und uebertraegt automatisch den passenden PublisherViewController.
+     */
     public void loadPublisherViewScene() {
         loadScene("/publisher.fxml", publisherViewController);
     }
 
+    /**
+     * Laedt eine spezifizierte FXML Datei und initialisiert den angegebenen Controller.
+     * Die Datei muss unter den Ressourcen dieser Klasse vorhanden sein.
+     *
+     * @param resource   Resource Name der FXML Datei
+     * @param controller Controller, der der FXML Datei uebergeben werden soll
+     */
     private void loadScene(String resource, IController controller) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));   //Laden
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource(resource));   //Laden
             loader.setController(controller);   //Controller setzen
 
             Parent parent = loader.load();  //Laden der FXML Daten (Insert in Controller)
@@ -107,20 +156,44 @@ public class SceneController {
         }
     }
 
+    /**
+     * Verbindet den Controller mit Model und View.
+     *
+     * @param controller anzugebender Controller
+     */
     private void setParameters(IController controller) {
         controller.setStage(stage);
         controller.setModel(model);
         controller.setSceneController(this);
     }
 
+    /**
+     * Gibt dem Benutzer eine Nachricht als Infonachricht aus.
+     *
+     * @param title   Titel der Nachricht
+     * @param message Text der Nachricht
+     */
     public void infoMessage(String title, String message) {
         message(title, message, Alert.AlertType.INFORMATION);
     }
 
+    /**
+     * Gibt dem Benutzer eine Nachricht als Fehlernachricht aus.
+     *
+     * @param title   Titel der Nachricht
+     * @param message Text der Nachricht
+     */
     public void errorMessage(String title, String message) {
         message(title, message, Alert.AlertType.ERROR);
     }
 
+    /**
+     * Gibt dem Benutzer eine Nachricht aus.
+     *
+     * @param title   Titel der Nachricht
+     * @param message Text der Nachricht
+     * @param type    Nachrichtentyp
+     */
     private void message(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(type.name() + " MESSAGE");
@@ -129,6 +202,13 @@ public class SceneController {
         alert.showAndWait();
     }
 
+    /**
+     * Gibt dem Benutzer eine Nachricht aus, die er bestaetigen oder ablehnen kann.
+     *
+     * @param title   Titel der Nachricht
+     * @param message Text der Nachricht
+     * @return true, wenn angenommen, sonst false
+     */
     public boolean confirmMessage(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Message");
@@ -138,6 +218,15 @@ public class SceneController {
         return res.isPresent() && res.get().equals(ButtonType.OK);
     }
 
+    /**
+     * Gibt dem Benutzer ein Textfeld aus, in dem er eine Nummer eingeben kann.
+     * Der Bneutzer darf keinen Text eingeben.
+     *
+     * @param title   Titel der Nachricht
+     * @param def     Standardwert des Textfeldes
+     * @param message Text der Nachricht
+     * @return Eingabe des Users als Integer
+     */
     public int editNumberMessage(String title, String def, String message) {
         try {
             return Integer.parseInt(editStringMessage(title, def, message));
@@ -148,6 +237,14 @@ public class SceneController {
         return Integer.parseInt(def);
     }
 
+    /**
+     * Gibt dem Benutzer ein Textfeld aus, in dem er einen Text eingeben kann.
+     *
+     * @param title   Titel der Nachricht
+     * @param def     Standardwert des Textfeldes
+     * @param message Text der Nachricht
+     * @return Eingabe des Users
+     */
     public String editStringMessage(String title, String def, String message) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle(title);
@@ -174,6 +271,16 @@ public class SceneController {
         return dialog.showAndWait().orElse(def);
     }
 
+    /**
+     * Gibt dem Benutzer zwei Listen aus, eine Auswahl (links) und eine komplette Liste (rechts).
+     * Der Benutzer kann die in den Listen enthaltende Werte per Doppelklick zwischen den Listen verschieben.
+     *
+     * @param title     Titel der Nachricht
+     * @param selection Elemente, die in der Auswahl sein sollen
+     * @param all       Elemente, die in der kompletten Liste sein sollen
+     * @param <T>       Art der Elemente
+     * @return Elemente in der Auswahl Liste.
+     */
     public <T> LinkedList<T> editList(String title, LinkedList<T> selection, LinkedList<T> all) {
         Dialog<List<T>> dialog = new Dialog<>();
         dialog.setTitle(title);
@@ -206,6 +313,13 @@ public class SceneController {
         return new LinkedList<>(dialog.showAndWait().orElse(new LinkedList<>()));
     }
 
+    /**
+     * Setzt die Transferaktion beim Klick auf ein Element in einer Liste.
+     *
+     * @param destination Zielliste des Elementes
+     * @param source      Herkunftsliste des Elementes
+     * @param <T>         Art des Elementes
+     */
     private <T> void setEditListTransfer(ListView<T> destination, ListView<T> source) {
         source.setOnMouseClicked(event -> {
             if (event.getClickCount() < 2) return;
@@ -216,6 +330,15 @@ public class SceneController {
         });
     }
 
+    /**
+     * Gibt dem Benutzer eine Auswahl an Elementen aus der er waehlen kann.
+     *
+     * @param title Titel der Nachricht
+     * @param def   Standardwert der Nachricht
+     * @param list  Liste an Auswahlelementen
+     * @param <T>   Art der Elemente
+     * @return Auswahl des Benutzers
+     */
     public <T> T choiceMessage(String title, T def, LinkedList<T> list) {
         Dialog<T> dialog = new Dialog<>();
         dialog.setTitle(title);

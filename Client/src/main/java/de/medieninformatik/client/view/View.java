@@ -5,6 +5,16 @@ import de.medieninformatik.client.model.MainModel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Die Klasse stellt eine Stage als View und ein einheitliches Model bereit, die von den Controllern verwendet werden kann.
+ */
 public class View extends Application {
     /**
      * The main entry point for all JavaFX applications.
@@ -25,6 +35,8 @@ public class View extends Application {
     public void start(Stage primaryStage) throws Exception {
         Stage stage = new Stage();
         MainModel model = new MainModel();
+        //Anstatt Code zu duplizieren und hier ebenfalls mit FXMLLoader die Login Scene zu laden
+        //Scene Controller auch fuer initiales laden verwenden
         SceneController controller = new SceneController();
         controller.setStage(stage);
         controller.setModel(model);

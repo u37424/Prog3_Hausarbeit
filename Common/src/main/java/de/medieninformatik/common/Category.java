@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * <p>
  * 2023-01-31
  * <p>
- * Die Klasse dient als Schnittstelle fuer alle Daten die zu Kategorien uebertragen werden sollen.
+ * Die Klasse dient als Schnittstelle fuer alle Daten die zu Kategorien zwischen Server und Klient uebertragen werden sollen.
  * Kategorien, die aus der Datenbank gelesen werden, koennen hiermit auf konkrete Objekte umgewandelt werden.
  * Die Klasse bietet ausserdem die Schnittstelle fuer die Umwandlung von konkreten Kategorien in JSON und zurueck.
  */
@@ -22,8 +22,8 @@ public class Category {
     }
 
     /**
-     * Gibt die Id der Kategorie zurueck
-     * @return Id der Kategorie
+     * Gibt die ID der Kategorie zurueck.
+     * @return ID der Kategorie
      */
     @JsonGetter("categoryId")
     public int getCategoryId() {
@@ -31,7 +31,7 @@ public class Category {
     }
 
     /**
-     * Setzt die ID der kategore
+     * Setzt die ID der Kategorie.
      * @param categoryId ID der Kategorie
      */
     @JsonSetter("categoryId")
@@ -40,7 +40,7 @@ public class Category {
     }
 
     /**
-     * Gibt den namen der Kategorie zurueck
+     * Gibt den Namen der Kategorie zurueck.
      * @return Name der Kategorie
      */
     @JsonGetter("name")
@@ -49,7 +49,7 @@ public class Category {
     }
 
     /**
-     * Setzt den Namen der Kategorie
+     * Setzt den Namen der Kategorie.
      * @param name Name der Kategorie
      */
     @JsonSetter("name")
@@ -59,7 +59,7 @@ public class Category {
 
     /**
      * Wandelt die Kategorie in eine ausgewaehlte String Darstellung um.
-     * @return String Darstellung der kategorie.
+     * @return String Darstellung der Kategorie.
      */
     @Override
     public String toString() {

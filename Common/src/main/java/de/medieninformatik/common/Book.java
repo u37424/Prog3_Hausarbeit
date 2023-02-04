@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * <p>
  * 2023-01-31
  * <p>
- * Die Klasse dient als Schnittstelle fuer alle Daten die zu Buechern uebertragen werden sollen.
+ * Die Klasse dient als Schnittstelle fuer alle Daten die zu Buechern zwischen Server und Klient uebertragen werden sollen.
  * Buecher, die aus der Datenbank gelesen werden, koennen hiermit auf konkrete Objekte umgewandelt werden.
  * Die Klasse bietet ausserdem die Schnittstelle fuer die Umwandlung von konkreten Buechern in JSON und zurueck.
  */
@@ -33,7 +33,7 @@ public class Book {
     }
 
     /**
-     * Gibt die ISBN zurueck
+     * Gibt die ISBN des Buches zurueck.
      * @return ISBN des Buches
      */
     @JsonGetter("isbn")
@@ -42,7 +42,7 @@ public class Book {
     }
 
     /**
-     * Setzt die ISBN des Buches
+     * Setzt die ISBN des Buches.
      * @param isbn ISBN des Buches
      */
     @JsonSetter("isbn")
@@ -52,7 +52,7 @@ public class Book {
 
 
     /**
-     * Gibt den Titel zurueck
+     * Gibt den Titel des Buches zurueck.
      * @return Titel des Buches
      */
     @JsonGetter("title")
@@ -61,7 +61,7 @@ public class Book {
     }
 
     /**
-     * Setzt den Titel des Buches
+     * Setzt den Titel des Buches.
      * @param title Titel des Buches
      */
     @JsonSetter("title")
@@ -71,7 +71,7 @@ public class Book {
 
 
     /**
-     * Gibt den Publisher zurueck
+     * Gibt den Publisher des Buches zurueck.
      * @return Publisher des Buches
      */
     @JsonGetter("publisher")
@@ -80,7 +80,7 @@ public class Book {
     }
 
     /**
-     * Setzt den Publisher des Buches
+     * Setzt den Publisher des Buches.
      * @param publisher Publisher des Buches
      */
     @JsonSetter("publisher")
@@ -90,7 +90,7 @@ public class Book {
 
 
     /**
-     * Gibt das Jahr zurueck
+     * Gibt das Erscheinungsjahr zurueck.
      * @return Erscheinungsjahr des Buches
      */
     @JsonGetter("year")
@@ -99,8 +99,8 @@ public class Book {
     }
 
     /**
-     * Setzt das Jahr des Buches
-     * @param releaseYear Jahr des Buches
+     * Setzt das Erscheinungsjahr des Buches.
+     * @param releaseYear Erscheinungsjahr des Buches
      */
     @JsonSetter("year")
     public void setReleaseYear(int releaseYear) {
@@ -109,7 +109,7 @@ public class Book {
 
 
     /**
-     * Gibt die Seitenanzahl zurueck
+     * Gibt die Seitenanzahl des Buches zurueck.
      * @return Seitenanzahl des Buches
      */
     @JsonGetter("pages")
@@ -118,8 +118,8 @@ public class Book {
     }
 
     /**
-     * Setzt die Seitenanzahl des Buches
-     * @param pages Seiten des Buches
+     * Setzt die Seitenanzahl des Buches.
+     * @param pages Seitenanzahl des Buches
      */
     @JsonSetter("pages")
     public void setPages(int pages) {
@@ -128,7 +128,7 @@ public class Book {
 
 
     /**
-     * Gibt die Bewertung zurueck
+     * Gibt die Bewertung des Buches zurueck.
      * @return Bewertung des Buches
      */
     @JsonGetter("rating")
@@ -137,7 +137,7 @@ public class Book {
     }
 
     /**
-     * Setzt die Bewertung des Buches
+     * Setzt die Bewertung des Buches.
      * @param rating Bewertung des Buches
      */
     @JsonSetter("rating")
@@ -147,7 +147,7 @@ public class Book {
 
 
     /**
-     * Gibt die Beschreibung zurueck
+     * Gibt die Beschreibung des Buches zurueck.
      * @return Beschreibung des Buches
      */
     @JsonGetter("description")
@@ -156,8 +156,8 @@ public class Book {
     }
 
     /**
-     * Setzt die Beschreibung des Buches
-     * @param description beschreibung des Buches
+     * Setzt die Beschreibung des Buches.
+     * @param description Beschreibung des Buches
      */
     @JsonSetter("description")
     public void setDescription(String description) {
@@ -166,7 +166,7 @@ public class Book {
 
 
     /**
-     * Gibt die Kategorien zurueck
+     * Gibt die Kategorien des Buches zurueck.
      * @return Kategorien des Buches
      */
     @JsonGetter("categories")
@@ -175,8 +175,8 @@ public class Book {
     }
 
     /**
-     * Setzt die Kategorien eines Buches
-     * @param categories kategorien des Buches
+     * Setzt die Kategorien des Buches.
+     * @param categories Kategorien des Buches
      */
     @JsonSetter("categories")
     public void setCategories(LinkedList<Category> categories) {
@@ -185,7 +185,7 @@ public class Book {
 
 
     /**
-     * Gibt die Autoren zurueck
+     * Gibt die Autoren des Buches zurueck.
      * @return Autoren des Buches
      */
     @JsonGetter("authors")
@@ -194,7 +194,7 @@ public class Book {
     }
 
     /**
-     * Setzt die Autoren des Buches
+     * Setzt die Autoren des Buches.
      * @param authors Autoren des Buches
      */
     @JsonSetter("authors")
