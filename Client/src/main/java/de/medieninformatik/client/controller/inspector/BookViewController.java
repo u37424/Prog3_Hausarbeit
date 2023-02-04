@@ -198,9 +198,7 @@ public class BookViewController extends ViewController {
         LinkedList<Author> selection = model.getBookRequest().getItem().getAuthors();
         LinkedList<Author> all = model.getAuthorRequest().getItemList();
 
-        for (Author author : selection) {
-            all.removeIf(e -> e.getAuthorId() == author.getAuthorId()); //Remove Selection from all
-        }
+        for (Author author : selection) all.removeIf(e -> e.getAuthorId() == author.getAuthorId());
 
         LinkedList<Author> eingabe = sceneController.editList("Author Selector", selection, all);
 
@@ -214,9 +212,7 @@ public class BookViewController extends ViewController {
         LinkedList<Category> selection = model.getBookRequest().getItem().getCategories();
         LinkedList<Category> all = model.getCategoryRequest().getItemList();
 
-        for (Category category : selection) {
-            all.removeIf(e -> e.getCategoryId() == category.getCategoryId());
-        }
+        for (Category category : selection) all.removeIf(e -> e.getCategoryId() == category.getCategoryId());
 
         LinkedList<Category> eingabe = sceneController.editList("Category Selector", selection, all);
 

@@ -2,6 +2,10 @@ package de.medieninformatik.server.model.parsing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -31,6 +35,7 @@ public class RequestManager {
 
     /**
      * Gibt dem manager fuer Buecher zurueck
+     *
      * @return instanz des BookManager
      */
     public BookManager getBookManager() {
@@ -39,6 +44,7 @@ public class RequestManager {
 
     /**
      * Gibt dem manager fuer Kategorien zurueck
+     *
      * @return instanz des CategoryManager
      */
     public CategoryManager getCategoryManager() {
@@ -47,6 +53,7 @@ public class RequestManager {
 
     /**
      * Gibt dem manager fuer Autoren zurueck
+     *
      * @return instanz des AutorManager
      */
     public AuthorManager getAuthorManager() {
@@ -55,6 +62,7 @@ public class RequestManager {
 
     /**
      * Gibt dem manager fuer Publisher zurueck
+     *
      * @return instanz des PublisherManager
      */
     public PublisherManager getPublisherManager() {
@@ -63,8 +71,9 @@ public class RequestManager {
 
     /**
      * Wandelt ein Objekt in einen JSON String um.
+     *
      * @param object Objekt das umgewandlet werden soll
-     * @param <T> Art des Objektes
+     * @param <T>    Art des Objektes
      * @return JSON String
      * @throws JsonProcessingException Wenn Umwandlung fehlerhaft
      */
@@ -80,9 +89,10 @@ public class RequestManager {
 
     /**
      * Wandelt einen JSON String auf ein Objekt um.
-     * @param json JSON String, der umgewandlet werden soll
+     *
+     * @param json   JSON String, der umgewandlet werden soll
      * @param tClass Klasse des Objektes
-     * @param <T> Art des Objektes
+     * @param <T>    Art des Objektes
      * @return Objekt, das aus dem JSON String befuellt wurde
      * @throws JsonProcessingException wenn Umwandlung fehlerhaft
      */
@@ -97,8 +107,26 @@ public class RequestManager {
     }
 
     /**
+     * Liest eine Zahl aus einem ResultSet mit nur einer Spalte und einer Zeile.
+     *
+     * @param set ResultSet mit einer Anzahl
+     * @return Anzahl die im ResultSet gespeichert ist als Integer
+     * @throws SQLException, wenn Lesen fehlerhaft
+     */
+    public int count(ResultSet set) throws SQLException {
+        int count = 0;
+        while (set.next()) {
+            count = set.getInt(1);
+        }
+        return count;
+    }
+
+    /**
      * Gibt die Instanz des Managers zurueck.
-     * @return Singleton Instanz.
+     * Sie wird verwendet, um allen Ressourcen eine Schnittstelle fuer die Datenbankkommunikation und Befehlsausfuehrung zu geben.
+     * Ausserdem wird dadurch Code Duplizierung oder eine Vielzahl an weiterleitenden Methoden vermieden.
+     *
+     * @return Singleton Instanz des Managers
      */
     public static RequestManager getInstance() {
         return instance;

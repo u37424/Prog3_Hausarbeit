@@ -22,7 +22,7 @@ import java.util.LinkedList;
  * Die Klasse stellt alle REST Anfragen zu Buechern bereit.
  * Buecher koennen angefragt, erstellt, veraendert oder geloescht werden.
  * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
- * Diese resource benutzt primaer den BookManager zum Bearbeiten von Datenbankanfragen.
+ * Diese Resource benutzt primaer den BookManager zum Bearbeiten von konkreten Datenbankanfragen.
  */
 @Path("book")
 public class BookResource {
@@ -30,7 +30,9 @@ public class BookResource {
 
     /**
      * Fragt eine Liste aller Buecher an.
-     * @return Antwort des Servers mit potentiellem JSON.
+     * Die Liste wird als JSON uebertragen.
+     *
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,12 +52,13 @@ public class BookResource {
 
     /**
      * Fragt eine partielle Liste von Buechern an.
-     * @param start Start der Liste.
-     * @param size Groesse der Liste
+     *
+     * @param start    Start der Liste
+     * @param size     Groesse der Liste
      * @param orderAsc Ordnung der Liste
-     * @param string String, nach dem die Liste gefiltert werden soll
+     * @param string   String, nach dem die Liste gefiltert werden soll
      * @param category Kategorie, nach der die Liste gefiltert werden soll
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
@@ -76,9 +79,10 @@ public class BookResource {
     }
 
     /**
-     * Gibt ein spezifisches Buch zurueck
+     * Gibt ein spezifisches Buch zurueck.
+     *
      * @param isbn ISBN des Buches
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{isbn}")
@@ -96,7 +100,8 @@ public class BookResource {
     }
 
     /**
-     * Aendert die Daten eines spezifischen Buches
+     * Gibt ein veraendertes Buch an die Datenbank weiter, um die Daten zu aktualisieren.
+     *
      * @param json Json String, der das veraenderte Objekt enthaelt
      * @return Erfolgsstatus
      */
@@ -116,9 +121,10 @@ public class BookResource {
     }
 
     /**
-     * Erstellt ein neues Buch
+     * Leitet ein zu erstellendes Buch an die Datenbank weiter.
+     *
      * @param uriInfo UriInfo
-     * @param json  Json String, der das neue Objekt enthaelt
+     * @param json    Json String, der das neue Objekt enthaelt
      * @return Erfolgsstatus
      */
     @POST
@@ -139,8 +145,9 @@ public class BookResource {
     }
 
     /**
-     * Loescht ein spezifisches Buch
-     * @param isbn ISBN des Buches
+     * Leitet die Datenbank an, das spezifizierte Buch zu loeschen.
+     *
+     * @param isbn isbn des Buches
      * @return Erfolgsstatus
      */
     @DELETE

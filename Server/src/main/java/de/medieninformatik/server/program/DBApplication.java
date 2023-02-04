@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.Application;
 
 import java.util.HashSet;
 import java.util.Set;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -14,7 +15,7 @@ import java.util.Set;
  * 2023-01-31
  * <p>
  * Die Klasse stellt dem REST Server alle benoetigten Resource-Klassen zur Verfuegung.
- * Diese beinhalten alle xxxResource Klassen zur Behandlung von Anfragen unter spezifischen Pfaden.
+ * (alle xxxResource Klassen zur Behandlung von Anfragen unter spezifischen Pfaden)
  */
 public class DBApplication extends Application {
     private final Set<Object> singletons = new HashSet<>();
@@ -35,6 +36,7 @@ public class DBApplication extends Application {
 
     /**
      * Erhaelt die Resource Klassen
+     *
      * @return Set von ResourceKlassen
      */
     @Override
@@ -44,6 +46,7 @@ public class DBApplication extends Application {
 
     /**
      * Erhaelt die Resource Objekte
+     *
      * @return Set von Resource Objekten
      */
     @Override

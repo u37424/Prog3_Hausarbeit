@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.Response;
  * <p>
  * Die Klasse stellt alle Anfragen zu generellen Benutzereinstellungen bereit.
  * Es kann nur ein Hauptbenutzer beim Server angemeldet sein.
- * Ebenso wird hier die Server Reset funktion bereitgestellt.
+ * Ebenso wird hier die Database Reset Funktion bereitgestellt.
  */
 @Path("user")
 public class UserResource {
@@ -24,9 +24,10 @@ public class UserResource {
 
     /**
      * Ermoeglicht dem Benutzer sich als Hauptbenutzer anzumelden.
-     * Es kann jeweils nur ein hauptbenutzer angemeldet sein.
+     * Es kann jeweils nur ein Hauptbenutzer angemeldet sein.
+     * Schlaegt fehl, wenn bereits ein Hauptbenutzer existiert.
      *
-     * @return Erfolgsstatus
+     * @return Erfolgsstatus des Logins
      */
     @GET
     @Path("/login")
@@ -37,10 +38,11 @@ public class UserResource {
     }
 
     /**
-     * Ermoeglicht dem hauptbenutzer sich abzumelden.
-     * Beim erfolgreichen Abmelden wird der Hauptbenutzer wieder freigegeben
+     * Ermoeglicht dem Hauptbenutzer sich abzumelden.
+     * Beim erfolgreichen Abmelden wird der Hauptbenutzer wieder freigegeben.
+     * Schlaegt fehl, wenn es keinen Hauptbenutzer gibt.
      *
-     * @return Erfolgsstatus
+     * @return Erfolgsstatus des Logouts
      */
     @GET
     @Path("/logout")
@@ -53,7 +55,7 @@ public class UserResource {
     /**
      * Setzt die Datenbank auf Werkseinstellungen zurueck.
      *
-     * @return Erfolgsstatus
+     * @return Erfolgsstatus des Resets
      */
     @POST
     @Path("/reset")

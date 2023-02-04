@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.*;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -21,7 +22,7 @@ import java.util.LinkedList;
  * Die Klasse stellt alle REST Anfragen zu Autoren bereit.
  * Autoren koennen angefragt, erstellt, veraendert oder geloescht werden.
  * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
- * Diese resource benutzt primaer den AutorManager zum Bearbeiten von Datenbankanfragen.
+ * Diese Resource benutzt primaer den AutorManager zum Bearbeiten von konkreten Datenbankanfragen.
  */
 @Path("author")
 public class AuthorResource {
@@ -29,7 +30,9 @@ public class AuthorResource {
 
     /**
      * Fragt eine Liste aller Autoren an.
-     * @return Antwort des Servers mit potentiellem JSON.
+     * Die Liste wird als JSON uebertragen.
+     *
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,11 +52,12 @@ public class AuthorResource {
 
     /**
      * Fragt eine partielle Liste von Autoen an.
-     * @param start Start der Liste.
-     * @param size Groesse der Liste
+     *
+     * @param start    Start der Liste
+     * @param size     Groesse der Liste
      * @param orderAsc Ordnung der Liste
-     * @param string String, nach dem die Liste gefiltert werden soll
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @param string   String, nach dem die Liste gefiltert werden soll
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
@@ -74,9 +78,10 @@ public class AuthorResource {
     }
 
     /**
-     * Gibt einen spezifischen Autor zurueck
+     * Gibt einen spezifischen Autor zurueck.
+     *
      * @param id id des Autors
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{id}")
@@ -94,7 +99,8 @@ public class AuthorResource {
     }
 
     /**
-     * Aendert die Daten eines spezifischen Autors
+     * Gibt einen veraenderten Autor an die Datenbank weiter, um die Daten zu aktualisieren.
+     *
      * @param json Json String, der das veraenderte Objekt enthaelt
      * @return Erfolgsstatus
      */
@@ -114,9 +120,10 @@ public class AuthorResource {
     }
 
     /**
-     * Erstellt einen neuen Autor
+     * Leitet einen zu erstellenden Autor an die Datenbank weiter.
+     *
      * @param uriInfo UriInfo
-     * @param json  Json String, der das neue Objekt enthaelt
+     * @param json    Json String, der das neue Objekt enthaelt
      * @return Erfolgsstatus
      */
     @POST
@@ -137,7 +144,8 @@ public class AuthorResource {
     }
 
     /**
-     * Loescht einen spezifischen Author
+     * Leitet die Datenbank an, den spezifizierten Autor zu loeschen.
+     *
      * @param id id des Autors
      * @return Erfolgsstatus
      */

@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.*;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -21,7 +22,7 @@ import java.util.LinkedList;
  * Die Klasse stellt alle REST Anfragen zu Publishern bereit.
  * Publisher koennen angefragt, erstellt, veraendert oder geloescht werden.
  * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
- * Diese resource benutzt primaer den PublisherManager zum Bearbeiten von Datenbankanfragen.
+ * Diese Resource benutzt primaer den PublisherManager zum Bearbeiten von konkreten Datenbankanfragen.
  */
 @Path("publisher")
 public class PublisherResource {
@@ -29,7 +30,9 @@ public class PublisherResource {
 
     /**
      * Fragt eine Liste aller Publisher an.
-     * @return Antwort des Servers mit potentiellem JSON.
+     * Die Liste wird als JSON uebertragen.
+     *
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,11 +52,12 @@ public class PublisherResource {
 
     /**
      * Fragt eine partielle Liste von Publishern an.
-     * @param start Start der Liste.
-     * @param size Groesse der Liste
+     *
+     * @param start    Start der Liste.
+     * @param size     Groesse der Liste
      * @param orderAsc Ordnung der Liste
-     * @param string String, nach dem die Liste gefiltert werden soll
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @param string   String, nach dem die Liste gefiltert werden soll
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
@@ -75,9 +79,10 @@ public class PublisherResource {
 
 
     /**
-     * Gibt einen spezifischen Publisher zurueck
+     * Gibt einen spezifischen Publisher zurueck.
+     *
      * @param id id des Publishers
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{id}")
@@ -93,8 +98,10 @@ public class PublisherResource {
             return Response.noContent().build();
         }
     }
+
     /**
-     * Aendert die Daten eines spezifischen Publishers
+     * Gibt einen veraenderten Publisher an die Datenbank weiter, um die Daten zu aktualisieren.
+     *
      * @param json Json String, der das veraenderte Objekt enthaelt
      * @return Erfolgsstatus
      */
@@ -114,9 +121,10 @@ public class PublisherResource {
     }
 
     /**
-     * Erstellt einen neuen Publisher
+     * Leitet einen zu erstellenden Publisher an die Datenbank weiter.
+     *
      * @param uriInfo UriInfo
-     * @param json  Json String, der das neue Objekt enthaelt
+     * @param json    Json String, der das neue Objekt enthaelt
      * @return Erfolgsstatus
      */
     @POST
@@ -137,7 +145,8 @@ public class PublisherResource {
     }
 
     /**
-     * Loescht einen spezifischen Publisher
+     * Leitet die Datenbank an, den spezifizierten Publisher zu loeschen.
+     *
      * @param id id des Publishers
      * @return Erfolgsstatus
      */

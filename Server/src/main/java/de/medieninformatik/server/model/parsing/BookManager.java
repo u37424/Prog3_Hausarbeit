@@ -6,6 +6,7 @@ import de.medieninformatik.server.model.database.Database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -16,41 +17,47 @@ import java.util.LinkedList;
  * <p>
  * Die Klasse wird zur Arbeit mit Datenbankanfragen und Ergebnisumwandlungen fuer Buecher benutzt.
  * Es werden entsprechende SQL Anfragen nach den Anforderungen erstellt und an die Datenbank weitergeleitet.
- * Es koennen Buecher aus den Ergebnissen erstellt werden, oder Buecher in Anfragen umngewandelt werden.
+ * Es koennen Buecher aus den Ergebnissen der Datenbank erstellt werden, oder Buecher in Anfragen umngewandelt werden.
  */
 public class BookManager {
+    private final static Database database = Database.getInstance();
+
     /**
-     * Fragt alle Buecher beim Server an und wandelt sie in eine Liste von Buechern um.
-     * @return Liste von Buch Objekten.
-     * @throws SQLException, wenn Anfrage fehlerhaft
+     * Fragt alle vorhandenen Buecher beim Server an und wandelt diese in eine Liste von Buechern um.
+     *
+     * @return Liste von Buch-Objekten.
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     public LinkedList<Book> getAll() throws SQLException {
         String query = "SELECT * FROM books;";
-        ResultSet set = Database.getInstance().query(query);
+        ResultSet set = database.query(query);
         return parseBooks(set);
     }
 
     /**
      * Fragt alle Buecher an, die spezifischen Vorgaben entsprechen, und wandelt sie in eine Liste von Buechern um.
-     * @param start Start der Liste
-     * @param size Groesse der Liste
+     *
+     * @param start    Start der Liste
+     * @param size     Groesse der Liste
      * @param orderAsc Ordnung der Liste
-     * @param string Zeichenkette, die im Titel enthalten sein muss
+     * @param string   Zeichenkette, die im Titel enthalten sein muss
      * @param category Kategorie, die mit dem Buch verbunden sein muss
      * @return Liste von Buechern
-     * @throws SQLException, wenn Anfrage fehlerhaft
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     public LinkedList<Book> getSelection(int start, int size, boolean orderAsc, String string, String category) throws SQLException {
         String queryStart = "SELECT * FROM books b";
 
         if (string == null) string = "";
 
+        //Falls Kategorie gefiltert werden soll
         boolean hasCategory = category != null && !category.isBlank();
         String filterCategory = (hasCategory) ? (" AND b.isbn = bc.isbn AND bc.category_id = c.category_id AND c.name = '" + category + "' ") : "";
 
-        String order = orderAsc ? " ASC " : " DESC ";
-        String range = "LIMIT " + start + "," + size;
+        String order = orderAsc ? " ASC " : " DESC ";   //Order
+        String range = "LIMIT " + start + "," + size;   //Limit
 
+        //Query bauen
         String query = queryStart +
                 (hasCategory ? ", categories c, book_categories bc " : "") +
                 " WHERE title LIKE('%" + string + "%') " +
@@ -59,36 +66,43 @@ public class BookManager {
                 range +
                 ";";
 
-        ResultSet set = Database.getInstance().query(query);
+        ResultSet set = database.query(query);
         return parseBooks(set);
     }
 
     /**
-     * Fragt ein Buch an, das in ein Buch Objekt umgewandelt wird.
+     * Fragt ein Buch von der Datenbank an, das in ein Buch-Objekt umgewandelt wird.
+     *
      * @param id ISBN des Buches
-     * @return Angefragtes Buch Objekt
-     * @throws SQLException, wenn Anfrage fehlerhaft
+     * @return Angefragtes Buch als Objekt
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     public Book getItem(String id) throws SQLException {
         String getQuery = "SELECT * FROM books WHERE isbn = '" + id + "';";
-        ResultSet set = Database.getInstance().query(getQuery);
+        ResultSet set = database.query(getQuery);
         return parseBooks(set).get(0);
     }
 
     /**
-     * Wandelt ein existierendes Buch in eine SQL Update anweisung um, die die Daten dafuer in der Datenbank mit den neuen Daten aktualisiert.
-     * @param book aktualisiertes Buch
+     * Aktualisiert die vorhandenen Daten zu einem Buch in der Datenbank mit den neuen Werten.
+     * Das entsprechende Buch muss in der Datenbank vorhanden sein, damit es aktualisiert werden kann.
+     *
+     * @param book Buch mit aktuellen Daten
      * @return Erfolgsstatus des Updates
-     * @throws SQLException, wenn Update fehlerhaft
+     * @throws SQLException, wenn SQL Update fehlerhaft
      */
     public boolean putItem(Book book) throws SQLException {
         if (book == null) return false;
         String isbn = book.getIsbn();
         if (countByISBN(isbn) != 1) return false;
+
+        //Autoren und Kategorien aktualisieren
         RequestManager.getInstance().getAuthorManager().deleteBookAuthors(isbn);
         RequestManager.getInstance().getCategoryManager().deleteBookCategories(isbn);
-        RequestManager.getInstance().getAuthorManager().addBookAuthors(book.getAuthors(), isbn);
-        RequestManager.getInstance().getCategoryManager().addBookCategories(book.getCategories(), isbn);
+        RequestManager.getInstance().getAuthorManager().putBookAuthors(book.getAuthors(), isbn);
+        RequestManager.getInstance().getCategoryManager().putBookCategories(book.getCategories(), isbn);
+
+        //Update bauen
         String update = "UPDATE books SET " +
                 " title = '" + book.getTitle() +
                 "', publisher_id = " + book.getPublisher().getPublisherId() +
@@ -97,21 +111,25 @@ public class BookManager {
                 ", rating = " + book.getRating() +
                 ", description = '" + book.getDescription() +
                 "' WHERE ISBN = '" + isbn + "';";
-        int res = Database.getInstance().update(update);
+
+        int res = database.update(update);
         return res == 1;
     }
 
     /**
-     * Erstellt einen neuen Bucheintrag in der Datenbank durch ein SQL Insert.
-     * @param book neues Buch
+     * Erstellt einen neuen Bucheintrag in der Datenbank.
+     * Das uebergebene Buch darf noch nicht in der Datenbank enthalten sein.
+     *
+     * @param book zu erstellendes Buch
      * @return Erfolgsstatus der Anweisung
-     * @throws SQLException, wenn Update fehlerhaft
+     * @throws SQLException, wenn SQL Update fehlerhaft
      */
     public boolean postItem(Book book) throws SQLException {
         if (book == null) return false;
         String isbn = book.getIsbn();
         if (countByISBN(isbn) != 0) return false;
 
+        //Update bauen
         String insert = "INSERT INTO books (ISBN, title, publisher_id, release_year, pages, rating, description)" +
                 " VALUES('" + isbn +
                 "','" + book.getTitle() +
@@ -121,40 +139,43 @@ public class BookManager {
                 "," + book.getRating() +
                 ",'" + book.getDescription() +
                 "');";
-        int res = Database.getInstance().update(insert);
+        int res = database.update(insert);
 
-        RequestManager.getInstance().getAuthorManager().addBookAuthors(book.getAuthors(), isbn);
-        RequestManager.getInstance().getCategoryManager().addBookCategories(book.getCategories(), isbn);
+        RequestManager.getInstance().getAuthorManager().putBookAuthors(book.getAuthors(), isbn);
+        RequestManager.getInstance().getCategoryManager().putBookCategories(book.getCategories(), isbn);
         return res == 1;
     }
 
     /**
-     * Loescht ein Buch aus der Datenbank, wenn es existiert.
-     * @param id ISBN des Buches
+     * Loescht ein bestehendes Buch aus der Datenbank, wenn es existiert.
+     *
+     * @param id ISBN des zu loeschenden Buches
      * @return Erfolgsstatus der Anweisung
-     * @throws SQLException, wenn fehlerhaft
+     * @throws SQLException, wenn SQL Update fehlerhaft
      */
     public boolean deleteItem(String id) throws SQLException {
         if (countByISBN(id) == 0) return false;
 
         RequestManager.getInstance().getCategoryManager().deleteBookCategories(id);
         RequestManager.getInstance().getAuthorManager().deleteBookAuthors(id);
-        System.out.println("here");
+
         String delete = "DELETE FROM books WHERE isbn = '" + id + "';";
-        int res = Database.getInstance().update(delete);
+        int res = database.update(delete);
         return res == 1;
     }
 
     /**
-     * Wandelt ein ResultSet auf eine Liste an Buch Objekten um.
+     * Wandelt ein ResultSet auf eine Liste von Buch-Objekten um.
+     *
      * @param set umzuwandelndes ResultSet
-     * @return Liste an Buechern aus dem ResultSet
-     * @throws SQLException, wenn fehlerhaft
+     * @return Liste an Buechern, die aus dem ResultSet erzeugt wurde
+     * @throws SQLException, wenn Umwandlung fehlerhaft
      */
     private LinkedList<Book> parseBooks(ResultSet set) throws SQLException {
         LinkedList<Book> books = new LinkedList<>();
         while (set.next()) {
             Book book = new Book();
+
             book.setIsbn(set.getString("ISBN"));
             book.setTitle(set.getString("Title"));
             book.setReleaseYear(set.getInt("Release_Year"));
@@ -162,7 +183,8 @@ public class BookManager {
             book.setRating(set.getDouble("Rating"));
             book.setDescription(set.getString("Description"));
 
-            Publisher publisher = RequestManager.getInstance().getPublisherManager().getItem(set.getInt("Publisher_ID"));
+            int publisherId = set.getInt("Publisher_ID");
+            Publisher publisher = RequestManager.getInstance().getPublisherManager().getItem(publisherId);
             book.setPublisher(publisher);
 
             LinkedList<Author> authors = RequestManager.getInstance().getAuthorManager().getBookAuthors(book.getIsbn());
@@ -177,20 +199,22 @@ public class BookManager {
     }
 
     /**
-     * Ermittelt die Maximalanzahl von Buechern in der Datenbank
-     * @return Maximale Anzahl an Buechern
-     * @throws SQLException, wenn fehlerhaft
+     * Ermittelt die Maximalanzahl von Buechern in der Datenbank.
+     *
+     * @return Maximale Anzahl an Buechern, die in der Datenbank vorhanden sind
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     public int getMax() throws SQLException {
         return getMax(null, null);
     }
 
     /**
-     *  Ermittelt die Maximalanzahl von Buechern in der Datenbank, die durch entsprechende Filter eingeschraenkt wird
-     * @param string Zeichenkette, die im Titel enthalten sein muss
+     * Ermittelt fuer eine durch Filter eingeschraenkte Abfrage die Maximalanzahl von Buechern.
+     *
+     * @param string   Zeichenkette, die im Titel enthalten sein muss
      * @param category Kategorie, die zum Buch gehoeren muss
      * @return Maximalanzahl von entsprechenden Buechern
-     * @throws SQLException, wenn fehlerhaft
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     public int getMax(String string, String category) throws SQLException {
         boolean hasCategory = category != null && !category.isBlank();
@@ -200,17 +224,18 @@ public class BookManager {
                 " WHERE title LIKE('%" + string + "%') " +
                 filterCategory +
                 ";";
-        ResultSet set = Database.getInstance().query(query);
-        return count(set);
+        ResultSet set = database.query(query);
+        return RequestManager.getInstance().count(set);
     }
 
     /**
-     * Wandelt eine Liste von Buechern in ein DBMeta Objekt um.
-     * Dem DBMeta Objekt kann ebenso eine passende Maximalanzahl uebergeben werden.
-     * @param books Liste an Buechern
-     * @param max Maximaler Wert der Ergebnisliste
+     * Wandelt eine (partielle) Liste von Buechern in ein DBMeta Objekt um.
+     * Dem DBMeta Objekt kann ebenso die Maximalanzahl der kompletten Liste uebergeben werden.
+     *
+     * @param books (partielle) Liste an Buechern
+     * @param max   Maximaler Wert der Ergebnisliste
      * @return umgewandeltes DBMeta Objekt
-     * @throws SQLException, wenn fehlerhaft
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     public DBMeta asDBMeta(LinkedList<Book> books, int max) throws SQLException {
         DBMeta meta = new DBMeta();
@@ -220,28 +245,15 @@ public class BookManager {
     }
 
     /**
-     * Zaehlt alle Buecher, die zu einer ISBN gehoeren.
-     * @param isbn ISBN des Buches
+     * Zaehlt alle Buecher in der Datenbank, die unter einer ISBN zu finden sind.
+     *
+     * @param isbn ISBN des zu zaehlenden Buches
      * @return Anzahl von entsprechenden Buechern
-     * @throws SQLException, wenn fehlerhaft
+     * @throws SQLException, wenn SQL Anfrage fehlerhaft
      */
     private int countByISBN(String isbn) throws SQLException {
         String exists = "SELECT COUNT(*) FROM books WHERE isbn= '" + isbn + "';";
-        ResultSet set = Database.getInstance().query(exists);
-        return count(set);
-    }
-
-    /**
-     * Wandelt ein ResultSet mit nur einer Anzahl in einen Integer um
-     * @param set ResultSet mit Anzahl
-     * @return Anzahl die im ResultSet gespeichert wurde
-     * @throws SQLException, wenn fehlerhaft
-     */
-    private int count(ResultSet set) throws SQLException {
-        int count = 0;
-        while (set.next()) {
-            count = set.getInt(1);
-        }
-        return count;
+        ResultSet set = database.query(exists);
+        return RequestManager.getInstance().count(set);
     }
 }

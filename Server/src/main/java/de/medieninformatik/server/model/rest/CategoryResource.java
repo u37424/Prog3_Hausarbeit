@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.*;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
+
 /**
  * @author Luca Spirka m29987
  * @version 1.0
@@ -21,7 +22,7 @@ import java.util.LinkedList;
  * Die Klasse stellt alle REST Anfragen zu Kategorien bereit.
  * Kategorien koennen angefragt, erstellt, veraendert oder geloescht werden.
  * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
- * Diese resource benutzt primaer den CategoryManager zum Bearbeiten von Datenbankanfragen.
+ * Diese Resource benutzt primaer den CategoryManager zum Bearbeiten von konkreten Datenbankanfragen.
  */
 @Path("category")
 public class CategoryResource {
@@ -29,7 +30,9 @@ public class CategoryResource {
 
     /**
      * Fragt eine Liste aller Kategorien an.
-     * @return Antwort des Servers mit potentiellem JSON.
+     * Die Liste wird als JSON uebertragen.
+     *
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,11 +52,12 @@ public class CategoryResource {
 
     /**
      * Fragt eine partielle Liste von Kategorien an.
-     * @param start Start der Liste.
-     * @param size Groesse der Liste
+     *
+     * @param start    Start der Liste
+     * @param size     Groesse der Liste
      * @param orderAsc Ordnung der Liste
-     * @param string String, nach dem die Liste gefiltert werden soll
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @param string   String, nach dem die Liste gefiltert werden soll
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{start}/{size}/{orderAsc}")
@@ -75,9 +79,10 @@ public class CategoryResource {
 
 
     /**
-     * Gibt eine spezifische Kategorie zurueck
+     * Gibt eine spezifische Kategorie zurueck.
+     *
      * @param id id der Kategorie
-     * @return Antwort des Servers mit potentiellem JSON.
+     * @return Antwort des Servers mit entsprechender JSON Antwort
      */
     @GET
     @Path("/{id}")
@@ -95,7 +100,8 @@ public class CategoryResource {
     }
 
     /**
-     * Aendert die Daten einer Kategorie
+     * Gibt eine veraenderte Kategorie an die Datenbank weiter, um die Daten zu aktualisieren.
+     *
      * @param json Json String, der das veraenderte Objekt enthaelt
      * @return Erfolgsstatus
      */
@@ -114,10 +120,12 @@ public class CategoryResource {
         return Response.noContent().status(Response.Status.NOT_FOUND).build();
     }
 
+
     /**
-     * Erstellt eine neue Kategorie
+     * Leitet eine zu erstellende Kategorie an die Datenbank weiter.
+     *
      * @param uriInfo UriInfo
-     * @param json  Json String, der das neue Objekt enthaelt
+     * @param json    Json String, der das neue Objekt enthaelt
      * @return Erfolgsstatus
      */
     @POST
@@ -138,8 +146,9 @@ public class CategoryResource {
     }
 
     /**
-     * Loescht eine spezifische kategorie
-     * @param id id der kategorie
+     * Leitet die Datenbank an, die spezifizierte Kategorie zu loeschen.
+     *
+     * @param id id der Kategorie
      * @return Erfolgsstatus
      */
     @DELETE
