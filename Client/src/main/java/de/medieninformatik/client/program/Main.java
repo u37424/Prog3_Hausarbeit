@@ -15,6 +15,10 @@ import javafx.application.Application;
  * Als View Klasse dient die Klasse View.
  */
 public class Main {
+    /**
+     * Startet eine JavaFX Anwendung fuer den Benutzer.
+     * @param args User-Argumente
+     */
     public static void main(String[] args) {
         Application.launch(View.class, args);
     }

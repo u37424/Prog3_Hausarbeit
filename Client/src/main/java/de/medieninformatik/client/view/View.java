@@ -13,7 +13,7 @@ import javafx.stage.Stage;
  * <p>
  * 2023-01-31
  * <p>
- * Die Klasse stellt eine Stage als View und ein einheitliches Model bereit, die von den Controllern verwendet werden kann.
+ * Die Klasse stellt eine Stage als View und ein einheitliches Model bereit, die von den Controllern verwendet werden koennen.
  */
 public class View extends Application {
     /**

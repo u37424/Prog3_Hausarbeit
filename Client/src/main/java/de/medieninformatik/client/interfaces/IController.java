@@ -4,6 +4,17 @@ import de.medieninformatik.client.controller.SceneController;
 import de.medieninformatik.client.model.MainModel;
 import javafx.stage.Stage;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * <p>
+ * 2023-01-31
+ * <p>
+ * Dieses Interface legt alle Funktionen fest, die alle davon abgeleiteten Controller besitzen sollen.
+ * Dieses Interface kann benutzt werden, um die darin festgelegten Aktionen durchzufuehren, ohne den konkreten Controller zu kennen.
+ */
 public interface IController {
     /**
      * Wird beim Laden der FXML Datei aufgerufen, um initiale Einstellungen beim Laden des Controllers zu machen.

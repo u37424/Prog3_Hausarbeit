@@ -314,7 +314,7 @@ public class SceneController {
     }
 
     /**
-     * Setzt die Transferaktion beim Klick auf ein Element in einer Liste.
+     * Setzt die Transferaktion beim Klick auf ein Element in einer Liste (im ListDialog).
      *
      * @param destination Zielliste des Elementes
      * @param source      Herkunftsliste des Elementes
