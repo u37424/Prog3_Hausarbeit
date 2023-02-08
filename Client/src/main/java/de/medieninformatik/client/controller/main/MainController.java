@@ -317,6 +317,13 @@ public abstract class MainController implements IMainController {
     }
 
     /**
+     * Setzt den Anfang der Liste zurueck an den Anfang.
+     */
+    private void resetPage() {
+        this.pageStart = 0;
+    }
+
+    /**
      * Setzt einen neuen Ansichtsbereich der Liste, der vor dem aktuellen Ansichtsbereich liegt.
      */
     @Override
@@ -346,6 +353,7 @@ public abstract class MainController implements IMainController {
         if (userString.equals(string) && userSelection.equals(category)) return;
         this.userString = string;
         this.userSelection = category;
+        resetPage();
         loadItemList();
     }
 
@@ -361,6 +369,7 @@ public abstract class MainController implements IMainController {
         this.userSelection = "";
         this.stringInput.setText("");
         this.selector.setValue("");
+        resetPage();
         loadItemList();
     }
 

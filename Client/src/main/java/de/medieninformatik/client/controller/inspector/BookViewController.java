@@ -73,6 +73,7 @@ public class BookViewController extends ViewController {
         this.editAuthors.setVisible(isEdit);
         this.editCategories.setVisible(isEdit);
         this.description.setEditable(isEdit);
+        this.description.setDisable(!isEdit);
         if (isEdit)
             this.description.textProperty().addListener((obs) -> model.getBookModel().getItem().setDescription(this.description.getText()));
 
@@ -242,6 +243,7 @@ public class BookViewController extends ViewController {
                 model.getBookModel().getItem().getPublisher(), model.getPublisherModel().getItemList());
 
         model.getBookModel().getItem().setPublisher(publisher);
+        displayValues();
     }
 
     /**

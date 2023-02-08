@@ -1,4 +1,4 @@
-rootProject.name = 'm29987_Prog3_Hausarbeit_2023'
+rootProject.name = 'm29987_Hausarbeit_Programmieren3_2023'
 include 'Common'
 include 'Server'
 include 'Client'
