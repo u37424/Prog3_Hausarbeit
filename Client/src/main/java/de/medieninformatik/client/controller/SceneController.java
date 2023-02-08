@@ -31,13 +31,14 @@ import java.util.Optional;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt alle Szenenuebergreifenden Funktionen bereit.
  * Hier koennen Szenen gewechselt werden, ohne Model und View zu duplizieren.
  * Alle verwendbaren Contoller werden hier gespeichert, damit sie wiederverwendet werden koennen.
  * Ebenso koennen hier Dialoge von allen Controllern verwendet werden, um Nachrichten anzuzeigen und Eingaben abzufragen.
+ * </p>
  */
 public class SceneController {
     private MainModel model;

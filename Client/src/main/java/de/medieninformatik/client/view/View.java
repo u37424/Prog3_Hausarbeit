@@ -10,10 +10,11 @@ import javafx.stage.Stage;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt eine Stage als View und ein einheitliches Model bereit, die von den Controllern verwendet werden koennen.
+ * </p>
  */
 public class View extends Application {
     /**

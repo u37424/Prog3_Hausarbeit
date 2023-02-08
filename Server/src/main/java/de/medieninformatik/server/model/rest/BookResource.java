@@ -16,13 +16,14 @@ import java.util.LinkedList;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt alle REST Anfragen zu Buechern bereit.
  * Buecher koennen angefragt, erstellt, veraendert oder geloescht werden.
  * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
  * Diese Resource benutzt primaer den BookManager zum Bearbeiten von konkreten Datenbankanfragen.
+ * </p>
  */
 @Path("book")
 public class BookResource {

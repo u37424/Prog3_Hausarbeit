@@ -13,12 +13,13 @@ import java.util.LinkedList;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse wird zur Arbeit mit Datenbankanfragen und Ergebnisumwandlungen fuer Autoren benutzt.
  * Es werden entsprechende SQL Anfragen nach den Anforderungen erstellt und an die Datenbank weitergeleitet.
  * Es koennen Autoren aus den Ergebnissen erstellt werden, oder Autoren in Anfragen umngewandelt werden.
+ * </p>
  */
 public class AuthorManager {
     private final static Database database = Database.getInstance();

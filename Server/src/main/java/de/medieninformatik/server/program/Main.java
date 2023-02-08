@@ -17,11 +17,12 @@ import java.util.logging.Logger;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse startet einen REST Server auf der in Common spezifizierten Host Adresse.
  * Der Server kann mit Enter beendet werden.
+ * </p>
  */
 public class Main {
     public static void main(String[] args) throws URISyntaxException, IOException {

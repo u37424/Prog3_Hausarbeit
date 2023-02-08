@@ -11,11 +11,12 @@ import java.util.Set;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt dem REST Server alle benoetigten Resource-Klassen zur Verfuegung.
  * (alle xxxResource Klassen zur Behandlung von Anfragen unter spezifischen Pfaden)
+ * </p>
  */
 public class DBApplication extends Application {
     private final Set<Object> singletons = new HashSet<>();

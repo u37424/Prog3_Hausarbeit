@@ -11,12 +11,13 @@ import java.sql.SQLException;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt alle Manager fuer die einzelnen Ressourcen bereit.
  * Ebenso enthaelt sie Methoden zum Wandeln zwischen Objekten und JSON.
  * Der ResourceManager ist ein genereller Manager und wurde als Singleton entworfen, um fuer alle resourcen benutzt werden zu koennen.
+ * </p>
  */
 public class RequestManager {
     private final static RequestManager instance = new RequestManager();

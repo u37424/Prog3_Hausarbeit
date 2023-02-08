@@ -8,15 +8,17 @@ import javafx.application.Application;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse startet die JavaFX Anwendung des Klienten.
- * Als View Klasse dient die Klasse View.
+ * Als View Klasse dient die Klasse "View".
+ * </p>
  */
 public class Main {
     /**
      * Startet eine JavaFX Anwendung fuer den Benutzer.
+     *
      * @param args User-Argumente
      */
     public static void main(String[] args) {

@@ -16,13 +16,14 @@ import java.util.LinkedList;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt alle REST Anfragen zu Kategorien bereit.
  * Kategorien koennen angefragt, erstellt, veraendert oder geloescht werden.
  * Es koennen einzelne Objekte, komplette Listen oder partielle Listen angefragt werden.
  * Diese Resource benutzt primaer den CategoryManager zum Bearbeiten von konkreten Datenbankanfragen.
+ * </p>
  */
 @Path("category")
 public class CategoryResource {

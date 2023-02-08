@@ -11,12 +11,13 @@ import jakarta.ws.rs.core.Response;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt alle Anfragen zu generellen Benutzereinstellungen bereit.
  * Es kann nur ein Hauptbenutzer beim Server angemeldet sein.
  * Ebenso wird hier die Database Reset Funktion bereitgestellt.
+ * </p>
  */
 @Path("user")
 public class UserResource {

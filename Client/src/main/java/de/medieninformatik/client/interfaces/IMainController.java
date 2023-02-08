@@ -5,12 +5,13 @@ package de.medieninformatik.client.interfaces;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Dieses Interface legt alle Funktionen fest, die ein Controller fuer das Hauptfenster haben soll.
  * Die Implementationen koennen in den konreten MainControllern variieren.
  * Das Interface faesst die Funktionen von normalem Benutzer und Hauptbenutzer zusammen.
+ * </p>
  */
 public interface IMainController extends IController {
     /**

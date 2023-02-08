@@ -12,11 +12,12 @@ import java.util.ResourceBundle;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Die Klasse stellt eine Verbindung zu einer MySQL Datenbank mithilfe eines MySQL Treibers her.
  * Wenn die Datenbank noch nicht erstellt wurde, werden die initialen Befehle aus der database_startup.sql ausgefuehrt.
+ * </p>
  */
 public class Database {
     private static final Database instance = new Database();

@@ -1,6 +1,5 @@
 package de.medieninformatik.client.controller.inspector;
 
-import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.common.Author;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +9,18 @@ import javafx.stage.Stage;
 
 import java.time.LocalDate;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * </p>
+ * 2023-01-31
+ * <p>
+ * Diese Klasse implementiert einen konkreten ViewController fuer Autoren.
+ * Dieser Controller implementiert alle spezifischen Funktionen, die fuer die Arbeit mit einer Autor-Ansicht gebraucht werden.
+ * </p>
+ */
 public class AuthorViewController extends ViewController {
     @FXML
     private Label firstName, lastName, alias, age, birthday;
@@ -20,16 +31,19 @@ public class AuthorViewController extends ViewController {
     @FXML
     private Button editFirstName, editLastName, editAlias, editAge;
 
+    /**
+     * Setzt die entsprechende Stage, welche vom Controller als View verwendet werden soll.
+     *
+     * @param stage Stage, welche verwendet werden soll
+     */
     public void setStage(Stage stage) {
         super.setStage(stage);
         this.stage.setTitle("Author Inspector");
     }
 
-    public void setModel(MainModel model) {
-        super.setModel(model);
-        displayValues();
-    }
-
+    /**
+     * Setzt die Optionen, die der Benutzer entsprechend zu seinem Benutzerstatus im Betrachtungsfenster haben soll.
+     */
     @Override
     public void setOptions() {
         if (!model.isMainUser()) return;
@@ -44,9 +58,12 @@ public class AuthorViewController extends ViewController {
         this.editBirthday.setVisible(isEdit);
     }
 
+    /**
+     * Setzt die eingestellten Default-Werte auf die erhaltenden Werte des zu betrachtenden Elementes.
+     */
     @Override
     public void displayValues() {
-        Author author = model.getAuthorRequest().getItem();
+        Author author = model.getAuthorModel().getItem();
         if (author == null) return;
 
         this.firstName.setText(author.getFirstName());
@@ -60,6 +77,9 @@ public class AuthorViewController extends ViewController {
         }
     }
 
+    /**
+     * Leitet alle notwendigen Aktionen ein, um den Benutzer in den entsprechenden Main Modus zu bringen.
+     */
     @Override
     public void returnToMain() {
         super.returnToMain();
@@ -68,47 +88,72 @@ public class AuthorViewController extends ViewController {
 
     //--------EDIT VALUES
 
+    /**
+     * Setzt den aktuell eingegebenen Vornamen als Vornamen des Autors.
+     */
     public void editFirstName() {
         String eingabe = sceneController.editStringMessage("Edit First Name", this.firstName.getText(), "Fist Name");
         if (eingabe == null) return;
         this.firstName.setText(eingabe);
-        model.getAuthorRequest().getItem().setFirstName(eingabe);
+        model.getAuthorModel().getItem().setFirstName(eingabe);
     }
 
+    /**
+     * Setzt den aktuell eingegebenen Nachnamen als Nachnamen des Autors.
+     */
     public void editLastName() {
         String eingabe = sceneController.editStringMessage("Edit Last Name", this.lastName.getText(), "Last Name");
         if (eingabe == null) return;
         this.lastName.setText(eingabe);
-        model.getAuthorRequest().getItem().setLastName(eingabe);
+        model.getAuthorModel().getItem().setLastName(eingabe);
     }
 
+    /**
+     * Setzt den aktuell eingegebenen Alias als Alias des Autors.
+     */
     public void editAlias() {
         String eingabe = sceneController.editStringMessage("Edit Alias Name", this.alias.getText(), "Alias Name");
         if (eingabe == null) return;
         this.alias.setText(eingabe);
-        model.getAuthorRequest().getItem().setAlias(eingabe);
+        model.getAuthorModel().getItem().setAlias(eingabe);
     }
 
+    /**
+     * Setzt das aktuell eingegebene Alter als Alter des Autors.
+     */
     public void editAge() {
         int eingabe = sceneController.editNumberMessage("Edit Age", this.age.getText(), "Age");
         this.age.setText(String.valueOf(eingabe));
-        model.getAuthorRequest().getItem().setAge(eingabe);
+        model.getAuthorModel().getItem().setAge(eingabe);
     }
 
+    /**
+     * Setzt das aktuell eingegebene Geburtsdatum als Geburtsdatum des Autors.
+     */
     public void editBirthday() {
         String eingabe = String.valueOf(this.editBirthday.getValue());
-        model.getAuthorRequest().getItem().setBirthday(eingabe);
+        model.getAuthorModel().getItem().setBirthday(eingabe);
     }
 
+    //-----ENDE EDIT VALUES
+
+    /**
+     * Prueft alle veraenderbaren Werte des dargestellten Objektes auf Korrektheit.
+     *
+     * @return true, wenn alle Werte den Vorgaben entsprechend vorhanden sind
+     */
     @Override
     public boolean validateItem() {
-        Author item = model.getAuthorRequest().getItem();
+        Author item = model.getAuthorModel().getItem();
         return item.getFirstName() != null && !item.getFirstName().isBlank() &&
                 item.getLastName() != null && !item.getLastName().isBlank() &&
                 item.getBirthday() != null && !item.getBirthday().isBlank() &&
                 item.getAge() > 0;
     }
 
+    /**
+     * Ermoeglicht es dem Hauptbenutzer den aktuellen Eintrag mit den aktuellen Werten zu speichern.
+     */
     @Override
     public void submitChanges() {
         if (!validateItem()) {
@@ -117,11 +162,12 @@ public class AuthorViewController extends ViewController {
         }
 
         //Alias ermitteln, wenn notwendig
-        Author author = model.getAuthorRequest().getItem();
+        Author author = model.getAuthorModel().getItem();
         if (author.getAlias() == null || author.getAlias().isBlank())
-            model.getAuthorRequest().getItem().setAlias(author.getFirstName().charAt(0) + ". " + author.getLastName());
+            model.getAuthorModel().getItem().setAlias(author.getFirstName().charAt(0) + ". " + author.getLastName());
 
-        boolean executed = model.isCreateMode() ? model.getAuthorRequest().createItem() : model.getAuthorRequest().editItem();
+        //Ausfuehrung je nach aktuellem Modus (Erstellen / Bearbeiten)
+        boolean executed = model.isCreateMode() ? model.getAuthorModel().createItem() : model.getAuthorModel().editItem();
 
         if (executed) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
@@ -129,12 +175,15 @@ public class AuthorViewController extends ViewController {
         } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
     }
 
+    /**
+     * Ermoeglicht es dem Hauptbenutzer den aktuellen Eintrag mit den aktuellen Werten zu loeschen.
+     */
     @Override
     public void deleteItem() {
         if (!sceneController.confirmMessage("Delete Author", "Do you really want to delete this Author?")) return;
 
-        int id = model.getAuthorRequest().getItem().getAuthorId();
-        boolean executed = model.getAuthorRequest().deleteItem(String.valueOf(id));
+        int id = model.getAuthorModel().getItem().getAuthorId();
+        boolean executed = model.getAuthorModel().deleteItem(String.valueOf(id));
 
         if (executed) {
             sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");

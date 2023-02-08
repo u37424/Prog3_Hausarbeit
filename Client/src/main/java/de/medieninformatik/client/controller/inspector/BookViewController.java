@@ -1,6 +1,5 @@
 package de.medieninformatik.client.controller.inspector;
 
-import de.medieninformatik.client.model.MainModel;
 import de.medieninformatik.common.Author;
 import de.medieninformatik.common.Book;
 import de.medieninformatik.common.Category;
@@ -20,6 +19,18 @@ import javafx.stage.Stage;
 
 import java.util.LinkedList;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * </p>
+ * 2023-01-31
+ * <p>
+ * Diese Klasse implementiert einen konkreten ViewController fuer Buecher.
+ * Dieser Controller implementiert alle spezifischen Funktionen, die fuer die Arbeit mit einer Buch-Ansicht gebraucht werden.
+ * </p>
+ */
 public class BookViewController extends ViewController {
     @FXML
     private Label title, isbn, pages, year, rating, publisher;
@@ -33,16 +44,20 @@ public class BookViewController extends ViewController {
     @FXML
     private Button editIsbn, editYear, editPages, editTitle, editPublisher, editAuthors, editCategories;
 
+    /**
+     * Setzt die entsprechende Stage, welche vom Controller als View verwendet werden soll.
+     *
+     * @param stage Stage, welche verwendet werden soll
+     */
     public void setStage(Stage stage) {
         super.setStage(stage);
         this.stage.setTitle("Book Inspector");
     }
 
-    public void setModel(MainModel model) {
-        super.setModel(model);
-        displayValues();
-    }
 
+    /**
+     * Setzt die Optionen, die der Benutzer entsprechend zu seinem Benutzerstatus im Betrachtungsfenster haben soll.
+     */
     @Override
     public void setOptions() {
         if (!model.isMainUser()) return;
@@ -59,7 +74,7 @@ public class BookViewController extends ViewController {
         this.editCategories.setVisible(isEdit);
         this.description.setEditable(isEdit);
         if (isEdit)
-            this.description.textProperty().addListener((obs) -> model.getBookRequest().getItem().setDescription(this.description.getText()));
+            this.description.textProperty().addListener((obs) -> model.getBookModel().getItem().setDescription(this.description.getText()));
 
         //Wenn im Create Modus
         this.editIsbn.setVisible(isCreate);
@@ -68,9 +83,12 @@ public class BookViewController extends ViewController {
         if (isCreate) this.description.setText("");
     }
 
+    /**
+     * Setzt die eingestellten Default-Werte auf die erhaltenden Werte des zu betrachtenden Elementes.
+     */
     @Override
     public void displayValues() {
-        Book book = model.getBookRequest().getItem();
+        Book book = model.getBookModel().getItem();
         if (book == null) return;
 
         //Daten aus Buch laden
@@ -93,6 +111,11 @@ public class BookViewController extends ViewController {
         if (book.getCategories() != null) buildCategoryBox();
     }
 
+    /**
+     * Stellt eine gegebene Bewertung als Sterne-Bewertung dar.
+     *
+     * @param rating darzustellende Bewertung
+     */
     private void displayRating(double rating) {
         int r = (int) rating;
         if (r == 0) return;
@@ -107,11 +130,15 @@ public class BookViewController extends ViewController {
         }
     }
 
+    /**
+     * Stellt alle zum Buch gehoerigen Autoren dar.
+     * Die Autoren werden durch Striche separiert.
+     */
     private void buildAuthorBox() {
         this.authors.getChildren().clear();
         boolean insertSeparator = true; //Um ersten Trennstrich abzuwarten
 
-        for (Author author : model.getBookRequest().getItem().getAuthors()) {
+        for (Author author : model.getBookModel().getItem().getAuthors()) {
             if (insertSeparator) insertSeparator = false;
             else this.authors.getChildren().add(new Separator(Orientation.VERTICAL));
 
@@ -121,11 +148,15 @@ public class BookViewController extends ViewController {
         }
     }
 
+    /**
+     * Stellt alle zum Buch gehoerigen Kategorien dar.
+     * Die Kategorien werden durch Striche separiert.
+     */
     private void buildCategoryBox() {
         this.categories.getChildren().clear();
         boolean insertSeparator = true; //Um ersten Trennstrich abzuwarten
 
-        for (Category category : model.getBookRequest().getItem().getCategories()) {
+        for (Category category : model.getBookModel().getItem().getCategories()) {
             if (insertSeparator) insertSeparator = false;
             else this.categories.getChildren().add(new Separator(Orientation.VERTICAL));
 
@@ -135,6 +166,9 @@ public class BookViewController extends ViewController {
         }
     }
 
+    /**
+     * Leitet alle notwendigen Aktionen ein, um den Benutzer in den entsprechenden Main Modus zu bringen.
+     */
     @Override
     public void returnToMain() {
         super.returnToMain();
@@ -143,32 +177,47 @@ public class BookViewController extends ViewController {
 
     //--------EDIT VALUES
 
+    /**
+     * Setzt den aktuell eingegebenen Titel als Titel des Buches.
+     */
     public void editBookTitle() {
         String eingabe = sceneController.editStringMessage("Edit Title", this.title.getText(), "Book Title");
         if (eingabe == null) return;
         this.title.setText(eingabe);
-        model.getBookRequest().getItem().setTitle(eingabe);
+        model.getBookModel().getItem().setTitle(eingabe);
     }
 
+    /**
+     * Setzt die aktuell eingegebene ISBN als ISBN des Buches.
+     */
     public void editBookISBN() {
         String eingabe = sceneController.editStringMessage("Edit ISBN", this.isbn.getText(), "Book ISBN");
         if (eingabe == null) return;
         this.isbn.setText(eingabe);
-        model.getBookRequest().getItem().setIsbn(eingabe);
+        model.getBookModel().getItem().setIsbn(eingabe);
     }
 
+    /**
+     * Setzt das aktuell eingegebene Erscheinungsjahr als Erscheinungsjahr des Buches.
+     */
     public void editBookYear() {
         int eingabe = sceneController.editNumberMessage("Edit Release Year", this.year.getText(), "Release Year");
         this.year.setText(String.valueOf(eingabe));
-        model.getBookRequest().getItem().setReleaseYear(eingabe);
+        model.getBookModel().getItem().setReleaseYear(eingabe);
     }
 
+    /**
+     * Setzt die aktuell eingegebene Seitenzahl als Seitenzahl des Buches.
+     */
     public void editBookPages() {
         int eingabe = sceneController.editNumberMessage("Edit Pages", this.pages.getText(), "Pages");
         this.pages.setText(String.valueOf(eingabe));
-        model.getBookRequest().getItem().setPages(eingabe);
+        model.getBookModel().getItem().setPages(eingabe);
     }
 
+    /**
+     * Setzt die aktuell eingegebene Bewertung als Bewertung des Buches.
+     */
     public void editBookRating(String id) {
         String image = "star_filled.png";
 
@@ -178,50 +227,66 @@ public class BookViewController extends ViewController {
             ((ImageView) n).setImage(new Image(image));
             if (id.equals(n.getId())) {
                 image = "star_empty.png";
-                model.getBookRequest().getItem().setRating(val);
+                model.getBookModel().getItem().setRating(val);
             }
         }
     }
 
+    /**
+     * Setzt den aktuell eingegebenen Verlag als Verlag des Buches.
+     */
     public void editBookPublisher() {
-        model.getPublisherRequest().loadAll();
+        model.getPublisherModel().loadAll();
 
         Publisher publisher = sceneController.choiceMessage("Select Publisher",
-                model.getBookRequest().getItem().getPublisher(), model.getPublisherRequest().getItemList());
+                model.getBookModel().getItem().getPublisher(), model.getPublisherModel().getItemList());
 
-        model.getBookRequest().getItem().setPublisher(publisher);
+        model.getBookModel().getItem().setPublisher(publisher);
     }
 
+    /**
+     * Setzt die aktuell eingegebenen Autoren als Autoren des Buches.
+     */
     public void editBookAuthors() {
-        model.getAuthorRequest().loadAll();
+        model.getAuthorModel().loadAll();
 
-        LinkedList<Author> selection = model.getBookRequest().getItem().getAuthors();
-        LinkedList<Author> all = model.getAuthorRequest().getItemList();
+        LinkedList<Author> selection = model.getBookModel().getItem().getAuthors();
+        LinkedList<Author> all = model.getAuthorModel().getItemList();
 
         for (Author author : selection) all.removeIf(e -> e.getAuthorId() == author.getAuthorId());
 
         LinkedList<Author> eingabe = sceneController.editList("Author Selector", selection, all);
 
-        model.getBookRequest().getItem().setAuthors(eingabe);
+        model.getBookModel().getItem().setAuthors(eingabe);
         displayValues();    //neues Item darstellen
     }
 
+    /**
+     * Setzt die aktuell eingegebenen Kategorien als Kategorien des Buches.
+     */
     public void editBookCategories() {
-        model.getCategoryRequest().loadAll();
+        model.getCategoryModel().loadAll();
 
-        LinkedList<Category> selection = model.getBookRequest().getItem().getCategories();
-        LinkedList<Category> all = model.getCategoryRequest().getItemList();
+        LinkedList<Category> selection = model.getBookModel().getItem().getCategories();
+        LinkedList<Category> all = model.getCategoryModel().getItemList();
 
         for (Category category : selection) all.removeIf(e -> e.getCategoryId() == category.getCategoryId());
 
         LinkedList<Category> eingabe = sceneController.editList("Category Selector", selection, all);
 
-        model.getBookRequest().getItem().setCategories(eingabe);
+        model.getBookModel().getItem().setCategories(eingabe);
         displayValues();    //Neues Item darstellen
     }
 
+    //----ENDE EDIT VALUES
+
+    /**
+     * Prueft alle veraenderbaren Werte des dargestellten Objektes auf Korrektheit.
+     *
+     * @return true, wenn alle Werte den Vorgaben entsprechend vorhanden sind
+     */
     public boolean validateItem() {
-        Book item = model.getBookRequest().getItem();
+        Book item = model.getBookModel().getItem();
         return item.getTitle() != null && !item.getTitle().isBlank() &&
                 item.getIsbn() != null && !item.getIsbn().isBlank() &&
                 item.getDescription() != null && !item.getDescription().isBlank() &&
@@ -232,6 +297,9 @@ public class BookViewController extends ViewController {
                 item.getCategories() != null && item.getCategories().size() != 0;
     }
 
+    /**
+     * Ermoeglicht es dem Hauptbenutzer den aktuellen Eintrag mit den aktuellen Werten zu speichern.
+     */
     @Override
     public void submitChanges() {
         if (!validateItem()) {
@@ -239,7 +307,8 @@ public class BookViewController extends ViewController {
             return;
         }
 
-        boolean executed = model.isCreateMode() ? model.getBookRequest().createItem() : model.getBookRequest().editItem();
+        //Ausfuehrung je nach aktuellem Modus (Erstellen / Bearbeiten)
+        boolean executed = model.isCreateMode() ? model.getBookModel().createItem() : model.getBookModel().editItem();
 
         if (executed) {
             sceneController.infoMessage("Submit Succeeded", "Changes have been saved on the Server!");
@@ -247,11 +316,14 @@ public class BookViewController extends ViewController {
         } else sceneController.errorMessage("Submit Error", "Failed to save Changes!");
     }
 
+    /**
+     * Ermoeglicht es dem Hauptbenutzer den aktuellen Eintrag mit den aktuellen Werten zu loeschen.
+     */
     @Override
     public void deleteItem() {
         if (!sceneController.confirmMessage("Delete Book", "Do you really want to delete this Book?")) return;
 
-        boolean executed = model.getBookRequest().deleteItem(model.getBookRequest().getItem().getIsbn());
+        boolean executed = model.getBookModel().deleteItem(model.getBookModel().getItem().getIsbn());
 
         if (executed) {
             sceneController.infoMessage("Deletion Succeeded", "The Entry was deleted!");

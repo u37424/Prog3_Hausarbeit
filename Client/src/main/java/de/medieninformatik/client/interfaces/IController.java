@@ -9,11 +9,12 @@ import javafx.stage.Stage;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Dieses Interface legt alle Funktionen fest, die alle davon abgeleiteten Controller besitzen sollen.
  * Dieses Interface kann benutzt werden, um die darin festgelegten Aktionen durchzufuehren, ohne den konkreten Controller zu kennen.
+ * </p>
  */
 public interface IController {
     /**

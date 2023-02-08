@@ -15,11 +15,20 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 
+/**
+ * @author Luca Spirka m29987
+ * @version 1.0
+ * <p>
+ * Programmieren 3 - Hausarbeit.
+ * </p>
+ * 2023-01-31
+ * <p>
+ * Diese Klasse wird verwendet, um Anfragen an einen REST Server zu senden und Antworten vom Server zu verarbeiten.
+ * Es koennen GET, PUT, POST und DELETE Anfragen gestellt werden.
+ * Die Verarbeitung von Daten geschieht mithilfe von JSON.
+ * </p>
+ */
 public class Request {
-    //Path Attributes
-    private final String userPath;
-    private final String loginPath, logoutPath, resetPath;
-
     private final String hostPort;
     private final String basePath;
     private String baseURI;
@@ -32,52 +41,54 @@ public class Request {
         this.hostPort = bundle.getString("Host.Port");
         this.basePath = bundle.getString("Base.Path");
         this.baseURI = "http://" + hostAddress + ":" + hostPort + "/" + basePath;
-
-        //Set Path Attributes
-        this.userPath = bundle.getString("User.Path");
-        this.loginPath = bundle.getString("User.Login.Path");
-        this.logoutPath = bundle.getString("User.Logout.Path");
-        this.resetPath = bundle.getString("User.Reset.Path");
-
         this.client = ClientBuilder.newClient();
     }
 
-    //---------USER REQUESTS
-
+    /**
+     * Veraendert den Namen des Hosts in der Adresse.
+     *
+     * @param hostName neuer Hostname
+     */
     public void changeHostName(String hostName) {
         this.baseURI = "http://" + hostName + ":" + hostPort + "/" + basePath;
     }
 
-    public boolean login() {
-        Response response = serverRequest("GET", "/" + userPath + "/" + loginPath);
-        return isOk(response);
-    }
-
-    public boolean logout() {
-        Response response = serverRequest("GET", "/" + userPath + "/" + logoutPath);
-        return isOk(response);
-    }
-
-    public boolean resetDatabase() {
-        Response response = serverRequest("POST", "/" + userPath + "/" + resetPath);
-        return isOk(response);
-    }
-
     //----------Response Reading/Converting Methoden
 
+    /**
+     * Prueft den Status einer Antwort des Servers auf Erfolgs.
+     *
+     * @param response Antwort des Servers
+     * @return true, wenn Status der Antwort erfolgreich
+     */
     boolean isOk(Response response) {
         if (response == null) return false;
         return status(response) == 200;
     }
 
+    /**
+     * Prueft den Status einer Antwort des Servers auf erfolgreiche Erstellung.
+     *
+     * @param response Antwort des Servers
+     * @return true, wenn erfolgreich Erstellt
+     */
     public boolean isCreated(Response response) {
         if (response == null) return false;
         return status(response) == 201;
     }
 
-    <T> T createObject(Response response, Class<T> tClass) {
+    /**
+     * Liest einen JSON String aus einer Serverantwort aus und wandelt ihn in ein angegebenes (erwartetes) Objekt um.
+     * Kann kein Objekt aus dem JSON String gelesen werden, wird ein leeres Objekt (kein null-Objekt) zurueckgegeben.
+     *
+     * @param response Antwort des Servers
+     * @param tClass   Klasse des erwarteten Objektes
+     * @param <T>      Art des erwarteten Objektes
+     * @return Objekt der angegebenen Klasse
+     */
+    <T> T JSONtoObject(Response response, Class<T> tClass) {
         T object = null;
-        if (isOk(response)) object = parseJSON(response, tClass);
+        if (isOk(response)) object = readJSON(response, tClass);
         if (object == null) {
             try {
                 Constructor<T> constructor = tClass.getDeclaredConstructor();
@@ -89,8 +100,15 @@ public class Request {
         return object;
     }
 
-
-    <T> T parseJSON(Response response, Class<T> objectClass) {
+    /**
+     * Liest einen JSON String aus einer Serverantwort und wandelt es in ein Objekt der angegebenen Klasse um.
+     *
+     * @param response    Serverantwort
+     * @param objectClass Klasse des erwarteten Objektes
+     * @param <T>         Art des Objektes
+     * @return gelesenes Objekt
+     */
+    private <T> T readJSON(Response response, Class<T> objectClass) {
         ObjectMapper mapper = new ObjectMapper();
         T res = null;
         try {
@@ -103,10 +121,27 @@ public class Request {
 
     //------------Server Request Methods (Response)
 
+    /**
+     * Stellt eine Anfrage an den angegebenen Ressourcenpfad beim Server.
+     *
+     * @param crud auszufuehrende Operation
+     * @param path anzusprechender Ressourcenpfad
+     * @return Antwort des Servers
+     */
     Response serverRequest(String crud, String path) {
         return serverRequest(crud, path, null);
     }
 
+    /**
+     * Stellt eine Anfrage an den angegebenen Ressourcenpfad beim Server.
+     * Ein Objekt kann ebenfalls mitgeliefert werden. Dieses wird dann als JSON String an den Server uebertragen.
+     *
+     * @param crud   auszufuehrende Operation
+     * @param path   anzusprechender Ressourcenpfad
+     * @param object zu uebertragenes Objekt
+     * @param <T>    Art des Objektes
+     * @return Antwort des Servers
+     */
     <T> Response serverRequest(String crud, String path, T object) {
         WebTarget target = getTarget(crud, path);
         ObjectMapper mapper = new ObjectMapper();
@@ -129,13 +164,26 @@ public class Request {
         return null;
     }
 
-    //--------Debug
+    //--------Debug/Logging Methoden
 
+    /**
+     * Debug Methode: Gibt Zielanfrage auf Konsole aus.
+     *
+     * @param crud Operation
+     * @param uri  Zielpfad
+     * @return benutzbares WebTarget
+     */
     private WebTarget getTarget(String crud, String uri) {
         System.out.printf("%n--- %s %s%s%n", crud, baseURI, uri);
         return client.target(baseURI + uri);
     }
 
+    /**
+     * Debug Methode: Gibt den Status einer Serverantwort auf der Konsole aus.
+     *
+     * @param response Antwort des Servers
+     * @return Statuscode der Antwort
+     */
     private int status(Response response) {
         int code = response.getStatus();
         String reason = response.getStatusInfo().getReasonPhrase();

@@ -14,13 +14,14 @@ import java.util.ResourceBundle;
  * @version 1.0
  * <p>
  * Programmieren 3 - Hausarbeit.
- * <p>
+ * </p>
  * 2023-01-31
  * <p>
  * Diese Klasse implementiert einen Controller, der das Login verfahren kontrolliert.
  * Der Benutzer kann sich als normaler Benutzer oder Hauptbenutzer anmelden.
  * Eine Anmeldung als Hauptbenutzer kann fehlschlagen.
  * Eine Anmeldung als normaler Benutzer ist immer erfolgreich.
+ * </p>
  */
 public class LoginController implements ILoginController {
 
@@ -91,7 +92,8 @@ public class LoginController implements ILoginController {
     @Override
     public void loginMainUser() {
         //Wenn erfolgreich eingeloggt, sonst Fehler
-        if (!model.login()) sceneController.errorMessage("Login Denied", "Login as Main User has failed!");
+        if (!model.login())
+            sceneController.errorMessage("Login Denied", "Login as Main User has failed!");
         else sceneController.loadMainBookScene();
     }
 
@@ -102,7 +104,7 @@ public class LoginController implements ILoginController {
     public void changeHostName() {
         String name = hostName.getText();
         if (name == null || name.isBlank()) return;
-        model.changeHostName(name);
+        model.getUserModel().changeHostName(name);
         sceneController.infoMessage("Host Changed", "Host Name successfully changed!");
         this.hostButton.setDisable(true);
     }
